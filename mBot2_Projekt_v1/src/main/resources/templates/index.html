@@ -8,5 +8,13 @@
 </head>
 <body>
     <h1>Welcome to MBot2</h1>
+    <form action="\sendCommand" method="post">
+        <button type="submit" name="direction" value="UP">Vorwärts</button>
+        <button type="submit" name="direction" value="DOWN">Rückwärts</button>
+        <button type="submit" name="direction" value="LEFT">Links</button>
+        <button type="submit" name="direction" value="RIGHT">Rechts</button>
+        <button type="submit" name="direction" value="STOP">Stop</button>
+    </form>
+    <script src="eventlistener_arrowkeys.js"></script>
 </body>
 </html>
