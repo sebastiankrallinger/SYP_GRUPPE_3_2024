@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"  xmlns:th="http://www.thymeleaf.org">
 <head>
+    <script src="eventlistener_arrowkeys.js"></script>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,13 +9,12 @@
 </head>
 <body>
     <h1>Welcome to MBot2</h1>
-    <form action="\sendCommand" method="post">
+    <form action="\buttonControl" method="post">
         <button type="submit" name="direction" value="UP">Vorwärts</button>
         <button type="submit" name="direction" value="DOWN">Rückwärts</button>
         <button type="submit" name="direction" value="LEFT">Links</button>
         <button type="submit" name="direction" value="RIGHT">Rechts</button>
         <button type="submit" name="direction" value="STOP">Stop</button>
     </form>
-    <script src="eventlistener_arrowkeys.js"></script>
 </body>
 </html>

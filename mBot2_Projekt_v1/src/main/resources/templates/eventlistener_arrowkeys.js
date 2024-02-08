@@ -1,5 +1,6 @@
 //Überwachung der Pfeiltasten
 document.addEventListener('keydown', function(event) {
+    console.log("test", event.key);
     switch(event.key) {
         case 'ArrowUp':
             sendDirection('UP');
@@ -26,6 +27,6 @@ document.addEventListener('keyup', function(event) {
 function sendDirection(direction) {
     // AJAX-Anfrage an den Controller senden
     var xhr = new XMLHttpRequest();
-    xhr.open('Post', '/arrowControl?direction=' + direction, true);
+    xhr.open('POST', '/arrowControl?direction=' + direction, true);
     xhr.send();
 }
