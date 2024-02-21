@@ -16,5 +16,10 @@
         <button type="submit" name="direction" value="RIGHT">Rechts</button>
         <button type="submit" name="direction" value="STOP">Stop</button>
     </form>
+
+    <form action="/selectDevice" method="get">
+        <button type="submit">Select Devices</button>
+        <p>Ausgewähltes Gerät: <span th:text="${selectedDevice}"></span></p>
+    </form>
 </body>
 </html>

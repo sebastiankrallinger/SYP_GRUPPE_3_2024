@@ -6,10 +6,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class MainController {
@@ -19,6 +25,36 @@ public class MainController {
     @GetMapping("/mBot")
     public String mainpage(Model model) {
         return "index";
+    }
+
+    @GetMapping("/selectDevice")
+    public String selectDevice(Model model) {
+        List<String> devices = scanNetwork();
+        model.addAttribute("devices", devices);
+        return "selectDevice";
+    }
+    private List<String> scanNetwork() {
+        List<String> devices = new ArrayList<>();
+        try {
+            Process process = Runtime.getRuntime().exec("arp -a");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                devices.add(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return devices;
+    }
+    @PostMapping("/device")
+    public String sendCommand(@RequestParam("selectedDevice") String selectedDevice, Model model) {
+
+        System.out.println("Ausgewähltes Gerät: " + selectedDevice);
+        // Füge das ausgewählte Gerät dem Model hinzu, um es auf der hello.html anzuzeigen
+        model.addAttribute("selectedDevice", selectedDevice);
+        // Hier könntest du eine Rückmeldung an die Benutzeroberfläche senden.
+        return "redirect:/mBot";
     }
 
     //Button Befehle an mBots senden

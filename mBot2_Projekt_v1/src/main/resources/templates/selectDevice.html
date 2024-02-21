@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Select Device</title>
+</head>
+<body>
+<h1>Select a Device</h1>
+<form action="/device" method="post">
+
+  <select name="device">
+    <option value="">Choose a device</option>
+    <!-- Iterate through devices and create options -->
+    <th:block th:each="device : ${devices}">
+      <option th:value="${device}" th:text="${device}"></option>
+    </th:block>
+  </select>
+  <!-- Hidden input field to store the selected device -->
+  <input type="hidden" name="selectedDevice" th:value="${selectedDevice}" />
+  <button type="submit">Send Command</button>
+
+</form>
+</body>
+</html>

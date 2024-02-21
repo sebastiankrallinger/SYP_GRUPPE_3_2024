@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/SYP_GRUPPE_3_2024.iml" filepath="$PROJECT_DIR$/.idea/SYP_GRUPPE_3_2024.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mBot2_Projekt_v1/demo.iml" filepath="$PROJECT_DIR$/mBot2_Projekt_v1/demo.iml" />
+    </modules>
+  </component>
+</project>
