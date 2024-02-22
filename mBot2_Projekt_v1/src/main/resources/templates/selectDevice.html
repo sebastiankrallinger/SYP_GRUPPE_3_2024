@@ -10,7 +10,6 @@
 <form action="/device" method="post">
 
   <select name="device">
-    <option value="">Choose a device</option>
     <!-- Iterate through devices and create options -->
     <th:block th:each="device : ${devices}">
       <option th:value="${device}" th:text="${device}"></option>

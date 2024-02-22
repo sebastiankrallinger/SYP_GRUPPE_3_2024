@@ -16,6 +16,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 public class MainController {
@@ -39,8 +40,20 @@ public class MainController {
             Process process = Runtime.getRuntime().exec("arp -a");
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line;
-            while ((line = reader.readLine()) != null) {
-                devices.add(line);
+            while ((line = reader.readLine()) != null && (line = reader.readLine()) != "") {
+                if(line != null){
+                    line = line.trim();
+                    System.out.println(line);
+                    String[] array = line.split("\\.");
+
+                    if(Objects.equals(array[0], "10") && Objects.equals(array[1], "10") && (Objects.equals(array[2], "1") || Objects.equals(array[2], "2") ||Objects.equals(array[2], "3")) ) {
+                        String ip = array[0] +"." + array[1] +"." + array[2] +"." +(array[3].substring(0, 3)).trim();
+                        String[] ip1 = ip.split("\\t");
+                        ip = ip1[0];
+
+                        devices.add(ip);
+                    }
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
