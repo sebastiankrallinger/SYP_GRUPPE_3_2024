@@ -21,10 +21,12 @@ import java.util.Objects;
 @Controller
 public class MainController {
     //IP Adresse des aktiven mBots
-    private String mBotIP = "10.10.1.28";
+    private String mBotIP = "Not Selected";
     //Mainpage mBot Website
+
     @GetMapping("/mBot")
     public String mainpage(Model model) {
+        model.addAttribute("ipAdresse", mBotIP);
         return "index";
     }
 
@@ -46,7 +48,7 @@ public class MainController {
                     System.out.println(line);
                     String[] array = line.split("\\.");
 
-                    if(Objects.equals(array[0], "10") && Objects.equals(array[1], "10") && (Objects.equals(array[2], "1") || Objects.equals(array[2], "2") ||Objects.equals(array[2], "3")) ) {
+                    if(Objects.equals(array[0], "10") && Objects.equals(array[1], "10") && (Objects.equals(array[2], "0") || Objects.equals(array[2], "1") || Objects.equals(array[2], "2") || Objects.equals(array[2], "3")) ) {
                         String ip = array[0] +"." + array[1] +"." + array[2] +"." +(array[3].substring(0, 3)).trim();
                         String[] ip1 = ip.split("\\t");
                         ip = ip1[0];
@@ -60,13 +62,13 @@ public class MainController {
         }
         return devices;
     }
-    @PostMapping("/device")
-    public String sendCommand(@RequestParam("selectedDevice") String selectedDevice, Model model) {
 
-        System.out.println("Ausgewähltes Gerät: " + selectedDevice);
-        // Füge das ausgewählte Gerät dem Model hinzu, um es auf der hello.html anzuzeigen
-        model.addAttribute("selectedDevice", selectedDevice);
-        // Hier könntest du eine Rückmeldung an die Benutzeroberfläche senden.
+
+    @PostMapping("/device")
+    public String sendCommand(@RequestParam("ipAdresse") String ipAdresse, Model model) {
+        System.out.println("Ausgewähltes Gerät: " + ipAdresse);
+        mBotIP = ipAdresse;
+        model.addAttribute("ipAdresse", mBotIP);
         return "redirect:/mBot";
     }
 

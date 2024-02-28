@@ -7,18 +7,17 @@
 </head>
 <body>
 <h1>Select a Device</h1>
-<form action="/device" method="post">
 
-  <select name="device">
-    <!-- Iterate through devices and create options -->
+<form id="deviceForm" action="/device" method="post">
+  <select id="devices" name="ipAdresse">
+    <!-- Auswahl aus Devices -->
     <th:block th:each="device : ${devices}">
       <option th:value="${device}" th:text="${device}"></option>
     </th:block>
   </select>
-  <!-- Hidden input field to store the selected device -->
-  <input type="hidden" name="selectedDevice" th:value="${selectedDevice}" />
-  <button type="submit">Send Command</button>
 
+  <input type="submit" value="Device senden">
 </form>
+
 </body>
 </html>
