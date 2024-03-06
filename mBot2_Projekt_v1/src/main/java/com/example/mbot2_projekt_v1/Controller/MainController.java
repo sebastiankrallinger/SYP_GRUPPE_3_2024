@@ -20,7 +20,7 @@ import java.util.Objects;
 @Controller
 public class MainController {
     //IP Adresse des aktiven mBots
-    private String mBotIP = "Not Selected";
+    private String mBotIP = "kein mBot ausgewählt";
 
     //Mainpage mBot Website
     @GetMapping("/mBot")
