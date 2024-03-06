@@ -29,13 +29,18 @@ public class MainController {
         return "index";
     }
 
-    @PostMapping("/device")
-    public String sendCommand(@RequestParam("ipAdresse") String ipAdresse, Model model) {
-        System.out.println("Ausgewähltes Gerät: " + ipAdresse);
-        mBotIP = ipAdresse;
-        model.addAttribute("ipAdresse", mBotIP);
+    @GetMapping("/sendCommand")
+    public String sendCommand() {
+        return "LoginPage";
+    }
+
+    @GetMapping("/getDevice")
+    public String getDevice(@RequestParam("ipAdresse") String ipAdresseMbot, Model model){
+        System.out.println("Ausgewähltes Gerät: " + ipAdresseMbot);
+        mBotIP = ipAdresseMbot;
         return "redirect:/mBot";
     }
+
 
     //Button Befehle an mBots senden
     @PostMapping("/buttonControl")

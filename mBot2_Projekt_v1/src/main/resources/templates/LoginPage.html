@@ -1,13 +1,20 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
+<head >
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Select Device</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
 </head>
-<body>
-<h1>Willkommen</h1>
 
+<body>
+<h1>Mbot auswählen</h1>
+
+<form action="\getDevice" class="container">
+  <label for="ipAdresse">IP Adresse des mBots eingeben:</label><br>
+  <input type="text" id="ipAdresse" name="ipAdresse"><br><br>
+  <button type="submit" name="absenden" value="Absenden">Absenden</button>
+</form>
 
 </body>
 </html>
