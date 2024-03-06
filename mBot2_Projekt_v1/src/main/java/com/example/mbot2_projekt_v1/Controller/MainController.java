@@ -38,7 +38,27 @@ public class MainController {
     public String getDevice(@RequestParam("ipAdresse") String ipAdresseMbot, Model model){
         System.out.println("Ausgewähltes Gerät: " + ipAdresseMbot);
         mBotIP = ipAdresseMbot;
+        sendConnected();
         return "redirect:/mBot";
+    }
+
+    @PostMapping("/sendConnected")
+    public void sendConnected(){
+        try {
+            System.out.println(mBotIP);
+            String connected = "TRUE";
+            System.out.println(connected);
+            //Befeht in byte-Array konvertieren
+            byte[] sendData = connected.getBytes();
+
+            try (DatagramSocket socket = new DatagramSocket()) {
+                DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
+
+                socket.send(packet);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
