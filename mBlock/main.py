@@ -25,7 +25,7 @@ while True:
             cyberpi.led.on(0, 0, 255)  # Blue Lights
             #Daten empfangen (maximal 1024 Bytes)
             data, addr = s.recvfrom(1024)
-            #Verarbeiten Sie die empfangenen Daten
+            #empfangenen Daten verarbeiten
             recieved_message = data.decode('utf-8')
             if recieved_message == "TRUE":
                 cyberpi.led.on(0,255,0)
@@ -34,7 +34,7 @@ while True:
                 time.sleep(3)
                 break
             
-        cyberpi.led.off() # No Lights
+        cyberpi.led.off() #No Lights
         cyberpi.console.clear()
         break
 
@@ -43,12 +43,12 @@ while True:
     # Daten empfangen (maximal 1024 Bytes)
     data, addr = s.recvfrom(1024)
 
-    # Verarbeiten Sie die empfangenen Daten
+    #empfangenen Daten verarbeiten
     received_message = data.decode('utf-8')
     if received_message != "":
         cyberpi.console.println("%s" % received_message)
         if received_message == "UP":
-            cyberpi.mbot2.forward(speed=60)
+            cyberpi.mbot2.forward(speed=75)
         if received_message == "DOWN":
             cyberpi.mbot2.backward(speed=60)
         if received_message == "LEFT":
