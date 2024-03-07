@@ -1,0 +1,70 @@
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    overflow: hidden;
+    height: 110%;
+    background: linear-gradient(to bottom, #646464, #000000);
+}
+
+.title {
+    color: #fff;
+    font-family:'Courier New', Courier, monospace;
+    text-align: center; /* Center align the text */
+    position: relative; /* Position relative for absolute positioning of arrows */
+}
+
+.title::before,
+.title::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid #fdfdfd; /* Arrow pointing down */
+}
+
+.title::before {
+    left: 25%; /* Position the arrow at 25% horizontally */
+    top: 100%; /* Position the arrow at the bottom of the title */
+}
+
+.title::after {
+    left: 75%; /* Position the arrow at 75% horizontally */
+    top: 100%; /* Position the arrow at the bottom of the title */
+}
+
+/* Create two equal columns that floats next to each other */
+.column {
+    background-color: #333131;
+    flex: 1 1 40%; /* Initial width set to 40%, grow factor set to 1 */
+    margin: 5vh;
+    height: 70vh;
+    box-sizing: border-box; /* Ensures padding is included in the width */
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.column img {
+    width: 100%; /* Make the image width 100% of the container */
+    height: 100%; /* Make the image height 100% of the container */
+    object-fit: cover; /* Maintain aspect ratio and cover the container */
+    transition: transform 0.3s ease;
+}
+
+.column:hover img {
+    transform: scale(1.1); /* Scale the image by 110% on hover */
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+}
