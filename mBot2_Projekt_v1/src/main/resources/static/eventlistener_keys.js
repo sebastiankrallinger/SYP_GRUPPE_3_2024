@@ -37,3 +37,9 @@ function sendDirection(direction) {
     xhr.open('POST', '/arrowControl?direction=' + direction, true);
     xhr.send();
 }
+function sendXY(xy) {
+    // AJAX-Anfrage an den Controller senden
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/joystickControl?xy=' + xy, true);
+    xhr.send();
+}

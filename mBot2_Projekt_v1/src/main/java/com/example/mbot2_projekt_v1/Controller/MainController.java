@@ -115,5 +115,27 @@ public class MainController {
         return "redirect:/mBot";
     }
 
+    @PostMapping("/joystickControl")
+    public String joystickControl(HttpServletRequest request){
+        try {
+            String xy = request.getParameter("xy");
+            //System.out.println(x);
+            //Befeht in byte-Array konvertieren
+            byte[] sendDataxy = xy.getBytes();
+
+
+            try (DatagramSocket socket = new DatagramSocket()) {
+                //Button Befehl direkt an den mBot senden
+                DatagramPacket packet = new DatagramPacket(sendDataxy, sendDataxy.length, InetAddress.getByName(mBotIP), 4000);
+
+                socket.send(packet);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //zurück zur Mainpage navigieren
+        return "redirect:/mBot";
+    }
+
 
 }

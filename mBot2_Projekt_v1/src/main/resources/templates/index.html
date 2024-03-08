@@ -49,18 +49,14 @@
 
     <!-- Joystick und Schieberegler für Handys -->
     <div id="phoneControls">
-        <hr>
-        <div id="status1" style="color: green;">Joystick 1</div>
-        <hr>
-        <div style="border: 1px solid green; width: 128px; position: absolute; left:10px; top:150px;">
+        <div style="border: 1px solid green; width: 150px; alignment: center; position: absolute; left:10px; top:200px;">
             <img src="/joystick-base.png"/>
             <div id="stick1" style="position: absolute; left:32px; top:32px;">
                 <img src="/joystick-green.png"/>
             </div>
         </div>
-        <input type="range" min="0" max="100" value="50">
     </div>
-
+    <input style="top:20px;" type="range" min="0" max="100" value="50">
     <form action="/selectDevice" method="get">
         <button type="submit">Select Devices</button>
     </form>
