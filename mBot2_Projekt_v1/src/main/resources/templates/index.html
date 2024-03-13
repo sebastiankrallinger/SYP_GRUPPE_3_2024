@@ -7,6 +7,58 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MBot2</title>
+    <style>
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked + .slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+    </style>
 </head>
 <body>
     <h1>Welcome to MBot2</h1>
@@ -21,11 +73,26 @@
     <form action="/sendCommand" method="get">
         <button type="submit">Select Devices</button>
     </form>
-    <form action="/suizidePrevention" method="get">
-        <button type="submit">Suizide Prevention</button>
+
+    <form id="toggleForm" action="/suizidePrevention" method="post">
+        <label class="switch" for="toggleSwitch">
+            <input type="checkbox" name="prevention" id="toggleSwitch" onchange="updateValue(this)" value="OFF">
+            <span class="slider"></span>
+        </label>
     </form>
 
     <p>Selected Device: <span th:text="${ipAdresse}"></span></p>
 
+    <script>
+        document.getElementById('toggleSwitch').addEventListener('change', function() {
+            var checkbox = this;
+            if (checkbox.checked) {
+                checkbox.value = "on";
+            } else {
+                checkbox.value = "off";
+            }
+            document.getElementById('toggleForm').submit();
+        });
+    </script>
 </body>
 </html>

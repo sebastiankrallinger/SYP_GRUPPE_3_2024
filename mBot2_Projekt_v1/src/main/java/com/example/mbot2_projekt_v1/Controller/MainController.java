@@ -61,6 +61,24 @@ public class MainController {
         }
     }
 
+    @PostMapping("/suizidePrevention")
+    public void sendSuizidePrevention(HttpServletRequest request){
+        try {
+            String prevention = request.getParameter("prevention");
+            System.out.println(prevention);
+            //Befeht in byte-Array konvertieren
+            byte[] sendData = prevention.getBytes();
+
+            try (DatagramSocket socket = new DatagramSocket()) {
+                DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
+
+                socket.send(packet);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     //Button Befehle an mBots senden
     @PostMapping("/buttonControl")
