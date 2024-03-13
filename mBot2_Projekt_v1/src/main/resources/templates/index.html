@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en"  xmlns:th="http://www.thymeleaf.org">
 <head>
+    <script src="/eventlistener_keys.js"></script>
+
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -60,6 +62,15 @@
     <input style="top:20px;" type="range" min="0" max="100" value="50">
 
     <form action="/selectDevice" method="get">
+    <form action="\buttonControl" method="post">
+        <button type="submit" name="direction" value="UP">Vorwärts</button>
+        <button type="submit" name="direction" value="DOWN">Rückwärts</button>
+        <button type="submit" name="direction" value="LEFT">Links</button>
+        <button type="submit" name="direction" value="RIGHT">Rechts</button>
+        <button type="submit" name="direction" value="STOP">Stop</button>
+    </form>
+    <hr>
+    <form action="/sendCommand" method="get">
         <button type="submit">Select Devices</button>
     </form>
 
