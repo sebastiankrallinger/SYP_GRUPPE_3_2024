@@ -8,6 +8,13 @@ html, body {
     background: linear-gradient(to bottom, #646464, #000000);
 }
 
+.text {
+    color: #ccebff;
+    font-family:'Courier New', Courier, monospace;
+    text-align: center; /* Center align the text */
+    position: relative; /* Position relative for absolute positioning of arrows */
+}
+
 .title {
     color: #fff;
     font-family:'Courier New', Courier, monospace;
