@@ -4,6 +4,38 @@ import ujson
 import os
 import mbuild
 import cyberpi
+import _thread
+
+distance = 50
+
+def ultrasonic_thread():
+    global distance
+    distance = cyberpi.ultrasonic2.get(index=1)
+    if distance < 35:
+        turn()
+    time.sleep(2)
+    ultrasonic_thread()
+
+def turn():
+    cyberpi.led.on(255, 0, 0)
+    #cyberpi.console.println("Stop")
+    cyberpi.mbot2.EM_stop(port = "all")
+    time.sleep(3)
+    cyberpi.mbot2.turn_left(speed = 25, run_time = 1.8)
+    cyberpi.led.off() #No Lights
+
+def drive(message):
+    #cyberpi.console.println("%s" % message)
+    if message == "UP":
+        cyberpi.mbot2.forward(speed=75)
+    if message == "DOWN":
+        cyberpi.mbot2.backward(speed=60)
+    if message == "LEFT":
+        cyberpi.mbot2.drive_power(40, -60)
+    if message == "RIGHT":
+        cyberpi.mbot2.drive_power(60, -40)
+    if message == "STOP":
+        cyberpi.mbot2.EM_stop(port="all")
 
 cyberpi.led.on(255, 0, 0)  # Red Lights
 cyberpi.network.config_sta("htljoh-public", "joh12345")  # Wlan Name & Password
@@ -37,23 +69,13 @@ while True:
         cyberpi.led.off() #No Lights
         cyberpi.console.clear()
         break
-
-
+    
 while True:
     # Daten empfangen (maximal 1024 Bytes)
     data, addr = s.recvfrom(1024)
-
     #empfangenen Daten verarbeiten
     received_message = data.decode('utf-8')
-    if received_message != "":
-        cyberpi.console.println("%s" % received_message)
-        if received_message == "UP":
-            cyberpi.mbot2.forward(speed=75)
-        if received_message == "DOWN":
-            cyberpi.mbot2.backward(speed=60)
-        if received_message == "LEFT":
-            cyberpi.mbot2.drive_power(40, -60)
-        if received_message == "RIGHT":
-            cyberpi.mbot2.drive_power(60, -40)
-        if received_message == "STOP":
-            cyberpi.mbot2.EM_stop(port="all")
+    
+    if received_message=="UP" or received_message=="DOWN" or received_message=="RIGHT" or received_message=="LEFT" or received_message=="STOP":
+        _thread.start_new_thread(ultrasonic_thread, ())
+        drive(received_message)
