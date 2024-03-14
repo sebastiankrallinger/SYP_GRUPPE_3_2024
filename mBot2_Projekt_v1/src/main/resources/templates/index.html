@@ -2,6 +2,7 @@
 <html lang="en"  xmlns:th="http://www.thymeleaf.org">
 <head>
     <script src="/eventlistener_keys.js"></script>
+
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,8 +17,8 @@
         <button type="submit" name="direction" value="RIGHT">Rechts</button>
         <button type="submit" name="direction" value="STOP">Stop</button>
     </form>
-
-    <form action="/selectDevice" method="get">
+    <hr>
+    <form action="/sendCommand" method="get">
         <button type="submit">Select Devices</button>
     </form>
 
