@@ -23,11 +23,17 @@ public class MainController {
     private String mBotIP = "kein mBot ausgewählt";
 
     //Mainpage mBot Website
-    @GetMapping("/mBot")
+    @GetMapping("/homepage")
     public String mainpage(Model model) {
+        return "homepage";
+    }
+
+    @GetMapping("/mBot")
+    public String choosePC(Model model) {
         model.addAttribute("ipAdresse", mBotIP);
         return "index";
     }
+
 
     @GetMapping("/sendCommand")
     public String sendCommand() {

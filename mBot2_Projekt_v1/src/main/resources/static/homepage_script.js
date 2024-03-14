@@ -1,5 +1,10 @@
-function handleClick(container) {
+function handleClickPC(container) {
     // Code to execute when the container is clicked
+    window.location.href = '/mBot';
+    console.log("Container clicked!");
+}
+
+function handleClickPhone(container) {
     console.log("Container clicked!");
 }
 
