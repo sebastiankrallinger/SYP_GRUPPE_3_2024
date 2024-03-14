@@ -47,7 +47,7 @@ public class MainController {
         try {
             System.out.println(mBotIP);
             String connected = "TRUE";
-            System.out.println(connected);
+            //System.out.println(connected);
             //Befeht in byte-Array konvertieren
             byte[] sendData = connected.getBytes();
 
@@ -62,7 +62,7 @@ public class MainController {
     }
 
     @PostMapping("/suizidePrevention")
-    public void sendSuizidePrevention(HttpServletRequest request){
+    public String sendSuizidePrevention(HttpServletRequest request){
         try {
             String prevention = request.getParameter("prevention");
             System.out.println(prevention);
@@ -77,6 +77,7 @@ public class MainController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return "redirect:/mBot";
     }
 
 

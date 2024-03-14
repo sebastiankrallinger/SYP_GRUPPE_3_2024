@@ -6,16 +6,17 @@ import mbuild
 import cyberpi
 import _thread
 
+thread_flag = False
 distance = 50
 
 def ultrasonic_thread():
     global distance
-    distance = cyberpi.ultrasonic2.get(index=1)
-    if distance < 35:
-        turn()
-    time.sleep(2)
-    ultrasonic_thread()
-
+    global thread_flag
+    while thread_flag:
+        distance = cyberpi.ultrasonic2.get(index=1)
+        if distance < 35:
+            turn()
+        time.sleep(2)
 def turn():
     cyberpi.led.on(255, 0, 0)
     #cyberpi.console.println("Stop")
@@ -27,7 +28,7 @@ def turn():
 def drive(message):
     #cyberpi.console.println("%s" % message)
     if message == "UP":
-        cyberpi.mbot2.forward(speed=75)
+        cyberpi.mbot2.forward(speed=85)
     if message == "DOWN":
         cyberpi.mbot2.backward(speed=60)
     if message == "LEFT":
@@ -75,7 +76,16 @@ while True:
     data, addr = s.recvfrom(1024)
     #empfangenen Daten verarbeiten
     received_message = data.decode('utf-8')
-    
-    if received_message=="UP" or received_message=="DOWN" or received_message=="RIGHT" or received_message=="LEFT" or received_message=="STOP":
+    if received_message=="ON":
+        cyberpi.console.println("Suizide-Prevention aktiv!")
+        thread_flag = True
         _thread.start_new_thread(ultrasonic_thread, ())
+        time.sleep(3)
+        cyberpi.console.clear()
+    elif received_message=="OFF":        
+        cyberpi.console.println("Suizide-Prevention deaktiviert!")
+        thread_flag = False
+        time.sleep(3)
+        cyberpi.console.clear()
+    elif received_message=="UP" or received_message=="DOWN" or received_message=="RIGHT" or received_message=="LEFT" or received_message=="STOP":
         drive(received_message)

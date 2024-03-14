@@ -75,24 +75,10 @@
     </form>
 
     <form id="toggleForm" action="/suizidePrevention" method="post">
-        <label class="switch" for="toggleSwitch">
-            <input type="checkbox" name="prevention" id="toggleSwitch" onchange="updateValue(this)" value="OFF">
-            <span class="slider"></span>
-        </label>
+        <button type="submit" name="prevention" value="OFF">Off</button>
+        <button type="submit" name="prevention" value="ON">ON</button>
     </form>
 
     <p>Selected Device: <span th:text="${ipAdresse}"></span></p>
-
-    <script>
-        document.getElementById('toggleSwitch').addEventListener('change', function() {
-            var checkbox = this;
-            if (checkbox.checked) {
-                checkbox.value = "on";
-            } else {
-                checkbox.value = "off";
-            }
-            document.getElementById('toggleForm').submit();
-        });
-    </script>
 </body>
 </html>
