@@ -16,7 +16,7 @@ def ultrasonic_thread():
         distance = cyberpi.ultrasonic2.get(index=1)
         if distance < 35:
             turn()
-        time.sleep(2)
+        time.sleep(1)
 def turn():
     cyberpi.led.on(255, 0, 0)
     #cyberpi.console.println("Stop")
@@ -77,14 +77,14 @@ while True:
     #empfangenen Daten verarbeiten
     received_message = data.decode('utf-8')
     if received_message=="ON":
-        cyberpi.console.println("Suizide-Prevention aktiv!")
         thread_flag = True
         _thread.start_new_thread(ultrasonic_thread, ())
+        cyberpi.console.println("Suizide-Prevention aktiv!")
         time.sleep(3)
         cyberpi.console.clear()
-    elif received_message=="OFF":        
-        cyberpi.console.println("Suizide-Prevention deaktiviert!")
+    elif received_message=="OFF":    
         thread_flag = False
+        cyberpi.console.println("Suizide-Prevention deaktiviert!")
         time.sleep(3)
         cyberpi.console.clear()
     elif received_message=="UP" or received_message=="DOWN" or received_message=="RIGHT" or received_message=="LEFT" or received_message=="STOP":
