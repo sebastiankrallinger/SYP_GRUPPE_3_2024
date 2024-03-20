@@ -108,13 +108,12 @@ class JoystickController
 }
 
 let joystick1 = new JoystickController("stick1", 64, 8);
-let joystick2 = new JoystickController("stick2", 64, 8);
 
 function update()
 {
-    document.getElementById("status1").innerText = "Joystick 1: " + JSON.stringify(joystick1.value);
-    document.getElementById("status2").innerText = "Joystick 2: " + JSON.stringify(joystick2.value);
-    sendXY(joystick1.value);
+    //document.getElementById("status1").innerText = "Joystick 1: " + JSON.stringify(joystick1.value);
+    console.log(JSON.stringify(joystick1.value));
+    sendXY(JSON.stringify(joystick1.value));
 }
 
 function loop()

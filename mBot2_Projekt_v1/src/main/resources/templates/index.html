@@ -8,74 +8,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MBot2</title>
 </head>
-<body class="noselect" onload="init();">
-    <h1>Welcome to MBot2</h1>
-    <script>
-        // JavaScript-Code, um den Gerätetyp zu überprüfen
-        function checkDevice() {
-            var screenWidth = window.innerWidth;
-            var pcContainer = document.getElementById("pcContainer");
-            var phoneControls = document.getElementById("phoneControls");
-            var deviceTypeMessage = document.getElementById("deviceType");
+    <body class="noselect" onload="init();">
+        <h1>Welcome to MBot2</h1>
+        <script>
+            // JavaScript-Code, um den Gerätetyp zu überprüfen
+            function checkDevice() {
+                var screenWidth = window.innerWidth;
+                var pcContainer = document.getElementById("pcContainer");
+                var phoneControls = document.getElementById("phoneControls");
+                var deviceTypeMessage = document.getElementById("deviceType");
 
-            if (screenWidth < 768) {
-                // Kleiner als 768px: wahrscheinlich ein Handy
-                pcContainer.style.display = "none";
-                phoneControls.style.display = "block";
-                deviceTypeMessage.innerHTML = "Du besuchst die Seite von einem Handy.";
-            } else {
-                // Größer oder gleich 768px: wahrscheinlich ein Desktop
-                pcContainer.style.display = "block";
-                phoneControls.style.display = "none";
-                deviceTypeMessage.innerHTML = "Du besuchst die Seite von einem Desktop-Computer.";
+                if (screenWidth < 768) {
+                    // Kleiner als 768px: wahrscheinlich ein Handy
+                    pcContainer.style.display = "none";
+                    phoneControls.style.display = "block";
+                    deviceTypeMessage.innerHTML = "Du besuchst die Seite von einem Handy.";
+                } else {
+                    // Größer oder gleich 768px: wahrscheinlich ein Desktop
+                    pcContainer.style.display = "block";
+                    phoneControls.style.display = "none";
+                    deviceTypeMessage.innerHTML = "Du besuchst die Seite von einem Desktop-Computer.";
+                }
             }
-        }
 
-        // Die Funktion beim Laden der Seite aufrufen
-        window.onload = checkDevice;
-    </script>
-    <p id="deviceType"></p>
+            // Die Funktion beim Laden der Seite aufrufen
+            window.onload = checkDevice;
+        </script>
+        <p id="deviceType"></p>
 
+        <!-- Container für die Buttons -->
+        <div id="pcContainer">
+            <form action="\pcContainer" method="post">
+                <button type="submit" name="direction" value="UP">Vorwärts</button>
+                <button type="submit" name="direction" value="DOWN">Rückwärts</button>
+                <button type="submit" name="direction" value="LEFT">Links</button>
+                <button type="submit" name="direction" value="RIGHT">Rechts</button>
+                <button type="submit" name="direction" value="STOP">Stop</button>
+            </form>
+        </div>
 
-
-    <!-- Container für die Buttons -->
-    <div id="pcContainer">
-        <form action="\pcContainer" method="post">
-            <button type="submit" name="direction" value="UP">Vorwärts</button>
-            <button type="submit" name="direction" value="DOWN">Rückwärts</button>
-            <button type="submit" name="direction" value="LEFT">Links</button>
-            <button type="submit" name="direction" value="RIGHT">Rechts</button>
-            <button type="submit" name="direction" value="STOP">Stop</button>
-        </form>
-    </div>
-
-    <!-- Joystick und Schieberegler für Handys -->
-    <div id="phoneControls">
-        <div style="border: 1px solid green; width: 150px; alignment: center; position: absolute; left:10px; top:200px;">
-            <img src="/joystick-base.png"/>
-            <div id="stick1" style="position: absolute; left:32px; top:32px;">
-                <img src="/joystick-green.png"/>
+        <!-- Joystick und Schieberegler für Handys -->
+        <div id="phoneControls">
+            <div style="border: 1px solid green; width: 150px; alignment: center; position: absolute; left:10px; top:200px;">
+                <img src="/joystick-base.png"/>
+                <div id="stick1" style="position: absolute; left:32px; top:32px;">
+                    <img src="/joystick-green.png"/>
+                </div>
             </div>
         </div>
-    </div>
 
-    <input style="top:20px;" type="range" min="0" max="100" value="50">
+        <input style="top:20px;" type="range" min="0" max="100" value="50">
 
-    <form action="/selectDevice" method="get">
-    <form action="\buttonControl" method="post">
-        <button type="submit" name="direction" value="UP">Vorwärts</button>
-        <button type="submit" name="direction" value="DOWN">Rückwärts</button>
-        <button type="submit" name="direction" value="LEFT">Links</button>
-        <button type="submit" name="direction" value="RIGHT">Rechts</button>
-        <button type="submit" name="direction" value="STOP">Stop</button>
-    </form>
-    <hr>
-    <form action="/sendCommand" method="get">
-        <button type="submit">Select Devices</button>
-    </form>
+        <form action="/selectDevice" method="get">
+            <form action="\buttonControl" method="post">
+                <button type="submit" name="direction" value="UP">Vorwärts</button>
+                <button type="submit" name="direction" value="DOWN">Rückwärts</button>
+                <button type="submit" name="direction" value="LEFT">Links</button>
+                <button type="submit" name="direction" value="RIGHT">Rechts</button>
+                <button type="submit" name="direction" value="STOP">Stop</button>
+            </form>
+            <hr>
+            <form action="/sendCommand" method="get">
+                <button type="submit">Select Devices</button>
+            </form>
 
-    <p>Selected Device: <span th:text="${ipAdresse}"></span></p>
-    <script src="/phone_joystick.js"></script>
-    <script src="/eventlistener_keys.js"></script>
-</body>
+            <p>Selected Device: <span th:text="${ipAdresse}"></span></p>
+            <script src="/phone_joystick.js"></script>
+            <script src="/eventlistener_keys.js"></script><hr>
+            </form>
+    </body>
 </html>

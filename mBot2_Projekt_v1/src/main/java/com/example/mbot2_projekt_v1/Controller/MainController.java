@@ -108,18 +108,20 @@ public class MainController {
     @PostMapping("/joystickControl")
     public String joystickControl(HttpServletRequest request){
         try {
-            String xy = request.getParameter("xy");
-            //System.out.println(x);
-            //Befeht in byte-Array konvertieren
-            byte[] sendDataxy = xy.getBytes();
+           if(mBotIP!="kein mBot ausgewählt") {
+               String xy = request.getParameter("xy");
+               //System.out.println(x);
+               //Befeht in byte-Array konvertieren
+               byte[] sendDataxy = xy.getBytes();
 
 
-            try (DatagramSocket socket = new DatagramSocket()) {
-                //Button Befehl direkt an den mBot senden
-                DatagramPacket packet = new DatagramPacket(sendDataxy, sendDataxy.length, InetAddress.getByName(mBotIP), 4000);
+               try (DatagramSocket socket = new DatagramSocket()) {
+                   //Button Befehl direkt an den mBot senden
+                   DatagramPacket packet = new DatagramPacket(sendDataxy, sendDataxy.length, InetAddress.getByName(mBotIP), 4000);
 
-                socket.send(packet);
-            }
+                   socket.send(packet);
+               }
+           }
         } catch (Exception e) {
             e.printStackTrace();
         }
