@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MBot2</title>
 </head>
-    <body class="noselect" onload="checkDevice();">
+    <body class="noselect" onload="init();">
         <script>
             function checkDevice() {
                 var screenWidth = window.innerWidth;
@@ -26,6 +26,7 @@
                     deviceTypeMessage.innerHTML = "Du besuchst die Seite von einem Desktop-Computer.";
                 }
             }
+            window.onload = checkDevice;
         </script>
         <h1>Welcome to MBot2</h1>
         <p id="deviceType"></p>
@@ -55,10 +56,10 @@
                 <button type="submit" name="direction" value="STOP">Stop</button>
             </form>
         </div>
-            <hr>
-            <form action="/sendCommand" method="get">
-                <button type="submit">Select Devices</button>
-            </form>
+        <hr>
+        <form action="/sendCommand" method="get">
+            <button type="submit">Select Devices</button>
+        </form>
         <script src="/eventlistener_keys.js"></script>
         <script src="/phone_joystick.js"></script>
     </body>

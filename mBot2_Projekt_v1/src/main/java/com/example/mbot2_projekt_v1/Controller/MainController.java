@@ -71,7 +71,7 @@ public class MainController {
     public String sendSuizidePrevention(HttpServletRequest request){
         try {
             String prevention = request.getParameter("prevention");
-            System.out.println(prevention);
+            //System.out.println(prevention);
             //Befeht in byte-Array konvertieren
             byte[] sendData = prevention.getBytes();
 
@@ -92,7 +92,7 @@ public class MainController {
     public String buttonControl(HttpServletRequest request){
         try {
             String direction = request.getParameter("direction");
-            System.out.println(direction);
+            //System.out.println(direction);
             //Befeht in byte-Array konvertieren
             byte[] sendData = direction.getBytes();
 
@@ -113,7 +113,7 @@ public class MainController {
     public String arrowControl(HttpServletRequest request){
         try {
             String direction = request.getParameter("direction");
-            System.out.println(direction);
+            //System.out.println(direction);
             //Befeht in byte-Array konvertieren
             byte[] sendData = direction.getBytes();
 
@@ -134,8 +134,7 @@ public class MainController {
     public String joystickControl(HttpServletRequest request){
         try {
            if(mBotIP!="kein mBot ausgewählt") {
-               String xy = request.getParameter("xy");
-               //System.out.println(x);
+               String xy = request.getParameter("direction");
                //Befeht in byte-Array konvertieren
                byte[] sendDataxy = xy.getBytes();
 
@@ -153,6 +152,4 @@ public class MainController {
         //zurück zur Mainpage navigieren
         return "redirect:/mBot";
     }
-
-
 }
