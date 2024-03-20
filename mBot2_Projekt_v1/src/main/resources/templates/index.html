@@ -3,26 +3,46 @@
 <head>
     <script src="/eventlistener_keys.js"></script>
 
+    <link rel="stylesheet" href="/index_style.css">
+
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MBot2</title>
 </head>
 <body>
-    <h1>Welcome to MBot2</h1>
-    <form action="\buttonControl" method="post">
-        <button type="submit" name="direction" value="UP">Vorwärts</button>
-        <button type="submit" name="direction" value="DOWN">Rückwärts</button>
-        <button type="submit" name="direction" value="LEFT">Links</button>
-        <button type="submit" name="direction" value="RIGHT">Rechts</button>
-        <button type="submit" name="direction" value="STOP">Stop</button>
-    </form>
-    <hr>
-    <form action="/sendCommand" method="get">
-        <button type="submit">Select Devices</button>
-    </form>
 
-    <p>Selected Device: <span th:text="${ipAdresse}"></span></p>
+<h1>Welcome to MBot2</h1>
 
+<div class="container">
+
+    <div class="selected-device">
+        <p>Selected Device: <span th:text="${ipAdresse}"></span></p>
+        <form action="/sendCommand" method="get">
+            <button type="submit">Select Devices</button>
+        </form>
+
+        <p>Suicide Prevention:</p>
+        <form id="toggleForm" action="/suizidePrevention" method="post">
+            <button type="submit" name="prevention" value="OFF" onclick="toggleState('OFF')">OFF</button>
+            <button type="submit" name="prevention" value="ON" onclick="toggleState('ON')">ON</button>
+        </form>
+
+    </div>
+
+    <div class="buttons-container">
+        <form action="\buttonControl" method="post" class="sub-container">
+            <button type="submit" name="direction" value="UP">Vorwärts</button>
+            <div class="middle-buttons">
+                <button type="submit" name="direction" value="LEFT">Links</button>
+                <button type="submit" name="direction" value="STOP">Stop</button>
+                <button type="submit" name="direction" value="RIGHT">Rechts</button>
+            </div>
+            <button type="submit" name="direction" value="DOWN">Rückwärts</button>
+        </form>
+    </div>
+</div>
+
+<script src="/suicide_prevention_buttons.js"></script>
 </body>
 </html>
