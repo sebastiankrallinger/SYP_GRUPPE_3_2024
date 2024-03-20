@@ -1,3 +1,4 @@
+
 import time
 import usocket
 import ujson
@@ -35,6 +36,10 @@ def drive(message):
         cyberpi.mbot2.drive_power(40, -60)
     if message == "RIGHT":
         cyberpi.mbot2.drive_power(60, -40)
+    if message == "LEFT_B":
+        cyberpi.mbot2.drive_power(-40, 60)
+    if message == "RIGHT_B":
+        cyberpi.mbot2.drive_power(-60, 40)
     if message == "STOP":
         cyberpi.mbot2.EM_stop(port="all")
 
@@ -87,5 +92,5 @@ while True:
         cyberpi.console.println("Suizide-Prevention deaktiviert!")
         time.sleep(3)
         cyberpi.console.clear()
-    elif received_message=="UP" or received_message=="DOWN" or received_message=="RIGHT" or received_message=="LEFT" or received_message=="STOP":
+    elif received_message=="UP" or received_message=="DOWN" or received_message=="RIGHT" or received_message=="RIGHT_B" or received_message=="LEFT" or received_message=="LEFT_B" or received_message=="STOP":
         drive(received_message)
