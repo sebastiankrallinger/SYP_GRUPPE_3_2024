@@ -41,14 +41,12 @@ function sendDirection(direction) {
     xhr.send();
 }
 function sendXY(joystick_coordinates) {
-    //console.log(joystick_coordinates);
+    //senden der richtung je nach x und y koordinaten
     let xy = [];
 
     if (joystick_coordinates.split(":").length > 1) {
         xy = joystick_coordinates.split(/[:,}]/);
-        console.log(xy[1] + " ----- " + xy[3]);
     }
-
 
     if (joystick_coordinates !== "") {
         if (xy[1] > -0.5 && xy[1] < 0.5 && xy[3] < -0.7) {
@@ -63,7 +61,7 @@ function sendXY(joystick_coordinates) {
                 sendDirection('DOWN');
             }
         }
-        else if (xy[3] > -0.5 && xy[3] < 0.5 && xy[1] < -0.7) {
+        else if (xy[3] > -0.7 && xy[3] < 0 && xy[1] < -0.7) {
             if(currentdir!="LEFT"){
                 currentdir="LEFT";
                 sendDirection('LEFT');
@@ -75,7 +73,7 @@ function sendXY(joystick_coordinates) {
                 sendDirection('LEFT_B');
             }
         }
-        else if (xy[3] > -0.5 && xy[3] < 0.5 && xy[1] > 0.7) {
+        else if (xy[3] > -0.7 && xy[3] < 0 && xy[1] > 0.7) {
             if(currentdir!="RIGHT"){
                 currentdir="RIGHT";
                 sendDirection('RIGHT');

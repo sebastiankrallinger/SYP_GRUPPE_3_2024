@@ -112,7 +112,6 @@ let joystick1 = new JoystickController("stick1", 64, 8);
 function update()
 {
     //document.getElementById("status1").innerText = "Joystick 1: " + JSON.stringify(joystick1.value);
-    console.log(JSON.stringify(joystick1.value));
     sendXY(JSON.stringify(joystick1.value));
 }
 
