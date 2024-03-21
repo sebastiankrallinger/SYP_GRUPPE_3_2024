@@ -32,8 +32,6 @@ document.addEventListener('keyup', function(event) {
         sendDirection('STOP', '/arrowControl?direction=');
     }
 });
-
-
 function sendDirection(direction, url) {
     // AJAX-Anfrage an den Controller senden
     var xhr = new XMLHttpRequest();

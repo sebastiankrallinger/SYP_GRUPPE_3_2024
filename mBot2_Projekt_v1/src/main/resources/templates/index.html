@@ -8,25 +8,6 @@
     <title>MBot2</title>
 </head>
 <body class="noselect" onload="init();">
-    <script>
-        function checkDevice() {
-            var screenWidth = window.innerWidth;
-            var pcContainer = document.getElementById("pcContainer");
-            var phoneControls = document.getElementById("phoneControls");
-            var deviceTypeMessage = document.getElementById("deviceType");
-
-            if (screenWidth < 768) {
-                // Kleiner als 768px: wahrscheinlich ein Handy
-                pcContainer.style.display = "none";
-                phoneControls.style.display = "block";
-            } else {
-                // Größer oder gleich 768px: wahrscheinlich ein Desktop
-                pcContainer.style.display = "block";
-                phoneControls.style.display = "none";
-            }
-        }
-        window.onload = checkDevice;
-    </script>
     <h1>Welcome to MBot2</h1>
     <div class="container">
         <div class="selected-device">
@@ -34,13 +15,11 @@
             <form action="/sendCommand" method="get">
                 <button type="submit">Select Devices</button>
             </form>
-
             <p>Suicide Prevention:</p>
             <form id="toggleForm" action="/suizidePrevention" method="post">
                 <button type="submit" name="prevention" value="OFF">OFF</button>
                 <button type="submit" name="prevention" value="ON">ON</button>
             </form>
-
         </div>
 
         <div id="pcContainer" class="buttons-container">
@@ -71,11 +50,6 @@
     </div>
     <script src="/eventlistener_keys.js"></script>
     <script src="/phone_joystick.js"></script>
-    <script>
-        function updateSliderValue(value) {
-            document.getElementById("sliderValue").textContent = value;
-        }
-    </script>
+    <script src="/website_functions.js"></script>
 </body>
-
 </html>
