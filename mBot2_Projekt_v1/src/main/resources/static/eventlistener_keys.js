@@ -85,8 +85,7 @@ function sendXY(joystick_coordinates) {
                 sendDirection('RIGHT_B', '/joystickControl?direction=');
             }
         }
-
-        else if (xy[1] === "0" && xy[3] === "0") {
+        else if (xy[1] === "0" && xy[3] === "0" && screen.width < 768) {
             if(currentdir!="STOP"){
                 currentdir="STOP";
                 sendDirection('STOP', '/joystickControl?direction=');
