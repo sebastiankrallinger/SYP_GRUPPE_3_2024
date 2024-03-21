@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en"  xmlns:th="http://www.thymeleaf.org">
 <head>
+    <script src="/eventlistener_keys.js"></script>
+
+    <link rel="stylesheet" href="/index_style.css">
+
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,12 +33,19 @@
             window.onload = checkDevice;
         </script>
         <h1>Welcome to MBot2</h1>
-        <p id="deviceType"></p>
-        <p>Selected Device: <span th:text="${ipAdresse}"></span></p>
-        <form id="toggleForm" action="/suizidePrevention" method="post">
-            <button type="submit" name="prevention" value="OFF">Off</button>
-            <button type="submit" name="prevention" value="ON">ON</button>
-        </form>
+        <div class="selected-device">
+            <p>Selected Device: <span th:text="${ipAdresse}"></span></p>
+            <form action="/sendCommand" method="get">
+                <button type="submit">Select Devices</button>
+            </form>
+    
+            <p>Suicide Prevention:</p>
+            <form id="toggleForm" action="/suizidePrevention" method="post">
+                <button type="submit" name="prevention" value="OFF">OFF</button>
+                <button type="submit" name="prevention" value="ON">ON</button>
+            </form>
+    
+        </div>
         <!-- Joystick und Schieberegler für Handys -->
         <div id="phoneControls">
             <div style="border: 1px solid green; width: 150px; alignment: center; position: absolute; left:10px; top:200px;">
@@ -47,13 +58,15 @@
 
         <input style="top:20px;" type="range" min="0" max="100" value="50">
 
-        <div id="pcContainer">
-            <form action="/buttonControl" method="post">
+        <div id="pcContainer" class="buttons-container">
+            <form action="\buttonControl" method="post" class="sub-container">
                 <button type="submit" name="direction" value="UP">Vorwärts</button>
+                <div class="middle-buttons">
+                    <button type="submit" name="direction" value="LEFT">Links</button>
+                    <button type="submit" name="direction" value="STOP">Stop</button>
+                    <button type="submit" name="direction" value="RIGHT">Rechts</button>
+                </div>
                 <button type="submit" name="direction" value="DOWN">Rückwärts</button>
-                <button type="submit" name="direction" value="LEFT">Links</button>
-                <button type="submit" name="direction" value="RIGHT">Rechts</button>
-                <button type="submit" name="direction" value="STOP">Stop</button>
             </form>
         </div>
         <hr>
