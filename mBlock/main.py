@@ -9,6 +9,7 @@ import _thread
 
 thread_flag = False
 distance = 50
+server_ip = "10.10.2.91"    #Server IP-Adresse (nur vorübergehend hard-codiert)
 
 def ultrasonic_thread():
     global distance
@@ -42,6 +43,40 @@ def drive(message):
         cyberpi.mbot2.drive_power(-60, 40)
     if message == "STOP":
         cyberpi.mbot2.EM_stop(port="all")
+        
+def send_sensor_data_to_server(ip):
+    server_ip = ip                      #Ip setzten
+    
+    sensor_data = {
+        "ultrasonic": cyberpi.ultrasonic2.get(index=1),
+        "light": cyberpi.light.get(),
+        "leds": {
+            "red": cyberpi.led.red,
+            "green": cyberpi.led.green,
+            "blue": cyberpi.led.blue
+        },
+        "motors": {
+            "left_speed": cyberpi.mbot2.get_motor_speed(port="M1"),
+            "right_speed": cyberpi.mbot2.get_motor_speed(port="M2")
+        },
+        "accelerometer": cyberpi.motion.get_acceleration(),
+        "display": cyberpi.display.read(),
+        "joystick": cyberpi.joystick.read()
+    }
+    
+    sensor_data_json = ujson.dumps(sensor_data)
+    try:
+        s = usocket.socket(usocket.AF_INET, usocket.SOCK_DGRAM)
+        server_addr = (server_ip, 4000)
+        cyberpi.console.println("Sensordaten wurden gesendet an:")
+        cyberpi.console.println(server_ip)
+
+        
+        s.sendto(sensor_data_json.encode('utf-8'), server_addr)
+        s.close()
+    except Exception as e:
+        print("Error sending sensor data:", e)
+
 
 cyberpi.led.on(255, 0, 0)  # Red Lights
 cyberpi.network.config_sta("htljoh-public", "joh12345")  # Wlan Name & Password
@@ -94,3 +129,4 @@ while True:
         cyberpi.console.clear()
     elif received_message=="UP" or received_message=="DOWN" or received_message=="RIGHT" or received_message=="RIGHT_B" or received_message=="LEFT" or received_message=="LEFT_B" or received_message=="STOP":
         drive(received_message)
+        

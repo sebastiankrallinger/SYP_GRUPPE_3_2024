@@ -152,4 +152,21 @@ public class MainController {
         //zurück zur Mainpage navigieren
         return "redirect:/mBot";
     }
+
+
+    @GetMapping("/getDevice")
+    public String getSensordata(@RequestParam("ipAdresse") String ipAdresseMbot, Model model){
+        System.out.println("Ausgewähltes Gerät: " + ipAdresseMbot);
+        mBotIP = ipAdresseMbot;
+        sendConnected();
+
+        String json = "";
+
+        if(mBotIP!="kein mBot ausgewählt")
+        {
+            //hier einfügen
+        }
+
+        return "redirect:/mBot";
+    }
 }
