@@ -19,12 +19,10 @@
                     // Kleiner als 768px: wahrscheinlich ein Handy
                     pcContainer.style.display = "none";
                     phoneControls.style.display = "block";
-                    deviceTypeMessage.innerHTML = "Du besuchst die Seite von einem Handy.";
                 } else {
                     // Größer oder gleich 768px: wahrscheinlich ein Desktop
                     pcContainer.style.display = "block";
                     phoneControls.style.display = "none";
-                    deviceTypeMessage.innerHTML = "Du besuchst die Seite von einem Desktop-Computer.";
                 }
             }
             window.onload = checkDevice;
