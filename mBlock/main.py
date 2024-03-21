@@ -9,15 +9,20 @@ import _thread
 
 thread_flag = False
 distance = 50
+suicide_prevention = False
 
 def ultrasonic_thread():
     global distance
     global thread_flag
+    global suicide_prevention
     while thread_flag:
         distance = cyberpi.ultrasonic2.get(index=1)
         if distance < 35:
+            suicide_prevention = True
             turn()
         time.sleep(1)
+        suicide_prevention = False
+        
 def turn():
     cyberpi.led.on(255, 0, 0)
     #cyberpi.console.println("Stop")
@@ -81,16 +86,17 @@ while True:
     data, addr = s.recvfrom(1024)
     #empfangenen Daten verarbeiten
     received_message = data.decode('utf-8')
-    if received_message=="ON":
-        thread_flag = True
-        _thread.start_new_thread(ultrasonic_thread, ())
-        cyberpi.console.println("Suizide-Prevention aktiv!")
-        time.sleep(3)
-        cyberpi.console.clear()
-    elif received_message=="OFF":    
-        thread_flag = False
-        cyberpi.console.println("Suizide-Prevention deaktiviert!")
-        time.sleep(3)
-        cyberpi.console.clear()
-    elif received_message=="UP" or received_message=="DOWN" or received_message=="RIGHT" or received_message=="RIGHT_B" or received_message=="LEFT" or received_message=="LEFT_B" or received_message=="STOP":
-        drive(received_message)
+    if suicide_prevention == False:
+        if received_message=="ON":
+            thread_flag = True
+            _thread.start_new_thread(ultrasonic_thread, ())
+            cyberpi.console.println("Suizide-Prevention aktiv!")
+            time.sleep(3)
+            cyberpi.console.clear()
+        elif received_message=="OFF":    
+            thread_flag = False
+            cyberpi.console.println("Suizide-Prevention deaktiviert!")
+            time.sleep(3)
+            cyberpi.console.clear()
+        elif received_message=="UP" or received_message=="DOWN" or received_message=="RIGHT" or received_message=="RIGHT_B" or received_message=="LEFT" or received_message=="LEFT_B" or received_message=="STOP":
+            drive(received_message)
