@@ -35,7 +35,18 @@
             window.onload = checkDevice;
         </script>
         <p id="deviceType"></p>
-        
+
+        <!-- Container für die Buttons -->
+        <div id="pcContainer">
+            <form action="\pcContainer" method="post">
+                <button type="submit" name="direction" value="UP">Vorwärts</button>
+                <button type="submit" name="direction" value="DOWN">Rückwärts</button>
+                <button type="submit" name="direction" value="LEFT">Links</button>
+                <button type="submit" name="direction" value="RIGHT">Rechts</button>
+                <button type="submit" name="direction" value="STOP">Stop</button>
+            </form>
+        </div>
+
         <!-- Joystick und Schieberegler für Handys -->
         <div id="phoneControls">
             <div style="border: 1px solid green; width: 150px; alignment: center; position: absolute; left:10px; top:200px;">
