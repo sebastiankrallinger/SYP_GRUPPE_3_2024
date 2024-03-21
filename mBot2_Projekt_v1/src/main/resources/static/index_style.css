@@ -29,19 +29,6 @@ h1 {
     justify-items: center;
 }
 
-/* Green color for ON button */
-/* Green color for ON button */
-.on {
-    background-color: green !important;
-    color: white;
-}
-
-/* Red color for OFF button */
-.off {
-    background-color: red !important;
-    color: white;
-}
-
 .middle-buttons {
     display: flex;
     flex-direction: row;
