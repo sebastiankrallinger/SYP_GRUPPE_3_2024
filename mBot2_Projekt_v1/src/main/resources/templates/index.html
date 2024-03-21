@@ -7,68 +7,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MBot2</title>
 </head>
-    <body class="noselect" onload="init();">
-        <script>
-            function checkDevice() {
-                var screenWidth = window.innerWidth;
-                var pcContainer = document.getElementById("pcContainer");
-                var phoneControls = document.getElementById("phoneControls");
-                var deviceTypeMessage = document.getElementById("deviceType");
+<body class="noselect" onload="init();">
+    <script>
+        function checkDevice() {
+            var screenWidth = window.innerWidth;
+            var pcContainer = document.getElementById("pcContainer");
+            var phoneControls = document.getElementById("phoneControls");
+            var deviceTypeMessage = document.getElementById("deviceType");
 
-                if (screenWidth < 768) {
-                    // Kleiner als 768px: wahrscheinlich ein Handy
-                    pcContainer.style.display = "none";
-                    phoneControls.style.display = "block";
-                    deviceTypeMessage.innerHTML = "Du besuchst die Seite von einem Handy.";
-                } else {
-                    // Größer oder gleich 768px: wahrscheinlich ein Desktop
-                    pcContainer.style.display = "block";
-                    phoneControls.style.display = "none";
-                    deviceTypeMessage.innerHTML = "Du besuchst die Seite von einem Desktop-Computer.";
-                }
+            if (screenWidth < 768) {
+                // Kleiner als 768px: wahrscheinlich ein Handy
+                pcContainer.style.display = "none";
+                phoneControls.style.display = "block";
+            } else {
+                // Größer oder gleich 768px: wahrscheinlich ein Desktop
+                pcContainer.style.display = "block";
+                phoneControls.style.display = "none";
             }
-            window.onload = checkDevice;
-        </script>
-        <h1>Welcome to MBot2</h1>
-        <div class="container">
-            <div class="selected-device">
-                <p>Selected Device: <span th:text="${ipAdresse}"></span></p>
-                <form action="/sendCommand" method="get">
-                    <button type="submit">Select Devices</button>
-                </form>
+        }
+        window.onload = checkDevice;
+    </script>
+    <h1>Welcome to MBot2</h1>
+    <div class="container">
+        <div class="selected-device">
+            <p>Selected Device: <span th:text="${ipAdresse}"></span></p>
+            <form action="/sendCommand" method="get">
+                <button type="submit">Select Devices</button>
+            </form>
 
-                <p>Suicide Prevention:</p>
-                <form id="toggleForm" action="/suizidePrevention" method="post">
-                    <button type="submit" name="prevention" value="OFF">OFF</button>
-                    <button type="submit" name="prevention" value="ON">ON</button>
-                </form>
+            <p>Suicide Prevention:</p>
+            <form id="toggleForm" action="/suizidePrevention" method="post">
+                <button type="submit" name="prevention" value="OFF">OFF</button>
+                <button type="submit" name="prevention" value="ON">ON</button>
+            </form>
 
-            </div>
-            <!-- Joystick und Schieberegler für Handys -->
-            <div id="phoneControls">
-                <div style="border: 1px solid green; width: 150px; alignment: center; position: absolute; left:10px; top:200px;">
-                    <img src="/joystick-base.png"/>
-                    <div id="stick1" style="position: absolute; left:32px; top:32px;">
-                        <img src="/joystick-green.png"/>
-                    </div>
+        </div>
+
+        <div id="pcContainer" class="buttons-container">
+            <form action="\buttonControl" method="post" class="sub-container">
+                <button type="submit" name="direction" value="UP">Vorwärts</button>
+                <div class="middle-buttons">
+                    <button type="submit" name="direction" value="LEFT">Links</button>
+                    <button type="submit" name="direction" value="STOP">Stop</button>
+                    <button type="submit" name="direction" value="RIGHT">Rechts</button>
+                </div>
+                <button type="submit" name="direction" value="DOWN">Rückwärts</button>
+                <div style="margin-top: 20px;">
+                    <input type="range" min="0" max="100" value="50" class="slider" id="myRange" oninput="updateSliderValue(this.value)">
+                    <span id="sliderValue">50</span>
+                </div>
+            </form>
+        </div>
+
+        <!-- Joystick und Schieberegler für Handys -->
+        <div id="phoneControls">
+            <div style="border: 1px solid green; width: 150px; alignment: center; position: absolute; left:10px; top:200px;">
+                <img src="/joystick-base.png"/>
+                <div id="stick1" style="position: absolute; left:32px; top:32px;">
+                    <img src="/joystick-green.png"/>
                 </div>
             </div>
-
-            <input style="top:20px;" type="range" min="0" max="100" value="50">
-
-            <div id="pcContainer" class="buttons-container">
-                <form action="\buttonControl" method="post" class="sub-container">
-                    <button type="submit" name="direction" value="UP">Vorwärts</button>
-                    <div class="middle-buttons">
-                        <button type="submit" name="direction" value="LEFT">Links</button>
-                        <button type="submit" name="direction" value="STOP">Stop</button>
-                        <button type="submit" name="direction" value="RIGHT">Rechts</button>
-                    </div>
-                    <button type="submit" name="direction" value="DOWN">Rückwärts</button>
-                </form>
-            </div>
         </div>
-        <script src="/eventlistener_keys.js"></script>
-        <script src="/phone_joystick.js"></script>
-    </body>
+    </div>
+    <script src="/eventlistener_keys.js"></script>
+    <script src="/phone_joystick.js"></script>
+    <script>
+        function updateSliderValue(value) {
+            document.getElementById("sliderValue").textContent = value;
+        }
+    </script>
+</body>
+
 </html>
