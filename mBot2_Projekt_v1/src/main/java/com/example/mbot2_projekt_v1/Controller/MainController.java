@@ -14,6 +14,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -21,7 +22,9 @@ import java.util.Objects;
 public class MainController {
     //IP Adresse des aktiven mBots
     private String mBotIP = "kein mBot ausgewählt";
-    private List<String> ips = new ArrayList<>();
+    //private List<String> ips = new ArrayList<>();
+    private HashMap<String, String> ips = new HashMap<>();
+    private int mbotId;
 
     //Mainpage mBot Website
     @GetMapping("/homepage")
@@ -44,8 +47,12 @@ public class MainController {
     @GetMapping("/getDevice")
     public String getDevice(@RequestParam("ipAdresse") String ipAdresseMbot){
         System.out.println("Ausgewähltes Gerät: " + ipAdresseMbot);
-        if (!ips.contains(ipAdresseMbot)){
+        /*if (!ips.contains(ipAdresseMbot)){
             ips.add(ipAdresseMbot);
+        }*/
+        if (!ips.containsKey(ipAdresseMbot)){
+            ips.put(ipAdresseMbot, "mBot" + mbotId);
+            mbotId++;
         }
         mBotIP = ipAdresseMbot;
         sendConnected();
