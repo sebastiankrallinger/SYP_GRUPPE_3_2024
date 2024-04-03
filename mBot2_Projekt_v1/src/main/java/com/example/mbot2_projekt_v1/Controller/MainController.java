@@ -113,8 +113,7 @@ public class MainController {
     public String arrowControl(HttpServletRequest request){
         try {
             String direction = request.getParameter("direction");
-            //System.out.println(direction);
-            //Befeht in byte-Array konvertieren
+
             byte[] sendData = direction.getBytes();
 
             try (DatagramSocket socket = new DatagramSocket()) {
@@ -154,19 +153,13 @@ public class MainController {
     }
 
 
-    @GetMapping("/getDevice")
-    public String getSensordata(@RequestParam("ipAdresse") String ipAdresseMbot, Model model){
-        System.out.println("Ausgewähltes Gerät: " + ipAdresseMbot);
-        mBotIP = ipAdresseMbot;
-        sendConnected();
-
-        String json = "";
-
-        if(mBotIP!="kein mBot ausgewählt")
-        {
-            //hier einfügen
-        }
-
+    @PostMapping("/getSonsordata")
+    public String getSensordata(){
+        System.out.println("GET SENSORDATA");
+        // SensorDataReceiver starten
+        SensordataReceiver sensordataReceiver = new SensordataReceiver(mBotIP);
+        Thread receiverThread = new Thread(sensordataReceiver);
+        receiverThread.start();
         return "redirect:/mBot";
     }
 }

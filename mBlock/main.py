@@ -44,12 +44,11 @@ def drive(message):
     if message == "STOP":
         cyberpi.mbot2.EM_stop(port="all")
         
-def send_sensor_data_to_server(ip):
-    server_ip = ip                      #Ip setzten
-    
-    sensor_data = {
+
+def send_sensor_data_to_server():
+    try:
+        sensor_data = {
         "ultrasonic": cyberpi.ultrasonic2.get(index=1),
-        "light": cyberpi.light.get(),
         "leds": {
             "red": cyberpi.led.red,
             "green": cyberpi.led.green,
@@ -62,11 +61,13 @@ def send_sensor_data_to_server(ip):
         "accelerometer": cyberpi.motion.get_acceleration(),
         "display": cyberpi.display.read(),
         "joystick": cyberpi.joystick.read()
-    }
+        }
     
-    sensor_data_json = ujson.dumps(sensor_data)
-    try:
+        sensor_data_json = ujson.dumps(sensor_data)
+        
         s = usocket.socket(usocket.AF_INET, usocket.SOCK_DGRAM)
+    
+        #Ip setzten
         server_addr = (server_ip, 4000)
         cyberpi.console.println("Sensordaten wurden gesendet an:")
         cyberpi.console.println(server_ip)
@@ -76,6 +77,8 @@ def send_sensor_data_to_server(ip):
         s.close()
     except Exception as e:
         print("Error sending sensor data:", e)
+
+
 
 
 cyberpi.led.on(255, 0, 0)  # Red Lights
@@ -129,4 +132,10 @@ while True:
         cyberpi.console.clear()
     elif received_message=="UP" or received_message=="DOWN" or received_message=="RIGHT" or received_message=="RIGHT_B" or received_message=="LEFT" or received_message=="LEFT_B" or received_message=="STOP":
         drive(received_message)
-        
+    elif received_message == "TRUE" or received_message == "FALSE":
+        cyberpi.led.on(0,255,0)
+    else:
+        server_ip = received_message
+        cyberpi.console.println("Server IP:")
+        cyberpi.console.println(server_ip)
+        send_sensor_data_to_server()
