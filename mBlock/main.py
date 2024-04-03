@@ -11,6 +11,12 @@ thread_flag = False
 distance = 50
 suicide_prevention = False
 
+def connect():
+    cyberpi.led.on(0,255,0)
+    cyberpi.console.clear()
+    cyberpi.console.println("Mbot bereit zum Steuern")
+    time.sleep(3)
+
 def ultrasonic_thread():
     global distance
     global thread_flag
@@ -71,14 +77,11 @@ while True:
             #empfangenen Daten verarbeiten
             recieved_message = data.decode('utf-8')
             if recieved_message == "TRUE":
-                cyberpi.led.on(0,255,0)
-                cyberpi.console.clear()
-                cyberpi.console.println("Mbot bereit zum Steuern")
-                time.sleep(3)
+                connect()
                 break
-            
+        
         cyberpi.led.off() #No Lights
-        cyberpi.console.clear()
+        cyberpi.console.clear()        
         break
     
 while True:
