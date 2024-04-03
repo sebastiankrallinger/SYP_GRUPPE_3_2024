@@ -29,11 +29,19 @@
         </script>
         <h1>Welcome to MBot2</h1>
         <div class="container">
-            <div class="selected-device">
+            <div class="dropdown">
                 <p>Selected Device: <span th:text="${ipAdresse}"></span></p>
                 <form action="/sendCommand" method="get">
                     <button type="submit">Select Devices</button>
                 </form>
+                <div class="dropdown">
+                    <button class="dropbtn">Dropdown</button>
+                    <div class="dropdown-content">
+                        <a href="#">Link 1</a>
+                        <a href="#">Link 2</a>
+                        <a href="#">Link 3</a>
+                    </div>
+                </div>
 
                 <p>Suicide Prevention:</p>
                 <form id="toggleForm" action="/suizidePrevention" method="post">
