@@ -32,13 +32,13 @@
                 </div>
                 <button type="submit" name="direction" value="DOWN">Rückwärts</button>
                 <div style="margin-top: 20px;">
-                    <input type="range" min="0" max="100" value="50" class="slider" id="myRange" oninput="updateSliderValue(this.value)">
-                    <span id="sliderValue">50</span>
+                    <input type="range" min="0" max="100" value="${speed}" class="slider" id="myRange" oninput="updateSliderValue(this.value)">
+                    <span id="sliderValue">${speed}</span>
                 </div>
             </form>
         </div>
 
-        <!-- Joystick und Schieberegler für Handys -->
+        <!-- Joystick für Handys -->
         <div id="phoneControls">
             <div style="border: 1px solid green; width: 150px; alignment: center; position: absolute; left:10px; top:200px;">
                 <img src="/joystick-base.png"/>

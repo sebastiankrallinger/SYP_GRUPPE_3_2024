@@ -17,5 +17,9 @@ function checkDevice() {
 window.onload = checkDevice;
 
 function updateSliderValue(value) {
+    console.log(value);
     document.getElementById("sliderValue").textContent = value;
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/speedControl?speed=' + value, true);
+    xhr.send();
 }

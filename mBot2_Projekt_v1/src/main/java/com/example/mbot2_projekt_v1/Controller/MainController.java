@@ -21,6 +21,9 @@ import java.util.Objects;
 public class MainController {
     //IP Adresse des aktiven mBots
     private String mBotIP = "kein mBot ausgewählt";
+    private int speed=0;
+
+
 
     //Mainpage mBot Website
     @GetMapping("/homepage")
@@ -146,6 +149,27 @@ public class MainController {
                    socket.send(packet);
                }
            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //zurück zur Mainpage navigieren
+        return "redirect:/mBot";
+    }
+
+    @PostMapping("/speedControl")
+    public String speedControl(HttpServletRequest request){
+        try {
+            speed = Integer.parseInt(request.getParameter("speed"));
+            //System.out.println(direction);
+            //Befeht in byte-Array konvertieren
+            byte[] sendData = String.valueOf(speed).getBytes();
+
+            try (DatagramSocket socket = new DatagramSocket()) {
+                //Button Befehl direkt an den mBot senden
+                DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
+
+                socket.send(packet);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
