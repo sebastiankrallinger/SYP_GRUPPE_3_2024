@@ -42,7 +42,7 @@ public class MainController {
     }
 
     @GetMapping("/getDevice")
-    public String getDevice(@RequestParam("ipAdresse") String ipAdresseMbot, Model model){
+    public String getDevice(@RequestParam("ipAdresse") String ipAdresseMbot){
         System.out.println("Ausgewähltes Gerät: " + ipAdresseMbot);
         if (!ips.contains(ipAdresseMbot)){
             ips.add(ipAdresseMbot);

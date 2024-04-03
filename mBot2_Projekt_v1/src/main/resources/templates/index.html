@@ -30,14 +30,14 @@
         <h1>Welcome to MBot2</h1>
         <div class="container">
             <div class="selected-device">
-                <p>Selected Device: <span th:text="${ipAdresse}"></span></p>
+                <p>Selected Device: <span id="selectedDevice" th:text="${ipAdresse}"></span></p>
                 <form action="/sendCommand" method="get">
                     <button type="submit">Select Devices</button>
                 </form>
 
-                <div class="dropdown">
+                <div class="dropdown" onclick="connect(event)">
                     <button class="dropbtn">Dropdown</button>
-                    <div class="dropdown-content">
+                    <div id="dropdown-content" class="dropdown-content">
                         <a th:each="ipAdresse : ${ipAdresses}" th:text="${ipAdresse}"></a>
                     </div>
                 </div>
@@ -75,5 +75,6 @@
         </div>
         <script src="/eventlistener_keys.js"></script>
         <script src="/phone_joystick.js"></script>
+        <script src="/index.js"></script>
     </body>
 </html>
