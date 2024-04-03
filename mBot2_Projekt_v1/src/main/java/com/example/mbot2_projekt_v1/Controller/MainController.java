@@ -21,6 +21,7 @@ import java.util.Objects;
 public class MainController {
     //IP Adresse des aktiven mBots
     private String mBotIP = "kein mBot ausgewählt";
+    private List<String> ips = new ArrayList<>();
 
     //Mainpage mBot Website
     @GetMapping("/homepage")
@@ -29,11 +30,11 @@ public class MainController {
     }
 
     @GetMapping("/mBot")
-    public String choosePC(Model model) {
+    public String ips(Model model) {
+        model.addAttribute("ipAdresses", ips);
         model.addAttribute("ipAdresse", mBotIP);
         return "index";
     }
-
 
     @GetMapping("/sendCommand")
     public String sendCommand() {
@@ -43,6 +44,9 @@ public class MainController {
     @GetMapping("/getDevice")
     public String getDevice(@RequestParam("ipAdresse") String ipAdresseMbot, Model model){
         System.out.println("Ausgewähltes Gerät: " + ipAdresseMbot);
+        if (!ips.contains(ipAdresseMbot)){
+            ips.add(ipAdresseMbot);
+        }
         mBotIP = ipAdresseMbot;
         sendConnected();
         return "redirect:/mBot";
