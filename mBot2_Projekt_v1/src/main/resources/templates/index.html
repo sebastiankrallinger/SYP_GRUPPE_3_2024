@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <title>MBot2</title>
 </head>
     <body class="noselect" onload="init();">
@@ -62,14 +63,14 @@
             <input style="top:20px;" type="range" min="0" max="100" value="50">
 
             <div id="pcContainer" class="buttons-container">
-                <form action="\buttonControl" method="post" class="sub-container">
-                    <button type="submit" name="direction" value="UP">Vorwärts</button>
+                <form class="sub-container">
+                    <button id="driveBtnU" type="button" name="direction" value="UP">Vorwärts</button>
                     <div class="middle-buttons">
-                        <button type="submit" name="direction" value="LEFT">Links</button>
-                        <button type="submit" name="direction" value="STOP">Stop</button>
-                        <button type="submit" name="direction" value="RIGHT">Rechts</button>
+                        <button id="driveBtnL" name="direction" value="LEFT">Links</button>
+                        <button id="driveBtnS" name="direction" value="STOP">Stop</button>
+                        <button id="driveBtnR" name="direction" value="RIGHT">Rechts</button>
                     </div>
-                    <button type="submit" name="direction" value="DOWN">Rückwärts</button>
+                    <button id="driveBtnD" name="direction" value="DOWN">Rückwärts</button>
                 </form>
             </div>
         </div>
