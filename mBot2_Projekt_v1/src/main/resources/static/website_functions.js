@@ -16,9 +16,17 @@ function checkDevice() {
 }
 window.onload = checkDevice;
 
-function updateSliderValue(value) {
+function updateSliderValue(value, id) {
     console.log(value);
-    document.getElementById("sliderValue").textContent = value;
+    if (id=="myRange")
+    {
+        document.getElementById("sliderValue").textContent = value;
+    }
+    else if (id=="myRange2")
+    {
+        document.getElementById("sliderValue2").textContent = value;
+    }
+
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/speedControl?speed=' + value, true);
     xhr.send();

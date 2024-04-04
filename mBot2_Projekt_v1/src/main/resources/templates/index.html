@@ -32,8 +32,8 @@
                 </div>
                 <button type="submit" name="direction" value="DOWN">Rückwärts</button>
                 <div style="margin-top: 20px;">
-                    <input type="range" min="0" max="100" value="${speed}" class="slider" id="myRange" oninput="updateSliderValue(this.value)">
-                    <span id="sliderValue">${speed}</span>
+                    <input type="range" min="0" max="100" value="${speed}" class="slider" id="myRange" oninput="updateSliderValue(this.value, this.id)">
+                    <span id="sliderValue">50</span>
                 </div>
             </form>
         </div>
@@ -44,6 +44,10 @@
                 <img src="/joystick-base.png"/>
                 <div id="stick1" style="position: absolute; left:32px; top:32px;">
                     <img src="/joystick-green.png"/>
+                </div>
+                <div style="margin-top: 20px;">
+                    <input type="range" min="0" max="100" value="${speed}" class="slider" id="myRange2" oninput="updateSliderValue(this.value, this.id)">
+                    <span id="sliderValue2">50</span>
                 </div>
             </div>
         </div>
