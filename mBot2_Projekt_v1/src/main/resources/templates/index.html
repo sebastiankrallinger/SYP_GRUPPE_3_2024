@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en"  xmlns:th="http://www.thymeleaf.org">
-<head>
-    <link rel="stylesheet" href="/index_style.css">
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <title>MBot2</title>
-</head>
-    <body class="noselect" onload="init();">
+    <head>
+        <link rel="stylesheet" href="/index_style.css">
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <title>MBot2</title>
+    </head>
+    <body class="noselect" onload="checkDevice()">
         <h1>Welcome to MBot2</h1>
         <div class="container">
             <div class="selected-device">
@@ -43,7 +43,10 @@
                         <input type="range" min="0" max="100" value="${speed}" class="slider" id="myRange2" oninput="updateSliderValue(this.value, this.id)">
                         <span id="sliderValue2">50</span>
                     </div>
-                <div id="pcContainer" class="buttons-container">
+                </div>
+            </div>
+
+            <div id="pcContainer" class="buttons-container">
                     <form class="sub-container">
                         <button id="driveBtnU" type="button" name="direction">Vorwärts</button>
                         <div class="middle-buttons">
@@ -57,10 +60,10 @@
                             <span id="sliderValue">50</span>
                         </div>
                     </form>
-            </div>
+                </div>
         </div>
         <script src="/eventlistener_keys.js"></script>
         <script src="/phone_joystick.js"></script>
-        <script src="/website_functions.js"></script>
+        <script src="/index.js"></script>
     </body>
 </html>

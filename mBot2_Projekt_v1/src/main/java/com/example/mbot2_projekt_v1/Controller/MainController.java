@@ -20,7 +20,7 @@ public class MainController {
     private HashMap<String, String> ips = new HashMap<>();
     private List<String> s = new ArrayList<>();
     private int mbotId = 1;
-    private int speed=0;
+    private int speed=100;
 
 
 
@@ -174,16 +174,19 @@ public class MainController {
     @PostMapping("/speedControl")
     public String speedControl(HttpServletRequest request){
         try {
-            speed = Integer.parseInt(request.getParameter("speed"));
-            //System.out.println(direction);
-            //Befeht in byte-Array konvertieren
-            byte[] sendData = String.valueOf(speed).getBytes();
+            int input = Integer.parseInt(request.getParameter("speed"));
+            if (input - speed > 5 || input - speed < -5 ){
+                speed = input;
+                //System.out.println(speed);
+                //Befeht in byte-Array konvertieren
+                byte[] sendData = String.valueOf(speed).getBytes();
 
-            try (DatagramSocket socket = new DatagramSocket()) {
-                //Button Befehl direkt an den mBot senden
-                DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
+                try (DatagramSocket socket = new DatagramSocket()) {
+                    //Button Befehl direkt an den mBot senden
+                    DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
 
-                socket.send(packet);
+                    socket.send(packet);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

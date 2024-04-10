@@ -12,12 +12,11 @@ suicide_prevention = False
 slider_speed=0
 direction_before="STOP"
 selected_speed=50
-speed_before=0
 
 def define_speed(speed_value):
     global slider_speed
     slider_speed = speed_value * 2
-    cyberpi.console.println(slider_speed)
+    #cyberpi.console.println(slider_speed)
 
 def connect():
     cyberpi.led.on(0,255,0)
@@ -31,7 +30,7 @@ def ultrasonic_thread():
     global suicide_prevention
     while thread_flag:
         distance = cyberpi.ultrasonic2.get(index=1)
-        if distance < 35:
+        if distance < 50:
             suicide_prevention = True
             turn()
         time.sleep(1)
@@ -124,6 +123,4 @@ while True:
             drive(received_message)
         if 0 <= selected_speed <= 100:
             define_speed(selected_speed)
-            if(selected_speed - speed_before > 5 or selected_speed - speed_before < -5):
-                drive(direction_before)
-                speed_before=selected_speed
+            drive(direction_before)
