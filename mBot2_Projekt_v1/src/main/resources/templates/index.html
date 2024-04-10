@@ -14,7 +14,6 @@
                 var screenWidth = window.innerWidth;
                 var pcContainer = document.getElementById("pcContainer");
                 var phoneControls = document.getElementById("phoneControls");
-                var deviceTypeMessage = document.getElementById("deviceType");
 
                 if (screenWidth < 768) {
                     // Kleiner als 768px: wahrscheinlich ein Handy
@@ -45,8 +44,8 @@
 
                 <p>Suicide Prevention:</p>
                 <form id="toggleForm" action="/suizidePrevention" method="post">
-                    <button type="submit" name="prevention" value="OFF">OFF</button>
-                    <button type="submit" name="prevention" value="ON">ON</button>
+                    <button id="suicideOff" type="button" name="prevention">OFF</button>
+                    <button id="suicideOn" type="button" name="prevention">ON</button>
                 </form>
 
             </div>
@@ -64,13 +63,13 @@
 
             <div id="pcContainer" class="buttons-container">
                 <form class="sub-container">
-                    <button id="driveBtnU" type="button" name="direction" value="UP">Vorwärts</button>
+                    <button id="driveBtnU" type="button" name="direction">Vorwärts</button>
                     <div class="middle-buttons">
-                        <button id="driveBtnL" name="direction" value="LEFT">Links</button>
-                        <button id="driveBtnS" name="direction" value="STOP">Stop</button>
-                        <button id="driveBtnR" name="direction" value="RIGHT">Rechts</button>
+                        <button id="driveBtnL" type="button" name="direction">Links</button>
+                        <button id="driveBtnS" type="button" name="direction">Stop</button>
+                        <button id="driveBtnR" type="button" name="direction">Rechts</button>
                     </div>
-                    <button id="driveBtnD" name="direction" value="DOWN">Rückwärts</button>
+                    <button id="driveBtnD" type="button" name="direction">Rückwärts</button>
                 </form>
             </div>
         </div>

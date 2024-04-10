@@ -6,10 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -78,10 +76,10 @@ public class MainController {
         }
     }
 
-    @PostMapping("/suizidePrevention")
-    public String sendSuizidePrevention(HttpServletRequest request){
+    @PostMapping("/suicidePrevention")
+    @ResponseBody
+    public void sendSuicidePrevention(@RequestParam("prevention") String prevention){
         try {
-            String prevention = request.getParameter("prevention");
             //System.out.println(prevention);
             //Befeht in byte-Array konvertieren
             byte[] sendData = prevention.getBytes();
@@ -94,12 +92,12 @@ public class MainController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "redirect:/mBot";
     }
 
 
     //Button Befehle an mBots senden
     @PostMapping("/buttonControl")
+    @ResponseBody
     public void buttonControl(@RequestParam("direction") String direction){
         try {
             //System.out.println(direction);
@@ -115,12 +113,11 @@ public class MainController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //zurück zur Mainpage navigieren
-        //return "redirect:/mBot";
     }
 
     @PostMapping("/arrowControl")
-    public String arrowControl(HttpServletRequest request){
+    @ResponseBody
+    public void arrowControl(HttpServletRequest request){
         try {
             String direction = request.getParameter("direction");
             //System.out.println(direction);
@@ -136,12 +133,11 @@ public class MainController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //zurück zur Mainpage navigieren
-        return "redirect:/mBot";
     }
 
     @PostMapping("/joystickControl")
-    public String joystickControl(HttpServletRequest request){
+    @ResponseBody
+    public void joystickControl(HttpServletRequest request){
         try {
            if(mBotIP!="kein mBot ausgewählt") {
                String xy = request.getParameter("direction");
@@ -159,8 +155,6 @@ public class MainController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //zurück zur Mainpage navigieren
-        return "redirect:/mBot";
     }
 
     private List<String> mapToString(){
