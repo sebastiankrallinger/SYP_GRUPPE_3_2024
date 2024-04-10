@@ -20,7 +20,7 @@ public class SensordataReceiver implements Runnable {
         //IP SENDEN
         running = true;
         try {
-            if(mBotIP!="kein mBot ausgewählt") {
+            if(mBotIP != "kein mBot ausgewählt") {
                 // Ermittle die lokale IP-Adresse des Systems
                 InetAddress localhost = InetAddress.getLocalHost();
                 String ip = localhost.getHostAddress();
@@ -42,12 +42,14 @@ public class SensordataReceiver implements Runnable {
         //SENSORDATEN EMPFANGEN
         try {
             System.out.println("DATEN EMPFANGEN");
-            int port = 4000; // Port, auf dem der mBot die Daten sendet
+            int port = 4000;
             DatagramSocket socket = new DatagramSocket(port);
 
             byte[] buffer = new byte[1024];
             DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
             socket.receive(packet);
+
+            //Daten bekommen
             String receivedData = new String(packet.getData(), 0, packet.getLength());
             processSensorData(receivedData);
 

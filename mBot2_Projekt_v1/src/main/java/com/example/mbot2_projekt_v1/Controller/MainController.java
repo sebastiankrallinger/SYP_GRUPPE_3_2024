@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.BufferedReader;
@@ -153,13 +154,25 @@ public class MainController {
     }
 
 
-    @PostMapping("/getSonsordata")
-    public String getSensordata(){
-        System.out.println("GET SENSORDATA");
+    @PostMapping("/getSensordata")
+    public String getSensordata(@RequestBody String sensorData) {
+        System.out.println("Empfangener Sensor-String: " + sensorData);
+
+        String s = "SENSOR";
+        byte[] sendDataxy = s.getBytes();
+
+        try (DatagramSocket socket = new DatagramSocket()) {
+            //Button Befehl direkt an den mBot senden
+            DatagramPacket packet = new DatagramPacket(sendDataxy, sendDataxy.length, InetAddress.getByName(mBotIP), 4000);
+            socket.send(packet);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         // SensorDataReceiver starten
-        SensordataReceiver sensordataReceiver = new SensordataReceiver(mBotIP);
-        Thread receiverThread = new Thread(sensordataReceiver);
-        receiverThread.start();
-        return "redirect:/mBot";
+        //SensordataReceiver sensordataReceiver = new SensordataReceiver();
+        //Thread receiverThread = new Thread(sensordataReceiver);
+        //receiverThread.start();
+        return sensorData;
     }
 }

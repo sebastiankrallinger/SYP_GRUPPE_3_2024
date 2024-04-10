@@ -1,3 +1,4 @@
+import requests
 import time
 import usocket
 import ujson
@@ -8,7 +9,6 @@ import _thread
 
 thread_flag = False
 distance = 50
-server_ip = "null"
 
 def ultrasonic_thread():
     global distance
@@ -46,23 +46,31 @@ def drive(message):
 
 def send_sensor_data_to_server():
     cyberpi.console.println("send_sensor_data_to_server()")
+    distance = cyberpi.ultrasonic2.get(index=1)
+    light = cyberpi.light_sensor.get(index=1)
+    quad_rgb = cyberpi.light_sensor.get(index=1)
     
-    sensor_data =  f"{cyberpi.ultrasonic2.get(index=1)}"         #Ultrasonic
-    sensor_data += f"\n{cyberpi.light_sensor.get(index=1)}"     #Light
-    sensor_data += f"\n{cyberpi.light_sensor.get(index=1)}"     #Quad RGB Sensor
-    sensor_data += f"\n{cyberpi.led.red}"       #R
-    sensor_data += f"\n{cyberpi.led.green}"     #G
-    sensor_data += f"\n{cyberpi.led.blue}"      #B
+    #sensor_data =  f'{distance}'        
+    #sensor_data = f'\n{light}'     
+    #sensor_data = f'\n{quad_rgb}'              #Quad RGB Sensor
+    #sensor_data += f'\n{cyberpi.led.red}'       #R
+    #sensor_data += f'\n{cyberpi.led.green}'     #G
+    #sensor_data += f'\n{cyberpi.led.blue}'      #B
 
-    cyberpi.console.println(sensor_data)
+    cyberpi.console.println(quad_rgb)
     s = usocket.socket(usocket.AF_INET, usocket.SOCK_DGRAM)
     
-    #Ip setzten
-    server_addr = (server_ip, 4000)
-    cyberpi.console.println("Sensordaten wurden gesendet an:")
-    cyberpi.console.println(server_ip)
-    s.sendto(sensor_data.encode('utf-8'), server_addr)
-    s.close()
+    data = quad_rgb
+    url = 'http://localhost:8080/getSensordata'
+    try:
+        response = requests.post(url, data=data)
+        # Überprüfen des Antwortstatus
+        if response.status_code == 200:
+            print("Daten erfolgreich gesendet.")
+        else:
+            print("Fehler beim Senden der Daten. Statuscode:", response.status_code)
+    except requests.exceptions.RequestException as e:
+        print("Fehler beim Senden der Daten:", e)
 
 
 
@@ -120,8 +128,5 @@ while True:
         drive(received_message)
     elif received_message == "TRUE" or received_message == "FALSE":
         cyberpi.led.on(0,255,0)
-    else:
-        server_ip = received_message
-        cyberpi.console.println("Server IP:")
-        cyberpi.console.println(server_ip)
+    elif received_message == "SENSOR":
         send_sensor_data_to_server()
