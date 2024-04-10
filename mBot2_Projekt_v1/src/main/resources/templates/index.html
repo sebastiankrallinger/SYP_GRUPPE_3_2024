@@ -1,82 +1,114 @@
 <!DOCTYPE html>
-<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <link rel="stylesheet" href="/index_style.css">
+    <script src="/user_identifier.js"></script>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MBot2</title>
 </head>
-    <body class="noselect" onload="init();">
-        <script>
-            function checkDevice() {
-                var screenWidth = window.innerWidth;
-                var pcContainer = document.getElementById("pcContainer");
-                var phoneControls = document.getElementById("phoneControls");
-                var deviceTypeMessage = document.getElementById("deviceType");
 
-                if (screenWidth < 768) {
-                    // Kleiner als 768px: wahrscheinlich ein Handy
-                    pcContainer.style.display = "none";
-                    phoneControls.style.display = "block";
-                    deviceTypeMessage.innerHTML = "Du besuchst die Seite von einem Handy.";
-                } else {
-                    // Größer oder gleich 768px: wahrscheinlich ein Desktop
-                    pcContainer.style.display = "block";
-                    phoneControls.style.display = "none";
-                    deviceTypeMessage.innerHTML = "Du besuchst die Seite von einem Desktop-Computer.";
-                }
-            }
-            window.onload = checkDevice;
-        </script>
-        <h1>Welcome to MBot2</h1>
-        <div class="container">
-            <div class="selected-device">
-                <p>Selected Device: <span th:text="${ipAdresse}"></span></p>
-                <form action="/sendCommand" method="get">
-                    <button type="submit">Select Devices</button>
-                </form>
-                <div class="dropdown">
-                    <button class="dropbtn">Dropdown</button>
-                    <div class="dropdown-content">
-                        <a href="#">Link 1</a>
-                        <a href="#">Link 2</a>
-                        <a href="#">Link 3</a>
-                    </div>
-                </div>
+<body>
+<div class="background"></div>
 
-                <p>Suicide Prevention:</p>
-                <form id="toggleForm" action="/suizidePrevention" method="post">
-                    <button type="submit" name="prevention" value="OFF">OFF</button>
-                    <button type="submit" name="prevention" value="ON">ON</button>
-                </form>
+<div class="content">
+    <div class="noselect" onload="init();">
 
-            </div>
-            <!-- Joystick und Schieberegler für Handys -->
-            <div id="phoneControls">
-                <div style="border: 1px solid green; width: 150px; alignment: center; position: absolute; left:10px; top:200px;">
-                    <img src="/joystick-base.png"/>
-                    <div id="stick1" style="position: absolute; left:32px; top:32px;">
-                        <img src="/joystick-green.png"/>
-                    </div>
-                </div>
-            </div>
-
-            <input style="top:20px;" type="range" min="0" max="100" value="50">
-
-            <div id="pcContainer" class="buttons-container">
-                <form action="\buttonControl" method="post" class="sub-container">
-                    <button type="submit" name="direction" value="UP">Vorwärts</button>
-                    <div class="middle-buttons">
-                        <button type="submit" name="direction" value="LEFT">Links</button>
-                        <button type="submit" name="direction" value="STOP">Stop</button>
-                        <button type="submit" name="direction" value="RIGHT">Rechts</button>
-                    </div>
-                    <button type="submit" name="direction" value="DOWN">Rückwärts</button>
-                </form>
-            </div>
+        <div class="navbar" id="myNavbar">
+            <a href="#about">About Us</a>
+            <a href="#team">Team</a>
+            <a href="#user-manual">User Manual</a>
+            <a href="#controller">Controller</a>
+            <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+                <img src="/bilder/icon.jpg" alt="Menu Icon">
+            </a>
         </div>
+
+        <header>
+            <h1>Welcome to MBot2</h1>
+        </header>
+
+        <section id="controller">
+            <h2 style="color: orange">Controller</h2>
+            <div class="container">
+                <div class="selected-device">
+                    <p>Selected Device: <span th:text="${ipAdresse}"></span></p>
+                    <form action="/sendCommand" method="get">
+                        <button type="submit">Select Devices</button>
+                    </form>
+                    <div class="dropdown">
+                        <button class="dropbtn">Dropdown</button>
+                        <div class="dropdown-content">
+                            <a href="#">Link 1</a>
+                            <a href="#">Link 2</a>
+                            <a href="#">Link 3</a>
+                        </div>
+                    </div>
+
+                    <p>Suicide Prevention:</p>
+                    <form id="toggleForm" action="/suizidePrevention" method="post">
+                        <button type="submit" name="prevention" value="OFF">OFF</button>
+                        <button type="submit" name="prevention" value="ON">ON</button>
+                    </form>
+
+                </div>
+                <!-- Joystick und Schieberegler für Handys -->
+                <div id="phoneControls" class="joystick-container">
+                    <div class="joystick">
+                        <img src="/joystick-base.png"/>
+                        <div id="stick1" style="position: absolute; left:32px; top:32px;">
+                            <img src="/joystick-green.png"/>
+                        </div>
+                    </div>
+                </div>
+
+                <input style="top:20px;" type="range" min="0" max="100" value="50">
+
+                <div id="pcContainer" class="buttons-container">
+                    <form action="\buttonControl" method="post" class="sub-container">
+                        <button type="submit" name="direction" value="UP">Vorwärts</button>
+                        <div class="middle-buttons">
+                            <button type="submit" name="direction" value="LEFT">Links</button>
+                            <button type="submit" name="direction" value="STOP">Stop</button>
+                            <button type="submit" name="direction" value="RIGHT">Rechts</button>
+                        </div>
+                        <button type="submit" name="direction" value="DOWN">Rückwärts</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section id="team">
+            <h2 style="color: whitesmoke">Our Team</h2>
+            <p style="color: whitesmoke">Add team information here.</p>
+        </section>
+
+        <section id="user-manual">
+            <h2 style="color: whitesmoke">User Manual</h2>
+            <p style="color: whitesmoke">Add user manual content here.</p>
+        </section>
+
+        <section id="about">
+            <h2 style="color: whitesmoke">About Us</h2>
+            <p style="color: whitesmoke">Add about us information here.</p>
+            <br>
+            <br>
+            <br>
+            <br>
+        </section>
+
+        <footer>
+            <p>&copy; 2024 MBot2. All rights reserved.</p>
+        </footer>
+
         <script src="/eventlistener_keys.js"></script>
         <script src="/phone_joystick.js"></script>
-    </body>
+        <script src="/navbar.js"></script>
+    </div>
+</div>
+
+</body>
+
 </html>
