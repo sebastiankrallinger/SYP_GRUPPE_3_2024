@@ -8,6 +8,16 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <title>MBot2</title>
     </head>
+    <body class="noselect" onload="checkDevice()">
+        <div class="navbar" id="myNavbar">
+            <a href="#about">About Us</a>
+            <a href="#team">Team</a>
+            <a href="#user-manual">User Manual</a>
+            <a href="#controller">Controller</a>
+            <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+                <img src="/bilder/icon.jpg" alt="Menu Icon">
+            </a>
+        </div>
         <header>
             <h1>Welcome to MBot2</h1>
         </header>
@@ -88,9 +98,9 @@
         <footer>
             <p>&copy; 2024 MBot2. All rights reserved.</p>
         </footer>
-    </body>
     <script src="/eventlistener_keys.js"></script>
     <script src="/phone_joystick.js"></script>
     <script src="/index.js"></script>
     <script src="/navbar.js"></script>
+    </body>
 </html>

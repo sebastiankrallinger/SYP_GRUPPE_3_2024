@@ -7,7 +7,6 @@ function checkDevice() {
     var screenWidth = window.innerWidth;
     var pcContainer = document.getElementById("pcContainer");
     var phoneControls = document.getElementById("phoneControls");
-    var deviceTypeMessage = document.getElementById("deviceType");
 
     if (screenWidth < 768) {
         // Kleiner als 768px: wahrscheinlich ein Handy
