@@ -9,24 +9,6 @@
     <title>MBot2</title>
 </head>
     <body class="noselect" onload="init();">
-        <script>
-            function checkDevice() {
-                var screenWidth = window.innerWidth;
-                var pcContainer = document.getElementById("pcContainer");
-                var phoneControls = document.getElementById("phoneControls");
-
-                if (screenWidth < 768) {
-                    // Kleiner als 768px: wahrscheinlich ein Handy
-                    pcContainer.style.display = "none";
-                    phoneControls.style.display = "block";
-                } else {
-                    // Größer oder gleich 768px: wahrscheinlich ein Desktop
-                    pcContainer.style.display = "block";
-                    phoneControls.style.display = "none";
-                }
-            }
-            window.onload = checkDevice;
-        </script>
         <h1>Welcome to MBot2</h1>
         <div class="container">
             <div class="selected-device">
@@ -49,32 +31,36 @@
                 </form>
 
             </div>
-            <!-- Joystick und Schieberegler für Handys -->
+        
+            <!-- Joystick für Handys -->
             <div id="phoneControls">
                 <div style="border: 1px solid green; width: 150px; alignment: center; position: absolute; left:10px; top:200px;">
                     <img src="/joystick-base.png"/>
                     <div id="stick1" style="position: absolute; left:32px; top:32px;">
                         <img src="/joystick-green.png"/>
                     </div>
-                </div>
-            </div>
-
-            <input style="top:20px;" type="range" min="0" max="100" value="50">
-
-            <div id="pcContainer" class="buttons-container">
-                <form class="sub-container">
-                    <button id="driveBtnU" type="button" name="direction">Vorwärts</button>
-                    <div class="middle-buttons">
-                        <button id="driveBtnL" type="button" name="direction">Links</button>
-                        <button id="driveBtnS" type="button" name="direction">Stop</button>
-                        <button id="driveBtnR" type="button" name="direction">Rechts</button>
+                    <div style="margin-top: 20px;">
+                        <input type="range" min="0" max="100" value="${speed}" class="slider" id="myRange2" oninput="updateSliderValue(this.value, this.id)">
+                        <span id="sliderValue2">50</span>
                     </div>
-                    <button id="driveBtnD" type="button" name="direction">Rückwärts</button>
-                </form>
+                <div id="pcContainer" class="buttons-container">
+                    <form class="sub-container">
+                        <button id="driveBtnU" type="button" name="direction">Vorwärts</button>
+                        <div class="middle-buttons">
+                            <button id="driveBtnL" type="button" name="direction">Links</button>
+                            <button id="driveBtnS" type="button" name="direction">Stop</button>
+                            <button id="driveBtnR" type="button" name="direction">Rechts</button>
+                        </div>
+                        <button id="driveBtnD" type="button" name="direction">Rückwärts</button>
+                        <div style="margin-top: 20px;">
+                            <input type="range" min="0" max="100" value="${speed}" class="slider" id="myRange" oninput="updateSliderValue(this.value, this.id)">
+                            <span id="sliderValue">50</span>
+                        </div>
+                    </form>
             </div>
         </div>
         <script src="/eventlistener_keys.js"></script>
         <script src="/phone_joystick.js"></script>
-        <script src="/index.js"></script>
+        <script src="/website_functions.js"></script>
     </body>
 </html>

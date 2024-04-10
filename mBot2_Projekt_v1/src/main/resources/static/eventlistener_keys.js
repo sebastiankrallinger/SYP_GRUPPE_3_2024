@@ -1,5 +1,10 @@
 let b=true;
 let currentdir="";
+
+function sendSliderValue(speed) {
+    // AJAX-Anfrage an den Controller senden
+}
+
 document.addEventListener('keydown', function(event) {
     if (event.key === 'ArrowLeft' || event.key === 'a' || event.key === 'A') {
         if(b==true) {
@@ -32,8 +37,6 @@ document.addEventListener('keyup', function(event) {
         sendDirection('STOP', '/arrowControl?direction=');
     }
 });
-
-
 function sendDirection(direction, url) {
     // AJAX-Anfrage an den Controller senden
     var xhr = new XMLHttpRequest();

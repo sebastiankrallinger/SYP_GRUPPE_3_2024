@@ -20,6 +20,9 @@ public class MainController {
     private HashMap<String, String> ips = new HashMap<>();
     private List<String> s = new ArrayList<>();
     private int mbotId = 1;
+    private int speed=0;
+
+
 
     //Mainpage mBot Website
     @GetMapping("/homepage")
@@ -166,5 +169,26 @@ public class MainController {
             }
         }
         return s;
+    }
+
+    @PostMapping("/speedControl")
+    public String speedControl(HttpServletRequest request){
+        try {
+            speed = Integer.parseInt(request.getParameter("speed"));
+            //System.out.println(direction);
+            //Befeht in byte-Array konvertieren
+            byte[] sendData = String.valueOf(speed).getBytes();
+
+            try (DatagramSocket socket = new DatagramSocket()) {
+                //Button Befehl direkt an den mBot senden
+                DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
+
+                socket.send(packet);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //zurück zur Mainpage navigieren
+        return "redirect:/mBot";
     }
 }
