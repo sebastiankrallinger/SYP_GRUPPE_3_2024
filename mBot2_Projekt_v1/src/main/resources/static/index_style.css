@@ -3,7 +3,6 @@ html, body {
     margin: 0;
     padding: 0;
     height: 100vh;
-    background: linear-gradient(to bottom, #646464, #000000);
 }
 
 .background {
@@ -228,4 +227,19 @@ button[type="button"] {
 
 button[type="button"]:hover {
     background-color: #45a049;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background-color: #f9f9f9; /* Background color for the whole table */
+}
+th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+th {
+    background-color: #f2f2f2;
 }
