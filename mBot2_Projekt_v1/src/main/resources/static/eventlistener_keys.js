@@ -1,10 +1,6 @@
 let b=true;
 let currentdir="";
 
-function sendSliderValue(speed) {
-    // AJAX-Anfrage an den Controller senden
-}
-
 document.addEventListener('keydown', function(event) {
     if (event.key === 'ArrowLeft' || event.key === 'a' || event.key === 'A') {
         if(b==true) {

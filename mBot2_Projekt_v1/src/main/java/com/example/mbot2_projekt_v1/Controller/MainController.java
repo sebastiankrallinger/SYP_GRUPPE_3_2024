@@ -164,7 +164,8 @@ public class MainController {
     }
 
     @PostMapping("/speedControl")
-    public String speedControl(HttpServletRequest request){
+    @ResponseBody
+    public void speedControl(HttpServletRequest request){
         try {
             int input = Integer.parseInt(request.getParameter("speed"));
             if (input - speed > 5 || input - speed < -5 ){
@@ -183,7 +184,5 @@ public class MainController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //zurück zur Mainpage navigieren
-        return "redirect:/mBot";
     }
 }
