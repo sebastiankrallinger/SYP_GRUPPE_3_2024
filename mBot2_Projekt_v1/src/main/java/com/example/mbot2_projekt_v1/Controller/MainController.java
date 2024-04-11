@@ -53,7 +53,6 @@ public class MainController {
         return "redirect:/mBot";
     }
 
-    @PostMapping("/sendConnected")
     public void sendConnected(){
         try {
             //System.out.println(mBotIP);
