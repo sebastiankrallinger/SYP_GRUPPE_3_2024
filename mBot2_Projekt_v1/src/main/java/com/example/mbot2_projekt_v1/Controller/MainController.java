@@ -21,7 +21,7 @@ public class MainController {
     private List<String> s = new ArrayList<>();
     private int mbotId = 1;
     private int speed=100;
-    
+
 
     @GetMapping("/mBot")
     public String ips(Model model) {
@@ -36,9 +36,9 @@ public class MainController {
         return "index";
     }
 
-    @GetMapping("/sendCommand")
+    @GetMapping("/mBotIP")
     public String sendCommand() {
-        return "LoginPage";
+        return "mBotIP";
     }
 
     @GetMapping("/getDevice")
