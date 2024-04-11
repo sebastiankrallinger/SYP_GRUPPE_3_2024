@@ -21,14 +21,7 @@ public class MainController {
     private List<String> s = new ArrayList<>();
     private int mbotId = 1;
     private int speed=100;
-
-
-
-    //Mainpage mBot Website
-    @GetMapping("/homepage")
-    public String mainpage(Model model) {
-        return "homepage";
-    }
+    
 
     @GetMapping("/mBot")
     public String ips(Model model) {
