@@ -18,12 +18,13 @@
                 <img src="/bilder/icon.jpg" alt="Menu Icon">
             </a>
         </div>
+        <div class="background"></div>
         <header>
             <h1>Welcome to MBot2</h1>
         </header>
 
         <section id="controller">
-            <h2 style="color: orange">Controller</h2>
+            <h2 style="color: whitesmoke">Controller</h2>
             <div class="container">
                 <div class="selected-device">
                     <p>Selected Device: <span th:text="${ipAdresse}"></span></p>
@@ -77,18 +78,120 @@
         </section>
 
         <section id="team">
-            <h2 style="color: whitesmoke">Our Team</h2>
-            <p style="color: whitesmoke">Add team information here.</p>
+            <h2 style="color: whitesmoke" >Unser Team</h2>
+            <div style="font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 20px;">
+                <div class="team-section" style="max-width: 800px; margin: 0 auto; background-color: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
+                    <h1 style="color: #333;">Nie ohne mein Team!</h1>
+                    <p>Ohne ein wunderbares Team wäre ein problemloses Programmieren und entwickeln eines Projekts nicht möglich.</p>
+                    <h2 style="color: #333; margin-top: 30px;">Lecker Bierchen IT</h2>
+                    <div class="team-member" style="display: none;">
+                        <img src="/bilder/basti.jpg" alt="Mitarbeiter 1">
+                        <h3>Sebastian Krallinger</h3>
+                        <p><strong>Rolle:</strong> Projektentwickler</p>
+                        <p><strong>Fähigkeiten:</strong> Kann alles.</p>
+                    </div>
+                    <div class="team-member" style="display: none;">
+                        <img src="/bilder/fabs.jpg" alt="Mitarbeiter 2">
+                        <h3>Fabian Scharfetter</h3>
+                        <p><strong>Rolle:</strong> Teamleiter</p>
+                        <p><strong>Fähigkeiten:</strong> Lässt sich von nichts aus der Ruhe bringen.</p>
+                    </div>
+                    <div class="team-member" style="display: none;">
+                        <img src="/bilder/phil.jpg" alt="Mitarbeiter 3">
+                        <h3>Philipp Kirchtag</h3>
+                        <p><strong>Rolle:</strong> Programmierung, Designer</p>
+                        <p><strong>Fähigkeiten:</strong> Behält den Überblick.</p>
+                    </div>
+                    <div class="team-member" style="display: none;">
+                        <img src="/bilder/edu.jpg" alt="Mitarbeiter 4">
+                        <h3>Eduard Voicescu</h3>
+                        <p><strong>Rolle:</strong> Designer, Website Programmierung</p>
+                        <p><strong>Fähigkeiten:</strong> Grafische Begabung von der die meisten nur träumen können.</p>
+                    </div>
+                    <!-- Weitere Teammitglieder hier einfügen -->
+
+                    <div class="team-navigation" style="margin-top: 30px;">
+                        <button onclick="showMember(1)">Mitarbeiter 1</button>
+                        <button onclick="showMember(2)">Mitarbeiter 2</button>
+                        <button onclick="showMember(3)">Mitarbeiter 3</button>
+                        <button onclick="showMember(4)">Mitarbeiter 4</button>
+                        <!-- Weitere Buttons für weitere Teammitglieder -->
+                    </div>
+                </div>
+            </div>
         </section>
+
+        <script>
+            let currentMember = 1;
+
+            function showMember(memberNumber) {
+                const members = document.querySelectorAll(".team-member");
+                for (let i = 0; i < members.length; i++) {
+                    members[i].style.display = "none";
+                }
+                members[memberNumber - 1].style.display = "block";
+                currentMember = memberNumber;
+            }
+        </script>
 
         <section id="user-manual">
             <h2 style="color: whitesmoke">User Manual</h2>
-            <p style="color: whitesmoke">Add user manual content here.</p>
+            <div style="font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 20px;">
+                <div class="team-section" style="max-width: 800px; margin: 0 auto; background-color: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
+                    <h1 style="color: #333;">Wenige Schritte bis zum vollen Genuss!</h1>
+                    <p>Wenn sie den einsatzbereiten MBot vor sich haben und jetzt damit die Umgebung unsicher machen wollen, folgen sie diesen wenigen Schritten!</p>
+
+                    <h2 style="color: #333; margin-top: 30px;">Vorgehensweise</h2>
+                    <ul class="team-list" style="list-style-type: none; padding: 0;">
+                        <li class="team-member" style="margin-bottom: 20px;">
+                            <strong>Verbindung zum MBot</strong>: Über unsere Website gelangen sie über den Select Devices Button in ein Fenster, in welchem sie die am MBot angezeigte IP eingeben müssen. Über den Button Absenden bestätigen sie ihre Eingabe.
+                        </li>
+                        <li class="team-member" style="margin-bottom: 20px;">
+                            <strong>Steuerung über deinen PC</strong>: Mit den Buttons auf der Website können sie jetzt die gewünschte Richtung in die der MBot fahren soll vorgeben. Auch über WASD oder die Pfeiltasten lässt sich unser MBot Problemlos steuern. Die Geschwindigkeit kann über den Slider einfach verändert werden.
+                        </li>
+                        <li class="team-member" style="margin-bottom: 20px;">
+                            <strong>Steuerung über dein Smartphone</strong>: Da auf einem mobilen Endgerät meistens keine einfach bedienbare Tastatur vorhanden ist haben wir uns auch für euch etwas einfallen lassen. Über einen Joystick kann man einfach die Richtung vorgeben in die der MBot fahren soll. Auch hier kann die Geschwindigkeit über den Slider einfach verändert werden.
+                        </li>
+                    </ul>
+                    <h2 style="color: #333;">Viel Spaß beim Steuern deines Mbots!</h2>
+                </div>
+            </div>
         </section>
 
         <section id="about">
             <h2 style="color: whitesmoke">About Us</h2>
-            <p style="color: whitesmoke">Add about us information here.</p>
+            <div style="font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 20px;">
+                <div class="team-section" style="max-width: 800px; margin: 0 auto; background-color: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
+                    <h1 style="color: #333;">Unser Team: Gemeinsam Stark</h1>
+                    <p>Willkommen zum Herzstück von Lecker Bierchen IT! Unser Team ist das Rückgrat unserer Mission und arbeitet eng zusammen, um unsere Visionen zu verwirklichen. Hier bei Lecker Bierchen IT haben wir eine vielfältige Gruppe von Talenten, die sich für Exzellenz und Zusammenarbeit einsetzen:</p>
+
+                    <h2 style="color: #333; margin-top: 30px;">Zusammenarbeit & Innovation</h2>
+                    <p>Unsere Teammitglieder bringen eine breite Palette von Fähigkeiten und Erfahrungen mit, die es uns ermöglichen, vielfältige Projekte zu realisieren. Von kreativen Köpfen bis hin zu analytischen Denkern, hier ist, was unser Team so besonders macht:</p>
+
+                    <ul class="team-list" style="list-style-type: none; padding: 0;">
+                        <li class="team-member" style="margin-bottom: 20px;">
+                            <strong>Kreativität im Überfluss</strong>: Wir haben Designer, die jede Idee zum Leben erwecken können, sowie Entwickler, die innovative Lösungen entwickeln.
+                        </li>
+                        <li class="team-member" style="margin-bottom: 20px;">
+                            <strong>Analytische Experten</strong>: Unsere Analysten und Strategen bringen eine tiefe Einsicht in Daten und Märkte mit, um fundierte Entscheidungen zu treffen.
+                        </li>
+                        <li class="team-member" style="margin-bottom: 20px;">
+                            <strong>Kommunikationsprofis</strong>: Von der Kundenbetreuung bis zur PR sind unsere Kommunikationsexperten da, um sicherzustellen, dass jede Botschaft klar und wirkungsvoll übermittelt wird.
+                        </li>
+                        <li class="team-member" style="margin-bottom: 20px;">
+                            <strong>Teamarbeit, die Ergebnisse bringt</strong>: Wir glauben an die Stärke der Zusammenarbeit und arbeiten Hand in Hand, um jedes Projekt zu einem Erfolg zu machen.
+                        </li>
+                    </ul>
+
+                    <h2 style="color: #333;">Unsere Kultur</h2>
+                    <p>Bei Lecker Bierchen IT fördern wir eine Kultur der Offenheit, Kreativität und kontinuierlichen Verbesserung. Wir schätzen die Vielfalt der Ideen und Perspektiven in unserem Team und arbeiten aktiv daran, ein Umfeld zu schaffen, in dem jedes Mitglied gedeihen kann.</p>
+
+                    <h2 style="color: #333;">Treffen Sie unser Team</h2>
+                    <p>Wenn Sie mehr über die Personen hinter Lecker Bierchen IT erfahren möchten, werfen Sie einen Blick auf unsere individuellen Profile und lernen Sie uns näher kennen.</p>
+
+                    <p>Wir sind stolz darauf, ein Team zu sein, das sich für Exzellenz und Innovation einsetzt. Danke, dass Sie uns auf dieser Reise begleiten!</p>
+                </div>
+            </div>
             <br>
             <br>
             <br>
