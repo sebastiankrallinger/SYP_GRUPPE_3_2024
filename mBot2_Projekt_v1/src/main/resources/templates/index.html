@@ -14,6 +14,7 @@
             <a href="#team">Team</a>
             <a href="#user-manual">User Manual</a>
             <a href="#controller">Controller</a>
+            <a href="#sensor-data">Sensor Data</a>
             <a href="javascript:void(0);" class="icon" onclick="myFunction()">
                 <img src="/bilder/icon.jpg" alt="Menu Icon">
             </a>
@@ -22,6 +23,14 @@
         <header>
             <h1>Welcome to MBot2</h1>
         </header>
+
+        <div class="image_container">
+            <img src="/bilder/mBot.png" style="
+                max-width: 90%;
+                height: auto;
+                display: block;
+                margin: 0 auto; "/>
+        </div>
 
         <section id="controller">
             <h2 style="color: whitesmoke">Controller</h2>
@@ -46,8 +55,8 @@
 
                 </div>
                  <!-- Joystick für Handys -->
-            <div id="phoneControls">
-                <div style="border: 1px solid green; width: 150px; alignment: center; position: absolute; left:10px; top:200px;">
+            <div class="joystick-container" id="phoneControls">
+                <div class="joystick">
                     <img src="/joystick-base.png"/>
                     <div id="stick1" style="position: absolute; left:32px; top:32px;">
                         <img src="/joystick-green.png"/>
@@ -75,6 +84,36 @@
                 </div>
                 </div>
             </div>
+        </section>
+
+        <section id="sensor-data">
+            <h2 style="color: whitesmoke">Sensor Data</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Data1 Name</th>
+                    <th>Data2 Name</th>
+                    <th>Data3 Name</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Obj1 Data1 Content</td>
+                    <td>Obj2 Data2 Content</td>
+                    <td>Obj3 Data3 Content</td>
+                </tr>
+                <tr>
+                    <td>Obj2 Data1 Content</td>
+                    <td>Obj2 Data2 Content</td>
+                    <td>Obj2 Data3 Content</td>
+                </tr>
+                <tr>
+                    <td>Obj3 Data1 Content</td>
+                    <td>Obj3 Data2 Content</td>
+                    <td>Obj3 Data3 Content</td>
+                </tr>
+                </tbody>
+            </table>
         </section>
 
         <section id="team">
