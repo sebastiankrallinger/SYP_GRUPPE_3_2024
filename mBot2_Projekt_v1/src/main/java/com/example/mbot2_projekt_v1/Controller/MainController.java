@@ -27,9 +27,11 @@ public class MainController {
     public String ips(Model model) {
         if (ips.get(mBotIP) != null) {
             model.addAttribute("ipAdresses", mapToString());
+            //System.out.println("ipAdresses: " + mapToString());
         }
         if (ips.get(mBotIP) != null){
             model.addAttribute("ipAdresse", mBotIP + " - " + ips.get(mBotIP));
+            //System.out.println("ipAdresse: " + mBotIP + " - " + ips.get(mBotIP));
         }else {
             model.addAttribute("ipAdresse", mBotIP);
         }
@@ -53,7 +55,6 @@ public class MainController {
         return "redirect:/mBot";
     }
 
-    @PostMapping("/sendConnected")
     public void sendConnected(){
         try {
             //System.out.println(mBotIP);
@@ -165,7 +166,8 @@ public class MainController {
     }
 
     @PostMapping("/speedControl")
-    public String speedControl(HttpServletRequest request){
+    @ResponseBody
+    public void speedControl(HttpServletRequest request){
         try {
             int input = Integer.parseInt(request.getParameter("speed"));
             if (input - speed > 5 || input - speed < -5 ){
@@ -184,7 +186,5 @@ public class MainController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //zurück zur Mainpage navigieren
-        return "redirect:/mBot";
     }
 }
