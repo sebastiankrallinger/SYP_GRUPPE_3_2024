@@ -15,12 +15,14 @@ document.addEventListener('keydown', function(event) {
         }
     }
     else if (event.key === 'ArrowUp' || event.key === 'w' || event.key === 'W') {
+        event.preventDefault();
         if(b==true) {
             sendDirection('UP', '/arrowControl?direction=');
             b = false;
         }
     }
     else if (event.key === 'ArrowDown' || event.key === 's' || event.key === 'S') {
+        event.preventDefault();
         if(b==true) {
             sendDirection('DOWN', '/arrowControl?direction=');
             b = false;
