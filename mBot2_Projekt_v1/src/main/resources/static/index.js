@@ -26,7 +26,7 @@ function connect(event) {
     if (clickedElement.tagName === "A") {
         var i = clickedElement.textContent;
         ip = i.split('-')
-        document.getElementById("dropdown-content").innerText = i;
+        document.getElementById("ipAdresse").innerText = i;
         var xhr = new XMLHttpRequest();
         xhr.open('Get', "/getDevice?ipAdresse=" + ip[0], true);
         xhr.send();

@@ -26,7 +26,7 @@
             <h2 style="color: orange">Controller</h2>
             <div class="container">
                 <div class="selected-device">
-                    <p>Selected Device: <span th:text="${ipAdresse}"></span></p>
+                    <p>Selected Device: <span id="ipAdresse" th:text="${ipAdresse}"></span></p>
                     <form action="/mBotIP" method="get">
                         <button type="submit">Select Devices</button>
                     </form>

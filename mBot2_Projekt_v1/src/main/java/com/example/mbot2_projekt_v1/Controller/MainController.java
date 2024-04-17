@@ -27,9 +27,11 @@ public class MainController {
     public String ips(Model model) {
         if (ips.get(mBotIP) != null) {
             model.addAttribute("ipAdresses", mapToString());
+            //System.out.println("ipAdresses: " + mapToString());
         }
         if (ips.get(mBotIP) != null){
             model.addAttribute("ipAdresse", mBotIP + " - " + ips.get(mBotIP));
+            //System.out.println("ipAdresse: " + mBotIP + " - " + ips.get(mBotIP));
         }else {
             model.addAttribute("ipAdresse", mBotIP);
         }
