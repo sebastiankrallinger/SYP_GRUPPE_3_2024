@@ -1,4 +1,3 @@
-import requests
 import time
 import usocket
 import ujson
@@ -48,30 +47,18 @@ def send_sensor_data_to_server():
     cyberpi.console.println("send_sensor_data_to_server()")
     distance = cyberpi.ultrasonic2.get(index=1)
     light = cyberpi.light_sensor.get(index=1)
-    quad_rgb = cyberpi.light_sensor.get(index=1)
+    quad_rgb = cyberpi.light_sensor.get(index=1) #Quad RGB Sensor
     
-    #sensor_data =  f'{distance}'        
-    #sensor_data = f'\n{light}'     
-    #sensor_data = f'\n{quad_rgb}'              #Quad RGB Sensor
-    #sensor_data += f'\n{cyberpi.led.red}'       #R
-    #sensor_data += f'\n{cyberpi.led.green}'     #G
-    #sensor_data += f'\n{cyberpi.led.blue}'      #B
+    #sensor_data =  f'{distance}'
 
     cyberpi.console.println(quad_rgb)
     s = usocket.socket(usocket.AF_INET, usocket.SOCK_DGRAM)
     
-    data = quad_rgb
-    url = 'http://localhost:8080/getSensordata'
-    try:
-        response = requests.post(url, data=data)
-        # Überprüfen des Antwortstatus
-        if response.status_code == 200:
-            print("Daten erfolgreich gesendet.")
-        else:
-            print("Fehler beim Senden der Daten. Statuscode:", response.status_code)
-    except requests.exceptions.RequestException as e:
-        print("Fehler beim Senden der Daten:", e)
-
+    sensor_data = quad_rgb
+    
+    server_ip = "10.10.2.91"
+    s.sendto(sensor_data, (server_ip, 1234))
+    
 
 
 

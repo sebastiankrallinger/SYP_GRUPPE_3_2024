@@ -17,6 +17,8 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Controller
 public class MainController {
@@ -155,24 +157,31 @@ public class MainController {
 
 
     @PostMapping("/getSensordata")
-    public String getSensordata(@RequestBody String sensorData) {
-        System.out.println("Empfangener Sensor-String: " + sensorData);
+    public String receiveData() {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
 
-        String s = "SENSOR";
-        byte[] sendDataxy = s.getBytes();
+        executor.execute(() -> {
+            try (DatagramSocket socket = new DatagramSocket(1234)) {
+                byte[] buffer = new byte[1024];
+                DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 
-        try (DatagramSocket socket = new DatagramSocket()) {
-            //Button Befehl direkt an den mBot senden
-            DatagramPacket packet = new DatagramPacket(sendDataxy, sendDataxy.length, InetAddress.getByName(mBotIP), 4000);
-            socket.send(packet);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                // Sende Befehl zum Abrufen von Sensorwerten
+                String command = "SENSOR";
+                byte[] sendData = command.getBytes();
+                DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
+                socket.send(sendPacket);
 
-        // SensorDataReceiver starten
-        //SensordataReceiver sensordataReceiver = new SensordataReceiver();
-        //Thread receiverThread = new Thread(sensordataReceiver);
-        //receiverThread.start();
-        return sensorData;
+                // Empfange die Antwort vom mBot
+                socket.receive(packet);
+                String sensorData = new String(packet.getData(), 0, packet.getLength());
+
+                System.out.println("Empfangene Sensorwerte: " + sensorData);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        executor.shutdown();
+        return "redirect:/mBot";
     }
 }
