@@ -14,6 +14,7 @@ import java.io.InputStreamReader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -173,7 +174,11 @@ public class MainController {
 
                 // Empfange die Antwort vom mBot
                 socket.receive(packet);
-                String sensorData = new String(packet.getData(), 0, packet.getLength());
+                byte[] data = packet.getData();
+                System.out.println("Data: " + data);
+                String sensorData = new String(data, 0, packet.getLength(), StandardCharsets.UTF_8);
+
+
 
                 System.out.println("Empfangene Sensorwerte: " + sensorData);
             } catch (Exception e) {

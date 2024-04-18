@@ -43,21 +43,25 @@ def drive(message):
         cyberpi.mbot2.EM_stop(port="all")
         
 
-def send_sensor_data_to_server():
+def send_sensor_data_to_server(s):
     cyberpi.console.println("send_sensor_data_to_server()")
-    distance = cyberpi.ultrasonic2.get(index=1)
+    
+    distance_s = cyberpi.ultrasonic2.get(index=1)
     light = cyberpi.light_sensor.get(index=1)
-    quad_rgb = cyberpi.light_sensor.get(index=1) #Quad RGB Sensor
-    
-    #sensor_data =  f'{distance}'
+    quad_rgb = cyberpi.quad_rgb_sensor.get_line_sta(index = 1)    #Quad RGB Sensor
 
-    cyberpi.console.println(quad_rgb)
-    s = usocket.socket(usocket.AF_INET, usocket.SOCK_DGRAM)
+    distance_str = str(distance_s)
+    light_str = str(light)
+    quad_rgb_str = str(quad_rgb)
     
-    sensor_data = quad_rgb
-    
+    distance_bytes = distance_str.encode('utf-8')
+    light_bytes = light_str.encode('utf-8')
+    quad_rgb_bytes = quad_rgb_str.encode('utf-8')
+
+    sensor_data_bytes = bytes(distance_bytes + ";" + light_bytes + ";" + quad_rgb_bytes)
     server_ip = "10.10.2.91"
-    s.sendto(sensor_data, (server_ip, 1234))
+    
+    s.sendto(sensor_data_bytes, (server_ip, 1234))
     
 
 
@@ -116,4 +120,4 @@ while True:
     elif received_message == "TRUE" or received_message == "FALSE":
         cyberpi.led.on(0,255,0)
     elif received_message == "SENSOR":
-        send_sensor_data_to_server()
+        send_sensor_data_to_server(s)
