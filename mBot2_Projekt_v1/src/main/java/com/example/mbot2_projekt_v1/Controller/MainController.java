@@ -215,7 +215,7 @@ public class MainController {
                 // Empfange die Antwort vom mBot
                 socket.receive(packet);
                 byte[] data = packet.getData();
-                System.out.println("Data: " + data);
+                //System.out.println("Data: " + data);
 
                 String sensorDataJSON = new String(data, 0, packet.getLength(), StandardCharsets.UTF_8);
 
@@ -234,6 +234,6 @@ public class MainController {
         });
 
         executor.shutdown();
-        return "redirect:/mBot";
+        return "redirect:/mBot#controller";
     }
 }

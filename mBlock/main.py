@@ -72,24 +72,41 @@ def drive(message):
         
 
 def send_sensor_data_to_server(s):
-    cyberpi.console.println("send_sensor_data_to_server()")
-    
-    distance_s = cyberpi.ultrasonic2.get(index=1)
-    light = cyberpi.light_sensor.get(index=1)
-    quad_rgb = cyberpi.quad_rgb_sensor.get_line_sta(index = 1)    #Quad RGB Sensor
 
-    distance_str = str(distance_s)
-    light_str = str(light)
-    quad_rgb_str = str(quad_rgb)
+    server_ip = "10.10.1.184"
     
-    distance_bytes = distance_str.encode('utf-8')
-    light_bytes = light_str.encode('utf-8')
-    quad_rgb_bytes = quad_rgb_str.encode('utf-8')
-
-    sensor_data_bytes = bytes(distance_bytes + ";" + light_bytes + ";" + quad_rgb_bytes)
-    server_ip = "10.10.2.91"
+    sensordata = {
+                "mbotid": cyberpi.get_mac_address(),
+                "ultrasonic": cyberpi.ultrasonic2.get(1),
+                "quad_rgb": [
+                    cyberpi.quad_rgb_sensor.get_color(1, index=1),
+                    cyberpi.quad_rgb_sensor.get_color(2, index=1),
+                    cyberpi.quad_rgb_sensor.get_color(3, index=1),
+                    cyberpi.quad_rgb_sensor.get_color(4, index=1)
+                ],
+                "line": cyberpi.quad_rgb_sensor.get_line_sta(index = 1),
+                "loudness": cyberpi.get_loudness("maximum"),
+                "brightness": cyberpi.get_bri(),
+                "pitch": cyberpi.get_pitch(),
+                "roll": cyberpi.get_roll(),
+                "yaw": cyberpi.get_yaw(),
+                "shakeval": cyberpi.get_shakeval(),
+                "wave_angle": cyberpi.get_wave_angle(),
+                "wave_speed": cyberpi.get_wave_speed(),
+                "acc_x": cyberpi.get_acc('x'),
+                "acc_y": cyberpi.get_acc('y'),
+                "acc_z": cyberpi.get_acc('z'),
+                "gyro_x": cyberpi.get_gyro('x'),
+                "gyro_y": cyberpi.get_gyro('y'),
+                "gyro_z": cyberpi.get_gyro('z'),
+                "rot_x": cyberpi.get_rotation('x'),
+                "rot_y": cyberpi.get_rotation('x'),
+                "rot_z": cyberpi.get_rotation('x')
+            }
+        
+    json_data = ujson.dumps(sensordata)
     
-    s.sendto(sensor_data_bytes, (server_ip, 1234))
+    s.sendto(json_data.encode('utf-8'), (server_ip, 1234))
     
 
 
