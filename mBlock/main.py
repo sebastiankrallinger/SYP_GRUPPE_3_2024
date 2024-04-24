@@ -69,6 +69,30 @@ def drive(message):
     if message == "STOP":
         cyberpi.mbot2.EM_stop(port="all")
         direction_before="STOP"
+        
+
+def send_sensor_data_to_server(s):
+    cyberpi.console.println("send_sensor_data_to_server()")
+    
+    distance_s = cyberpi.ultrasonic2.get(index=1)
+    light = cyberpi.light_sensor.get(index=1)
+    quad_rgb = cyberpi.quad_rgb_sensor.get_line_sta(index = 1)    #Quad RGB Sensor
+
+    distance_str = str(distance_s)
+    light_str = str(light)
+    quad_rgb_str = str(quad_rgb)
+    
+    distance_bytes = distance_str.encode('utf-8')
+    light_bytes = light_str.encode('utf-8')
+    quad_rgb_bytes = quad_rgb_str.encode('utf-8')
+
+    sensor_data_bytes = bytes(distance_bytes + ";" + light_bytes + ";" + quad_rgb_bytes)
+    server_ip = "10.10.2.91"
+    
+    s.sendto(sensor_data_bytes, (server_ip, 1234))
+    
+
+
 
 cyberpi.led.on(255, 0, 0)  # Red Lights
 cyberpi.network.config_sta("htljoh-public", "joh12345")  # Wlan Name & Password
@@ -121,6 +145,9 @@ while True:
             cyberpi.console.clear()
         elif received_message=="UP" or received_message=="DOWN" or received_message=="RIGHT" or received_message=="RIGHT_B" or received_message=="LEFT" or received_message=="LEFT_B" or received_message=="STOP":
             drive(received_message)
+        elif received_message == "SENSOR":
+            send_sensor_data_to_server(s)
         if 0 <= selected_speed <= 100:
             define_speed(selected_speed)
             drive(direction_before)
+    
