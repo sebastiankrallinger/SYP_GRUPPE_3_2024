@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en"  xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -5,77 +6,258 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <title>MBot2</title>
 </head>
-    <body class="noselect" onload="init();">
-        <script>
-            function checkDevice() {
-                var screenWidth = window.innerWidth;
-                var pcContainer = document.getElementById("pcContainer");
-                var phoneControls = document.getElementById("phoneControls");
-                var deviceTypeMessage = document.getElementById("deviceType");
+<body class="noselect" onload="checkDevice()">
+<div class="navbar" id="myNavbar">
+    <a href="#controller">Controller</a>
+    <a href="#sensor-data">Sensor Data</a>
+    <a href="#team">Team</a>
+    <a href="#user-manual">User Manual</a>
+    <a href="#about">About Us</a>
+    <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+        <img src="/bilder/icon.jpg" alt="Menu Icon">
+    </a>
+</div>
+<div class="background"></div>
+<header>
+    <h1>Welcome to MBot2</h1>
+</header>
 
-                if (screenWidth < 768) {
-                    // Kleiner als 768px: wahrscheinlich ein Handy
-                    pcContainer.style.display = "none";
-                    phoneControls.style.display = "block";
-                    deviceTypeMessage.innerHTML = "Du besuchst die Seite von einem Handy.";
-                } else {
-                    // Größer oder gleich 768px: wahrscheinlich ein Desktop
-                    pcContainer.style.display = "block";
-                    phoneControls.style.display = "none";
-                    deviceTypeMessage.innerHTML = "Du besuchst die Seite von einem Desktop-Computer.";
-                }
-            }
-            window.onload = checkDevice;
-        </script>
-        <h1>Welcome to MBot2</h1>
-        <div class="container">
-            <div class="selected-device">
-                <p>Selected Device: <span th:text="${ipAdresse}"></span></p>
-                <form action="/sendCommand" method="get">
-                    <button type="submit">Select Devices</button>
-                </form>
+<div class="image_container">
+    <img src="/bilder/mBot.png" style="
+                max-width: 90%;
+                height: auto;
+                display: block;
+                margin: 0 auto; "/>
+</div>
 
-                <p>Suicide Prevention:</p>
-                <form id="toggleForm" action="/suizidePrevention" method="post">
-                    <button type="submit" name="prevention" value="OFF">OFF</button>
-                    <button type="submit" name="prevention" value="ON">ON</button>
-                </form>
-<<<<<<< Updated upstream
-
-                <p>Sensordaten: <span th:text="${ipAdresse}"></span></p>
-                <form action="/getSensordata" method="post">
-                    <button type="submit">Abfragen</button>
-                </form>
-=======
->>>>>>> Stashed changes
-
-            </div>
-            <div id="phoneControls">
-                <div style="border: 1px solid green; width: 150px; alignment: center; position: absolute; left:10px; top:200px;">
-                    <img src="/joystick-base.png"/>
-                    <div id="stick1" style="position: absolute; left:32px; top:32px;">
-                        <img src="/joystick-green.png"/>
-                    </div>
+<section id="controller">
+    <h2 style="color: whitesmoke">Controller</h2>
+    <div class="container">
+        <div class="selected-device">
+            <p>Selected Device: <span id="ipAdresse" th:text="${ipAdresse}"></span></p>
+            <form action="/mBotIP" method="get">
+                <button type="submit">Select Devices</button>
+            </form>
+            <div class="dropdown" onclick="connect(event)">
+                <button class="dropbtn">Dropdown</button>
+                <div id="dropdown-content" class="dropdown-content">
+                    <a th:each="ipAdresse : ${ipAdresses}" th:text="${ipAdresse}"></a>
                 </div>
             </div>
 
-            <input style="top:20px;" type="range" min="0" max="100" value="50">
+            <p>Suicide Prevention:</p>
+            <form id="toggleForm" action="/suizidePrevention" method="post">
+                <button id="suicideOff" type="button" name="prevention">OFF</button>
+                <button id="suicideOn" type="button" name="prevention">ON</button>
+            </form>
 
-            <div id="pcContainer" class="buttons-container">
-                <form action="\buttonControl" method="post" class="sub-container">
-                    <button type="submit" name="direction" value="UP">Vorwärts</button>
-                    <div class="middle-buttons">
-                        <button type="submit" name="direction" value="LEFT">Links</button>
-                        <button type="submit" name="direction" value="STOP">Stop</button>
-                        <button type="submit" name="direction" value="RIGHT">Rechts</button>
+            <button onclick="sensorData()">Abfragen</button>
+
+            <p>LED</p>
+            <form id="light_data" action="/light_data" method="post">
+                <div style="display: flex;">
+                    <button id="light_status_start" type="button" name="light_status" style="width: 100px; height: 50px;">Start</button>
+                    <div style="display: inline-flex; align-items: center; margin-left: 10px;">
+                        <div id="out_left" style="width: 50px; height: 50px; margin: 5px; background-color: grey; border: 1px solid black;"></div>
+                        <div id="mid_left" style="width: 50px; height: 50px; margin: 5px; background-color: grey; border: 1px solid black;"></div>
+                        <div id="mid_right" style="width: 50px; height: 50px; margin: 5px; background-color: grey; border: 1px solid black;"></div>
+                        <div id="out_right" style="width: 50px; height: 50px; margin: 5px; background-color: grey; border: 1px solid black;"></div>
                     </div>
-                    <button type="submit" name="direction" value="DOWN">Rückwärts</button>
-                </form>
+                </div>
+            </form>
+        </div>
+        <!-- Joystick für Handys -->
+        <div class="joystick-container" id="phoneControls">
+            <div class="joystick">
+                <img src="/joystick-base.png"/>
+                <div id="stick1" style="position: absolute; left:32px; top:32px;">
+                    <img src="/joystick-green.png"/>
+                </div>
+                <div style="margin-top: 20px;">
+                    <input type="range" min="0" max="100" value="${speed}" class="slider" id="myRange2" oninput="updateSliderValue(this.value, this.id)">
+                    <span id="sliderValue2">50</span>
+                </div>
             </div>
         </div>
-        <script src="/eventlistener_keys.js"></script>
-        <script src="/phone_joystick.js"></script>
-    </body>
+        <div id="pcContainer" class="buttons-container">
+            <form class="sub-container">
+                <button id="driveBtnU" type="button" name="direction">Vorwärts</button>
+                <div class="middle-buttons">
+                    <button id="driveBtnL" type="button" name="direction">Links</button>
+                    <button id="driveBtnS" type="button" name="direction">Stop</button>
+                    <button id="driveBtnR" type="button" name="direction">Rechts</button>
+                </div>
+                <button id="driveBtnD" type="button" name="direction">Rückwärts</button>
+                <div style="margin-top: 20px;">
+                    <input type="range" min="0" max="100" value="${speed}" class="slider" id="myRange" oninput="updateSliderValue(this.value, this.id)">
+                    <span id="sliderValue">50</span>
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
+</section>
+
+<section id="sensor-data">
+    <h2 style="color: whitesmoke">Sensor Data</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Data1 Name</th>
+            <th>Data2 Name</th>
+            <th>Data3 Name</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>Obj1 Data1 Content</td>
+            <td>Obj2 Data2 Content</td>
+            <td>Obj3 Data3 Content</td>
+        </tr>
+        <tr>
+            <td>Obj2 Data1 Content</td>
+            <td>Obj2 Data2 Content</td>
+            <td>Obj2 Data3 Content</td>
+        </tr>
+        <tr>
+            <td>Obj3 Data1 Content</td>
+            <td>Obj3 Data2 Content</td>
+            <td>Obj3 Data3 Content</td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+
+<section id="team">
+    <h2 style="color: whitesmoke" >Unser Team</h2>
+    <div style="font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 20px;">
+        <div class="team-section" style="max-width: 800px; margin: 0 auto; background-color: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
+            <h1 style="color: #333;">Nie ohne mein Team!</h1>
+            <p>Ohne ein wunderbares Team wäre ein problemloses Programmieren und entwickeln eines Projekts nicht möglich.</p>
+            <h2 style="color: #333; margin-top: 30px;">Lecker Bierchen IT</h2>
+            <div class="team-member" style="display: none;">
+                <img src="/bilder/basti.jpg" alt="Mitarbeiter 1">
+                <h3>Sebastian Krallinger</h3>
+                <p><strong>Rolle:</strong> Projektentwickler</p>
+                <p><strong>Fähigkeiten:</strong> Kann alles.</p>
+            </div>
+            <div class="team-member" style="display: none;">
+                <img src="/bilder/fabs.jpg" alt="Mitarbeiter 2">
+                <h3>Fabian Scharfetter</h3>
+                <p><strong>Rolle:</strong> Teamleiter</p>
+                <p><strong>Fähigkeiten:</strong> Lässt sich von nichts aus der Ruhe bringen.</p>
+            </div>
+            <div class="team-member" style="display: none;">
+                <img src="/bilder/phil.jpg" alt="Mitarbeiter 3">
+                <h3>Philipp Kirchtag</h3>
+                <p><strong>Rolle:</strong> Programmierung, Designer</p>
+                <p><strong>Fähigkeiten:</strong> Behält den Überblick.</p>
+            </div>
+            <div class="team-member" style="display: none;">
+                <img src="/bilder/edu.jpg" alt="Mitarbeiter 4">
+                <h3>Eduard Voicescu</h3>
+                <p><strong>Rolle:</strong> Designer, Website Programmierung</p>
+                <p><strong>Fähigkeiten:</strong> Grafische Begabung von der die meisten nur träumen können.</p>
+            </div>
+            <!-- Weitere Teammitglieder hier einfügen -->
+
+            <div class="team-navigation" style="margin-top: 30px;">
+                <button onclick="showMember(1)">Mitarbeiter 1</button>
+                <button onclick="showMember(2)">Mitarbeiter 2</button>
+                <button onclick="showMember(3)">Mitarbeiter 3</button>
+                <button onclick="showMember(4)">Mitarbeiter 4</button>
+                <!-- Weitere Buttons für weitere Teammitglieder -->
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    let currentMember = 1;
+
+    function showMember(memberNumber) {
+        const members = document.querySelectorAll(".team-member");
+        for (let i = 0; i < members.length; i++) {
+            members[i].style.display = "none";
+        }
+        members[memberNumber - 1].style.display = "block";
+        currentMember = memberNumber;
+    }
+</script>
+
+<section id="user-manual">
+    <h2 style="color: whitesmoke">User Manual</h2>
+    <div style="font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 20px;">
+        <div class="team-section" style="max-width: 800px; margin: 0 auto; background-color: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
+            <h1 style="color: #333;">Wenige Schritte bis zum vollen Genuss!</h1>
+            <p>Wenn sie den einsatzbereiten MBot vor sich haben und jetzt damit die Umgebung unsicher machen wollen, folgen sie diesen wenigen Schritten!</p>
+            <h2 style="color: #333; margin-top: 30px;">Vorgehensweise</h2>
+            <ul class="team-list" style="list-style-type: none; padding: 0;">
+                <li class="team-member" style="margin-bottom: 20px;">
+                    <strong>Verbindung zum MBot</strong>: Über unsere Website gelangen sie über den Select Devices Button in ein Fenster, in welchem sie die am MBot angezeigte IP eingeben müssen. Über den Button Absenden bestätigen sie ihre Eingabe.
+                </li>
+                <li class="team-member" style="margin-bottom: 20px;">
+                    <strong>Steuerung über deinen PC</strong>: Mit den Buttons auf der Website können sie jetzt die gewünschte Richtung in die der MBot fahren soll vorgeben. Auch über WASD oder die Pfeiltasten lässt sich unser MBot Problemlos steuern. Die Geschwindigkeit kann über den Slider einfach verändert werden.
+                </li>
+                <li class="team-member" style="margin-bottom: 20px;">
+                    <strong>Steuerung über dein Smartphone</strong>: Da auf einem mobilen Endgerät meistens keine einfach bedienbare Tastatur vorhanden ist haben wir uns auch für euch etwas einfallen lassen. Über einen Joystick kann man einfach die Richtung vorgeben in die der MBot fahren soll. Auch hier kann die Geschwindigkeit über den Slider einfach verändert werden.
+                </li>
+            </ul>
+            <h2 style="color: #333;">Viel Spaß beim Steuern deines Mbots!</h2>
+        </div>
+    </div>
+</section>
+
+<section id="about">
+    <h2 style="color: whitesmoke">About Us</h2>
+    <div style="font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 20px;">
+        <div class="team-section" style="max-width: 800px; margin: 0 auto; background-color: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
+            <h1 style="color: #333;">Unser Team: Gemeinsam Stark</h1>
+            <p>Willkommen zum Herzstück von Lecker Bierchen IT! Unser Team ist das Rückgrat unserer Mission und arbeitet eng zusammen, um unsere Visionen zu verwirklichen. Hier bei Lecker Bierchen IT haben wir eine vielfältige Gruppe von Talenten, die sich für Exzellenz und Zusammenarbeit einsetzen:</p>
+
+            <h2 style="color: #333; margin-top: 30px;">Zusammenarbeit & Innovation</h2>
+            <p>Unsere Teammitglieder bringen eine breite Palette von Fähigkeiten und Erfahrungen mit, die es uns ermöglichen, vielfältige Projekte zu realisieren. Von kreativen Köpfen bis hin zu analytischen Denkern, hier ist, was unser Team so besonders macht:</p>
+
+            <ul class="team-list" style="list-style-type: none; padding: 0;">
+                <li class="team-member" style="margin-bottom: 20px;">
+                    <strong>Kreativität im Überfluss</strong>: Wir haben Designer, die jede Idee zum Leben erwecken können, sowie Entwickler, die innovative Lösungen entwickeln.
+                </li>
+                <li class="team-member" style="margin-bottom: 20px;">
+                    <strong>Analytische Experten</strong>: Unsere Analysten und Strategen bringen eine tiefe Einsicht in Daten und Märkte mit, um fundierte Entscheidungen zu treffen.
+                </li>
+                <li class="team-member" style="margin-bottom: 20px;">
+                    <strong>Kommunikationsprofis</strong>: Von der Kundenbetreuung bis zur PR sind unsere Kommunikationsexperten da, um sicherzustellen, dass jede Botschaft klar und wirkungsvoll übermittelt wird.
+                </li>
+                <li class="team-member" style="margin-bottom: 20px;">
+                    <strong>Teamarbeit, die Ergebnisse bringt</strong>: Wir glauben an die Stärke der Zusammenarbeit und arbeiten Hand in Hand, um jedes Projekt zu einem Erfolg zu machen.
+                </li>
+            </ul>
+
+            <h2 style="color: #333;">Unsere Kultur</h2>
+            <p>Bei Lecker Bierchen IT fördern wir eine Kultur der Offenheit, Kreativität und kontinuierlichen Verbesserung. Wir schätzen die Vielfalt der Ideen und Perspektiven in unserem Team und arbeiten aktiv daran, ein Umfeld zu schaffen, in dem jedes Mitglied gedeihen kann.</p>
+
+            <h2 style="color: #333;">Treffen Sie unser Team</h2>
+            <p>Wenn Sie mehr über die Personen hinter Lecker Bierchen IT erfahren möchten, werfen Sie einen Blick auf unsere individuellen Profile und lernen Sie uns näher kennen.</p>
+
+            <p>Wir sind stolz darauf, ein Team zu sein, das sich für Exzellenz und Innovation einsetzt. Danke, dass Sie uns auf dieser Reise begleiten!</p>
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+</section>
+
+<footer>
+    <p>&copy; 2024 MBot2. All rights reserved.</p>
+</footer>
+<script src="/eventlistener_keys.js"></script>
+<script src="/phone_joystick.js"></script>
+<script src="/index.js"></script>
+<script src="/navbar.js"></script>
+<script src="/arrow_key_disable.js"></script>
+</body>
 </html>

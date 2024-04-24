@@ -1,7 +1,6 @@
 $(document).ready(function() {
     btnDrive();
     btnSuicide();
-    sensorData();
 });
 
 function checkDevice() {

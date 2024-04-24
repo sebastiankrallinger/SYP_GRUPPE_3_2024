@@ -193,12 +193,6 @@ public class MainController {
                 e.printStackTrace();
             }
         });
-
-<<<<<<< Updated upstream
-        executor.shutdown();
-        return "redirect:/mBot";
-=======
         //executor.shutdown();
->>>>>>> Stashed changes
     }
 }
