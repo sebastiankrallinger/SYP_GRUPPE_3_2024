@@ -10,11 +10,11 @@
     </head>
     <body class="noselect" onload="checkDevice()">
         <div class="navbar" id="myNavbar">
-            <a href="#about">About Us</a>
-            <a href="#team">Team</a>
-            <a href="#user-manual">User Manual</a>
             <a href="#controller">Controller</a>
             <a href="#sensor-data">Sensor Data</a>
+            <a href="#team">Team</a>
+            <a href="#user-manual">User Manual</a>
+            <a href="#about">About Us</a>
             <a href="javascript:void(0);" class="icon" onclick="myFunction()">
                 <img src="/bilder/icon.jpg" alt="Menu Icon">
             </a>
@@ -53,6 +53,18 @@
                     <button id="suicideOn" type="button" name="prevention">ON</button>
                 </form>
 
+                <p>LED</p>
+                <form id="light_data" action="/light_data" method="post">
+                    <div style="display: flex;">
+                        <button id="light_status_start" type="button" name="light_status" style="width: 100px; height: 50px;">Start</button>
+                        <div style="display: inline-flex; align-items: center; margin-left: 10px;">
+                            <div id="out_left" style="width: 50px; height: 50px; margin: 5px; background-color: grey; border: 1px solid black;"></div>
+                            <div id="mid_left" style="width: 50px; height: 50px; margin: 5px; background-color: grey; border: 1px solid black;"></div>
+                            <div id="mid_right" style="width: 50px; height: 50px; margin: 5px; background-color: grey; border: 1px solid black;"></div>
+                            <div id="out_right" style="width: 50px; height: 50px; margin: 5px; background-color: grey; border: 1px solid black;"></div>
+                        </div>
+                    </div>
+                </form>
                 </div>
                  <!-- Joystick für Handys -->
             <div class="joystick-container" id="phoneControls">
