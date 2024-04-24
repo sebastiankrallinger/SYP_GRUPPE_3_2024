@@ -1,5 +1,7 @@
 package com.example.mbot2_projekt_v1.Controller;
 
+import com.example.mbot2_projekt_v1.classes.Sensordata;
+import com.google.gson.Gson;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -176,11 +178,18 @@ public class MainController {
                 socket.receive(packet);
                 byte[] data = packet.getData();
                 System.out.println("Data: " + data);
-                String sensorData = new String(data, 0, packet.getLength(), StandardCharsets.UTF_8);
 
+                String sensorDataJSON = new String(data, 0, packet.getLength(), StandardCharsets.UTF_8);
 
+                System.out.println("Empfangene Sensorwerte:\n" + sensorDataJSON);
 
-                System.out.println("Empfangene Sensorwerte: " + sensorData);
+                //Auslesen
+                Gson gson = new Gson();
+
+                // JSON-String in ein Objekt deserialisieren
+                Sensordata sensordata = gson.fromJson(sensorDataJSON, Sensordata.class);
+                System.out.println(sensordata.getMbotid() +"\t" +sensordata.getLine());
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
