@@ -160,7 +160,7 @@ public class MainController {
 
 
     @PostMapping("/getSensordata")
-    public String receiveData() {
+    public void receiveData(@RequestParam("command") String command) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
 
         executor.execute(() -> {
@@ -169,7 +169,6 @@ public class MainController {
                 DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 
                 // Sende Befehl zum Abrufen von Sensorwerten
-                String command = "SENSOR";
                 byte[] sendData = command.getBytes();
                 DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
                 socket.send(sendPacket);
@@ -181,7 +180,7 @@ public class MainController {
 
                 String sensorDataJSON = new String(data, 0, packet.getLength(), StandardCharsets.UTF_8);
 
-                System.out.println("Empfangene Sensorwerte:\n" + sensorDataJSON);
+                //System.out.println("Empfangene Sensorwerte:\n" + sensorDataJSON);
 
                 //Auslesen
                 Gson gson = new Gson();
@@ -195,7 +194,11 @@ public class MainController {
             }
         });
 
+<<<<<<< Updated upstream
         executor.shutdown();
         return "redirect:/mBot";
+=======
+        //executor.shutdown();
+>>>>>>> Stashed changes
     }
 }
