@@ -52,7 +52,7 @@ public class MainController {
         }
         mBotIP = ipAdresseMbot;
         sendConnected();
-        return "redirect:/mBot";
+        return "redirect:/mBot#controller";
     }
 
     public void sendConnected(){

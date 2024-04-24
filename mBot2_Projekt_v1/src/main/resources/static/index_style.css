@@ -3,7 +3,6 @@ html, body {
     margin: 0;
     padding: 0;
     height: 100vh;
-    overflow: hidden;
 }
 
 .background {
@@ -248,3 +247,20 @@ th {
     padding: 0 20px; /* optional: add padding to prevent image sticking to the edge */
 }
 
+.container3D {
+    body {
+        margin: 0;
+        overflow: hidden; /* Prevent scrollbars */
+        background-color: #ffffff; /* Set background color of the entire page */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh; /* Ensure body covers the entire viewport height */
+    }
+
+    canvas {
+        width: 70vw; /* Make canvas occupy 70% of the viewport width */
+        height: 70vh; /* Make canvas occupy 70% of the viewport height */
+    }
+
+}
