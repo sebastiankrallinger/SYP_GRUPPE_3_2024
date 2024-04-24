@@ -69,6 +69,47 @@ def drive(message):
     if message == "STOP":
         cyberpi.mbot2.EM_stop(port="all")
         direction_before="STOP"
+        
+
+def send_sensor_data_to_server(s):
+
+    server_ip = "10.10.1.184"
+    
+    sensordata = {
+                "mbotid": cyberpi.get_mac_address(),
+                "ultrasonic": cyberpi.ultrasonic2.get(1),
+                "quad_rgb": [
+                    cyberpi.quad_rgb_sensor.get_color(1, index=1),
+                    cyberpi.quad_rgb_sensor.get_color(2, index=1),
+                    cyberpi.quad_rgb_sensor.get_color(3, index=1),
+                    cyberpi.quad_rgb_sensor.get_color(4, index=1)
+                ],
+                "line": cyberpi.quad_rgb_sensor.get_line_sta(index = 1),
+                "loudness": cyberpi.get_loudness("maximum"),
+                "brightness": cyberpi.get_bri(),
+                "pitch": cyberpi.get_pitch(),
+                "roll": cyberpi.get_roll(),
+                "yaw": cyberpi.get_yaw(),
+                "shakeval": cyberpi.get_shakeval(),
+                "wave_angle": cyberpi.get_wave_angle(),
+                "wave_speed": cyberpi.get_wave_speed(),
+                "acc_x": cyberpi.get_acc('x'),
+                "acc_y": cyberpi.get_acc('y'),
+                "acc_z": cyberpi.get_acc('z'),
+                "gyro_x": cyberpi.get_gyro('x'),
+                "gyro_y": cyberpi.get_gyro('y'),
+                "gyro_z": cyberpi.get_gyro('z'),
+                "rot_x": cyberpi.get_rotation('x'),
+                "rot_y": cyberpi.get_rotation('x'),
+                "rot_z": cyberpi.get_rotation('x')
+            }
+        
+    json_data = ujson.dumps(sensordata)
+    
+    s.sendto(json_data.encode('utf-8'), (server_ip, 1234))
+    
+
+
 
 cyberpi.led.on(255, 0, 0)  # Red Lights
 cyberpi.network.config_sta("htljoh-public", "joh12345")  # Wlan Name & Password
@@ -121,6 +162,9 @@ while True:
             cyberpi.console.clear()
         elif received_message=="UP" or received_message=="DOWN" or received_message=="RIGHT" or received_message=="RIGHT_B" or received_message=="LEFT" or received_message=="LEFT_B" or received_message=="STOP":
             drive(received_message)
+        elif received_message == "SENSOR":
+            send_sensor_data_to_server(s)
         if 0 <= selected_speed <= 100:
             define_speed(selected_speed)
             drive(direction_before)
+    

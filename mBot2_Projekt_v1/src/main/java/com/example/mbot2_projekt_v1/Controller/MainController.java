@@ -1,10 +1,13 @@
 package com.example.mbot2_projekt_v1.Controller;
 
+import com.example.mbot2_projekt_v1.classes.Sensordata;
+import com.google.gson.Gson;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -12,6 +15,12 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.*;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Controller
 public class MainController {
@@ -52,7 +61,7 @@ public class MainController {
         }
         mBotIP = ipAdresseMbot;
         sendConnected();
-        return "redirect:/mBot";
+        return "redirect:/mBot#controller";
     }
 
     public void sendConnected(){
@@ -117,8 +126,7 @@ public class MainController {
     public void arrowControl(HttpServletRequest request){
         try {
             String direction = request.getParameter("direction");
-            //System.out.println(direction);
-            //Befeht in byte-Array konvertieren
+
             byte[] sendData = direction.getBytes();
 
             try (DatagramSocket socket = new DatagramSocket()) {
@@ -186,5 +194,46 @@ public class MainController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    @PostMapping("/getSensordata")
+    public String receiveData() {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        executor.execute(() -> {
+            try (DatagramSocket socket = new DatagramSocket(1234)) {
+                byte[] buffer = new byte[1024];
+                DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+
+                // Sende Befehl zum Abrufen von Sensorwerten
+                String command = "SENSOR";
+                byte[] sendData = command.getBytes();
+                DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
+                socket.send(sendPacket);
+
+                // Empfange die Antwort vom mBot
+                socket.receive(packet);
+                byte[] data = packet.getData();
+                //System.out.println("Data: " + data);
+
+                String sensorDataJSON = new String(data, 0, packet.getLength(), StandardCharsets.UTF_8);
+
+                System.out.println("Empfangene Sensorwerte:\n" + sensorDataJSON);
+
+                //Auslesen
+                Gson gson = new Gson();
+
+                // JSON-String in ein Objekt deserialisieren
+                Sensordata sensordata = gson.fromJson(sensorDataJSON, Sensordata.class);
+                System.out.println(sensordata.getMbotid() +"\t" +sensordata.getLine());
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        executor.shutdown();
+        return "redirect:/mBot#controller";
     }
 }
