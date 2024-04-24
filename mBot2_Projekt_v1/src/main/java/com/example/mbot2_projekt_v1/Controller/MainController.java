@@ -198,6 +198,7 @@ public class MainController {
 
 
     @PostMapping("/getSensordata")
+    @ResponseBody
     public void receiveData(@RequestParam("command") String command) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
 
@@ -231,6 +232,6 @@ public class MainController {
                 e.printStackTrace();
             }
         });
-        //executor.shutdown();
+        executor.shutdown();
     }
 }
