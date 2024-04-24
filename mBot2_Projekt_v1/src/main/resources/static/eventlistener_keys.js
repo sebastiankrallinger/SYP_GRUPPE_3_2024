@@ -1,5 +1,6 @@
 let b=true;
 let currentdir="";
+
 document.addEventListener('keydown', function(event) {
     if (event.key === 'ArrowLeft' || event.key === 'a' || event.key === 'A') {
         if(b==true) {
@@ -14,12 +15,14 @@ document.addEventListener('keydown', function(event) {
         }
     }
     else if (event.key === 'ArrowUp' || event.key === 'w' || event.key === 'W') {
+        event.preventDefault();
         if(b==true) {
             sendDirection('UP', '/arrowControl?direction=');
             b = false;
         }
     }
     else if (event.key === 'ArrowDown' || event.key === 's' || event.key === 'S') {
+        event.preventDefault();
         if(b==true) {
             sendDirection('DOWN', '/arrowControl?direction=');
             b = false;
@@ -32,8 +35,6 @@ document.addEventListener('keyup', function(event) {
         sendDirection('STOP', '/arrowControl?direction=');
     }
 });
-
-
 function sendDirection(direction, url) {
     // AJAX-Anfrage an den Controller senden
     var xhr = new XMLHttpRequest();
@@ -85,8 +86,7 @@ function sendXY(joystick_coordinates) {
                 sendDirection('RIGHT_B', '/joystickControl?direction=');
             }
         }
-
-        else if (xy[1] === "0" && xy[3] === "0") {
+        else if (xy[1] === "0" && xy[3] === "0" && screen.width < 768) {
             if(currentdir!="STOP"){
                 currentdir="STOP";
                 sendDirection('STOP', '/joystickControl?direction=');

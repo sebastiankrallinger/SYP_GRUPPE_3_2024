@@ -9,13 +9,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.util.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,37 +26,47 @@ import java.util.concurrent.Executors;
 public class MainController {
     //IP Adresse des aktiven mBots
     private String mBotIP = "kein mBot ausgewählt";
+    private HashMap<String, String> ips = new HashMap<>();
+    private List<String> s = new ArrayList<>();
+    private int mbotId = 1;
+    private int speed=100;
 
-    //Mainpage mBot Website
-    @GetMapping("/homepage")
-    public String mainpage(Model model) {
-        return "homepage";
-    }
 
     @GetMapping("/mBot")
-    public String choosePC(Model model) {
-        model.addAttribute("ipAdresse", mBotIP);
+    public String ips(Model model) {
+        if (ips.get(mBotIP) != null) {
+            model.addAttribute("ipAdresses", mapToString());
+            //System.out.println("ipAdresses: " + mapToString());
+        }
+        if (ips.get(mBotIP) != null){
+            model.addAttribute("ipAdresse", mBotIP + " - " + ips.get(mBotIP));
+            //System.out.println("ipAdresse: " + mBotIP + " - " + ips.get(mBotIP));
+        }else {
+            model.addAttribute("ipAdresse", mBotIP);
+        }
         return "index";
     }
 
-
-    @GetMapping("/sendCommand")
+    @GetMapping("/mBotIP")
     public String sendCommand() {
-        return "LoginPage";
+        return "mBotIP";
     }
 
     @GetMapping("/getDevice")
-    public String getDevice(@RequestParam("ipAdresse") String ipAdresseMbot, Model model){
+    public String getDevice(@RequestParam("ipAdresse") String ipAdresseMbot){
         System.out.println("Ausgewähltes Gerät: " + ipAdresseMbot);
+        if (!ips.containsKey(ipAdresseMbot)){
+            ips.put(ipAdresseMbot, "mBot " + mbotId);
+            mbotId++;
+        }
         mBotIP = ipAdresseMbot;
         sendConnected();
-        return "redirect:/mBot";
+        return "redirect:/mBot#controller";
     }
 
-    @PostMapping("/sendConnected")
     public void sendConnected(){
         try {
-            System.out.println(mBotIP);
+            //System.out.println(mBotIP);
             String connected = "TRUE";
             //System.out.println(connected);
             //Befeht in byte-Array konvertieren
@@ -73,10 +82,10 @@ public class MainController {
         }
     }
 
-    @PostMapping("/suizidePrevention")
-    public String sendSuizidePrevention(HttpServletRequest request){
+    @PostMapping("/suicidePrevention")
+    @ResponseBody
+    public void sendSuicidePrevention(@RequestParam("prevention") String prevention){
         try {
-            String prevention = request.getParameter("prevention");
             //System.out.println(prevention);
             //Befeht in byte-Array konvertieren
             byte[] sendData = prevention.getBytes();
@@ -89,15 +98,14 @@ public class MainController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "redirect:/mBot";
     }
 
 
     //Button Befehle an mBots senden
     @PostMapping("/buttonControl")
-    public String buttonControl(HttpServletRequest request){
+    @ResponseBody
+    public void buttonControl(@RequestParam("direction") String direction){
         try {
-            String direction = request.getParameter("direction");
             //System.out.println(direction);
             //Befeht in byte-Array konvertieren
             byte[] sendData = direction.getBytes();
@@ -111,12 +119,11 @@ public class MainController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //zurück zur Mainpage navigieren
-        return "redirect:/mBot";
     }
 
     @PostMapping("/arrowControl")
-    public String arrowControl(HttpServletRequest request){
+    @ResponseBody
+    public void arrowControl(HttpServletRequest request){
         try {
             String direction = request.getParameter("direction");
 
@@ -131,12 +138,11 @@ public class MainController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //zurück zur Mainpage navigieren
-        return "redirect:/mBot";
     }
 
     @PostMapping("/joystickControl")
-    public String joystickControl(HttpServletRequest request){
+    @ResponseBody
+    public void joystickControl(HttpServletRequest request){
         try {
            if(mBotIP!="kein mBot ausgewählt") {
                String xy = request.getParameter("direction");
@@ -154,8 +160,40 @@ public class MainController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //zurück zur Mainpage navigieren
-        return "redirect:/mBot";
+    }
+
+    private List<String> mapToString(){
+        for (Map.Entry<String, String> m : ips.entrySet()) {
+            String key = m.getKey();
+            String value = m.getValue();
+            if (!s.contains(key + " - " + value)) {
+                s.add(key + " - " + value);
+            }
+        }
+        return s;
+    }
+
+    @PostMapping("/speedControl")
+    @ResponseBody
+    public void speedControl(HttpServletRequest request){
+        try {
+            int input = Integer.parseInt(request.getParameter("speed"));
+            if (input - speed > 5 || input - speed < -5 ){
+                speed = input;
+                //System.out.println(speed);
+                //Befeht in byte-Array konvertieren
+                byte[] sendData = String.valueOf(speed).getBytes();
+
+                try (DatagramSocket socket = new DatagramSocket()) {
+                    //Button Befehl direkt an den mBot senden
+                    DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
+
+                    socket.send(packet);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -176,7 +214,7 @@ public class MainController {
                 // Empfange die Antwort vom mBot
                 socket.receive(packet);
                 byte[] data = packet.getData();
-                System.out.println("Data: " + data);
+                //System.out.println("Data: " + data);
 
                 String sensorDataJSON = new String(data, 0, packet.getLength(), StandardCharsets.UTF_8);
 
