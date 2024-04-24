@@ -248,19 +248,31 @@ th {
 }
 
 .container3D {
-    body {
-        margin: 0;
-        overflow: hidden; /* Prevent scrollbars */
-        background-color: #ffffff; /* Set background color of the entire page */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh; /* Ensure body covers the entire viewport height */
-    }
+    position: relative;
+    margin: 20px auto; /* Adjust margin as needed */
+    width: 90%;
+    height: auto;
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 10px;
+    border-radius: 5px;
+    z-index: 0;
+}
 
-    canvas {
-        width: 70vw; /* Make canvas occupy 70% of the viewport width */
-        height: 70vh; /* Make canvas occupy 70% of the viewport height */
-    }
+/* CSS for the 3D canvas */
+.container3D canvas {
+    width: 90%;
+    height: auto;
 
+}
+
+.custom-image {
+    max-width: 90%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+.button-3Dcontainer {
+    text-align: center;
+    margin-top: 20px;
 }

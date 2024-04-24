@@ -6,6 +6,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="/arrow_key_disable.js"></script>
+        <script src="/model_swap.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
@@ -30,16 +31,42 @@
             <h1>Welcome to MBot2</h1>
         </header>
 
-        <div class="image_container">
-            <img src="/bilder/mBot.png" style="
-                max-width: 90%;
-                height: auto;
-                display: block;
-                margin: 0 auto; "/>
+        <div class="container3D" id="overlay">
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const scene = new THREE.Scene();
+                    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                    const renderer = new THREE.WebGLRenderer();
+                    renderer.setSize(window.innerWidth * 0.8, window.innerHeight * 0.7);
+                    renderer.setClearColor(0xffffff);
+
+                    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+                    // Geometry
+                    const geometry = new THREE.BoxGeometry(1, 1, 1);
+                    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+                    const cube = new THREE.Mesh(geometry, material);
+                    scene.add(cube);
+
+                    camera.position.z = 5;
+
+                    document.getElementById('overlay').appendChild(renderer.domElement);
+
+                    function animate() {
+                        requestAnimationFrame(animate);
+                        renderer.render(scene, camera);
+                    }
+                    animate();
+                });
+            </script>
         </div>
 
-        <div class="container3D">
-            <script src="/3Dmodel.js"></script>
+        <div class="custom-image-container" style="display: none;">
+            <img class="custom-image" src="/bilder/mBot.png"/>
+        </div>
+
+        <div class="button-3Dcontainer">
+            <button onclick="toggleVisibility()">Toggle Model View</button>
         </div>
 
         <section id="controller">
