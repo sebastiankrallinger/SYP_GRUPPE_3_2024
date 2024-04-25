@@ -61,6 +61,7 @@ public class MainController {
         }
         mBotIP = ipAdresseMbot;
         sendConnected();
+        receiveData("SENSOR");
         return "redirect:/mBot#controller";
     }
 
@@ -226,7 +227,7 @@ public class MainController {
 
                 // JSON-String in ein Objekt deserialisieren
                 Sensordata sensordata = gson.fromJson(sensorDataJSON, Sensordata.class);
-                System.out.println(sensordata.getMbotid() +"\t" +sensordata.getLine());
+                System.out.println(sensordata.getMbotid() +"\t" + sensordata.getLine() +"\t" + sensordata.getBrightness() +"\t" + sensordata.getUltrasonic());
 
             } catch (Exception e) {
                 e.printStackTrace();
