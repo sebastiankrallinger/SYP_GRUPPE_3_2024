@@ -3,6 +3,7 @@ package com.example.mbot2_projekt_v1.Controller;
 import com.example.mbot2_projekt_v1.classes.Sensordata;
 import com.google.gson.Gson;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,13 +24,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Controller
-public class MainController {
+public class MainController{
     //IP Adresse des aktiven mBots
     private String mBotIP = "kein mBot ausgewählt";
     private HashMap<String, String> ips = new HashMap<>();
     private List<String> s = new ArrayList<>();
     private int mbotId = 1;
     private int speed=100;
+    private Sensordata sensordata;
 
 
     @GetMapping("/mBot")
@@ -61,7 +63,7 @@ public class MainController {
         }
         mBotIP = ipAdresseMbot;
         sendConnected();
-        receiveData("SENSOR");
+        receiveData();
         return "redirect:/mBot#controller";
     }
 
@@ -198,41 +200,52 @@ public class MainController {
     }
 
 
+    public Sensordata receiveData() {
+        try (DatagramSocket socket = new DatagramSocket()) {
+            // Sende Befehl zum Abrufen von Sensorwerten
+            byte[] sendData = "SENSOR".getBytes();
+            DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
+            socket.send(sendPacket);
+            Thread thread = new Thread(new SensorThread());
+            thread.start();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return sensordata;
+    }
     @PostMapping("/getSensordata")
     @ResponseBody
-    public void receiveData(@RequestParam("command") String command) {
-        ExecutorService executor = Executors.newSingleThreadExecutor();
+    public Sensordata sendSensorData() {
+        return sensordata;
+    }
+    class SensorThread implements Runnable {
+        @Override
+        public void run() {
+            try (DatagramSocket socket2 = new DatagramSocket(4001)) {
+                while(true) {
+                    byte[] buffer = new byte[1024];
+                    DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+                    // Empfange die Antwort vom mBot
+                    socket2.receive(packet);
+                    byte[] data = packet.getData();
+                    //System.out.println("Data: " + data);
 
-        executor.execute(() -> {
-            try (DatagramSocket socket = new DatagramSocket(1234)) {
-                byte[] buffer = new byte[1024];
-                DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+                    String sensorDataJSON = new String(data, 0, packet.getLength(), StandardCharsets.UTF_8);
 
-                // Sende Befehl zum Abrufen von Sensorwerten
-                byte[] sendData = command.getBytes();
-                DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
-                socket.send(sendPacket);
+                    //System.out.println("Empfangene Sensorwerte:\n" + sensorDataJSON);
 
-                // Empfange die Antwort vom mBot
-                socket.receive(packet);
-                byte[] data = packet.getData();
-                //System.out.println("Data: " + data);
+                    //Auslesen
+                    Gson gson = new Gson();
 
-                String sensorDataJSON = new String(data, 0, packet.getLength(), StandardCharsets.UTF_8);
-
-                //System.out.println("Empfangene Sensorwerte:\n" + sensorDataJSON);
-
-                //Auslesen
-                Gson gson = new Gson();
-
-                // JSON-String in ein Objekt deserialisieren
-                Sensordata sensordata = gson.fromJson(sensorDataJSON, Sensordata.class);
-                System.out.println(sensordata.getMbotid() +"\t" + sensordata.getLine() +"\t" + sensordata.getBrightness() +"\t" + sensordata.getUltrasonic());
+                    // JSON-String in ein Objekt deserialisieren
+                    sensordata = gson.fromJson(sensorDataJSON, Sensordata.class);
+                    sendSensorData();
+                    System.out.println(sensordata.getMbotid() + "\t" + sensordata.getSpeed() + "\t" + sensordata.getUltrasonic());
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        });
-        executor.shutdown();
+        }
     }
 }

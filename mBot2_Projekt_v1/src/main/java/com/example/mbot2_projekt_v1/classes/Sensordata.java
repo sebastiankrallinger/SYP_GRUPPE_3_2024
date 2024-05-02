@@ -71,6 +71,9 @@ public class Sensordata {
     @JsonProperty("quad_rgb")
     private List<String> quadRGB;
 
+    @JsonProperty("speed")
+    private int speed;
+
     public int getLine() {
         return line;
     }
@@ -238,4 +241,7 @@ public class Sensordata {
     public void setQuadRGB(List<String> quadRGB) {
         this.quadRGB = quadRGB;
     }
+
+    public void setSpeed(int speed){this.speed=speed;}
+    public int getSpeed(){return speed;}
 }

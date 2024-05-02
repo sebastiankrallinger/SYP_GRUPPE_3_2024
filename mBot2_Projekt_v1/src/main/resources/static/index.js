@@ -89,11 +89,12 @@ function btnSuicide(){
 }
 
 function sensorData(){
-    $.ajax({
-        url: "/getSensordata",
-        type: "POST",
-        data: { command: "SENSOR" }
-    });
+    fetch("/getSensordata")
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+        })
+        .catch(error => console.error('Error:', error));
 }
 
 function updateSliderValue(value, id) {
@@ -110,4 +111,7 @@ function updateSliderValue(value, id) {
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/speedControl?speed=' + value, true);
     xhr.send();
+
+    sensorData();
+    setInterval(sensorData, 5000);
 }
