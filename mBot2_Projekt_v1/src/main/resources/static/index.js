@@ -1,6 +1,7 @@
 $(document).ready(function() {
     btnDrive();
     btnSuicide();
+    sensorData();
 });
 
 function checkDevice() {
@@ -88,7 +89,41 @@ function btnSuicide(){
     })
 }
 
-
+function sensorData(){
+    fetch("/getSensordata")
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        if (data != ""){
+            document.getElementById("mbotid").innerText = data.mbotid;
+            document.getElementById("yaw").innerText = data.yaw;
+            document.getElementById("loudness").innerText = data.loudness;
+            document.getElementById("rot_x").innerText = data.rot_x;
+            document.getElementById("rot_y").innerText = data.rot_y;
+            document.getElementById("gyro_y").innerText = data.gyro_y;
+            document.getElementById("brightness").innerText = data.brightness;
+            document.getElementById("acc_z").innerText = data.acc_z;
+            document.getElementById("pitch").innerText = data.pitch;
+            document.getElementById("shakeval").innerText = data.shakeval;
+            document.getElementById("wave_speed").innerText = data.wave_speed;
+            document.getElementById("roll").innerText = data.roll;
+            document.getElementById("acc_x").innerText = data.acc_x;
+            document.getElementById("wave_angle").innerText = data.wave_angle;
+            document.getElementById("acc_y").innerText = data.acc_y;
+            document.getElementById("gyro_x").innerText = data.gyro_x;
+            document.getElementById("ultrasonic").innerText = data.ultrasonic;
+            document.getElementById("gyro_z").innerText = data.gyro_z;
+            document.getElementById("rot_z").innerText = data.rot_z;
+            document.getElementById("speed").innerText = data.speed;
+            document.getElementById("quad_rgb").innerText = data.quad_rgb;
+            document.getElementById("mid_left").style.backgroundColor = "#" + data.quad_rgb[1].split("x")[1];
+            document.getElementById("mid_right").style.backgroundColor = "#" + data.quad_rgb[2].split("x")[1];
+            document.getElementById("out_left").style.backgroundColor = "#" + data.quad_rgb[0].split("x")[1];
+            document.getElementById("out_right").style.backgroundColor = "#" + data.quad_rgb[3].split("x")[1];
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
 
 function updateSliderValue(value, id) {
     console.log(value);
@@ -104,7 +139,4 @@ function updateSliderValue(value, id) {
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/speedControl?speed=' + value, true);
     xhr.send();
-
-    sensorData();
-    setInterval(sensorData, 5000);
 }

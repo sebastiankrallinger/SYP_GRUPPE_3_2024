@@ -213,10 +213,13 @@ public class MainController{
         }
         return sensordata;
     }
-    @PostMapping("/getSensordata")
+    @GetMapping("/getSensordata")
     @ResponseBody
     public Sensordata sendSensorData() {
-        return sensordata;
+        if (sensordata != null) {
+            return sensordata;
+        }
+        return null;
     }
     class SensorThread implements Runnable {
         @Override
@@ -236,11 +239,10 @@ public class MainController{
 
                     //Auslesen
                     Gson gson = new Gson();
-
                     // JSON-String in ein Objekt deserialisieren
                     sensordata = gson.fromJson(sensorDataJSON, Sensordata.class);
                     sendSensorData();
-                    System.out.println(sensordata.getMbotid() + "\t" + sensordata.getLine() + "\t" + sensordata.getUltrasonic());
+                    //System.out.println(sensordata.getMbotid() + "\t" + sensordata.getQuadRGB() + "\t" + sensordata.getUltrasonic());
                 }
 
             } catch (Exception e) {
