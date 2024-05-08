@@ -240,7 +240,7 @@ public class MainController{
                     // JSON-String in ein Objekt deserialisieren
                     sensordata = gson.fromJson(sensorDataJSON, Sensordata.class);
                     sendSensorData();
-                    System.out.println(sensordata.getMbotid() + "\t" + sensordata.getSpeed() + "\t" + sensordata.getUltrasonic());
+                    System.out.println(sensordata.getMbotid() + "\t" + sensordata.getLine() + "\t" + sensordata.getUltrasonic());
                 }
 
             } catch (Exception e) {

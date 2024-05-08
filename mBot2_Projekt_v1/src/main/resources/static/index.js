@@ -88,14 +88,7 @@ function btnSuicide(){
     })
 }
 
-function sensorData(){
-    fetch("/getSensordata")
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-        })
-        .catch(error => console.error('Error:', error));
-}
+
 
 function updateSliderValue(value, id) {
     console.log(value);
