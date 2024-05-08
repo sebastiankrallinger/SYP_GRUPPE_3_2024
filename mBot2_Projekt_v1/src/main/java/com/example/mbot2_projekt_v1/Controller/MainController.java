@@ -3,6 +3,9 @@ package com.example.mbot2_projekt_v1.Controller;
 import com.example.mbot2_projekt_v1.classes.Sensordata;
 import com.google.gson.Gson;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,6 +35,7 @@ public class MainController{
     private int mbotId = 1;
     private int speed=100;
     private Sensordata sensordata;
+    private SimpMessagingTemplate messagingTemplate;
 
 
     @GetMapping("/mBot")
@@ -213,8 +217,8 @@ public class MainController{
         }
         return sensordata;
     }
-    @GetMapping("/getSensordata")
-    @ResponseBody
+    @MessageMapping("/sensorData")
+    @SendTo("/topic/sensorData")
     public Sensordata sendSensorData() {
         if (sensordata != null) {
             return sensordata;
@@ -241,7 +245,7 @@ public class MainController{
                     Gson gson = new Gson();
                     // JSON-String in ein Objekt deserialisieren
                     sensordata = gson.fromJson(sensorDataJSON, Sensordata.class);
-                    sendSensorData();
+                    messagingTemplate.convertAndSend("/topic/sensorData", sensordata);
                     //System.out.println(sensordata.getMbotid() + "\t" + sensordata.getQuadRGB() + "\t" + sensordata.getUltrasonic());
                 }
 
