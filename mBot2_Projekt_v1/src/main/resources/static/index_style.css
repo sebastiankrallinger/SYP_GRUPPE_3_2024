@@ -32,16 +32,16 @@ h1 {
     font-weight: bold;
 }
 .buttons-container {
-    grid-column: 2; /* Second column */
-    grid-row: 0; /* Second row */
+    grid-column: 3; /* Third column */
+    grid-row: 1; /* First row */
     display: grid;
     flex-direction: column;
     align-items: center; /* Center align items horizontally */
 }
 
 .joystick-container {
-    grid-column: 2; /* Adjust grid-column to place it on the right */
-    grid-row: 0; /* Adjust grid-row if necessary */
+    grid-column: 3; /* Third column */
+    grid-row: 1; /* Second row */
     width: 150px;
 }
 
@@ -86,7 +86,7 @@ button {
     margin: 0 auto;
     padding: 20px;
     display: grid;
-    grid-template-columns: 1fr 0fr; /* Two columns */
+    grid-template-columns: 1fr 1fr 1fr; /* Three columns */
     grid-template-rows: auto auto; /* Two rows, first row for header, second row for content */
     gap: 20px; /* Gap between grid items */
     background: white;
@@ -241,30 +241,6 @@ th {
     background-color: #f2f2f2;
 }
 
-.image_container {
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 0 20px; /* optional: add padding to prevent image sticking to the edge */
-}
-
-.container3D {
-    position: relative;
-    margin: 20px auto; /* Adjust margin as needed */
-    width: 90%;
-    height: auto;
-    background-color: rgba(255, 255, 255, 0.5);
-    padding: 10px;
-    border-radius: 5px;
-    z-index: 0;
-}
-
-/* CSS for the 3D canvas */
-.container3D canvas {
-    width: 90%;
-    height: auto;
-
-}
-
 .custom-image {
     max-width: 90%;
     height: auto;
@@ -272,7 +248,19 @@ th {
     margin: 0 auto;
 }
 
-.button-3Dcontainer {
-    text-align: center;
-    margin-top: 20px;
+.iframe-container {
+    grid-column: 2; /* Second column */
+    grid-row: 1; /* Second row */
+    position: relative;
+    width: 100%; /* Full width of the container */
+    padding-top: 56.25%; /* Aspect Ratio (16:9) */
+}
+
+iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
 }

@@ -31,47 +31,16 @@
             <h1>Welcome to MBot2</h1>
         </header>
 
-        <div class="container3D" id="overlay">
-            <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                    const scene = new THREE.Scene();
-                    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-                    const renderer = new THREE.WebGLRenderer();
-                    renderer.setSize(window.innerWidth * 0.8, window.innerHeight * 0.7);
-                    renderer.setClearColor(0xffffff);
-
-                    const controls = new THREE.OrbitControls(camera, renderer.domElement);
-
-                    // Geometry
-                    const geometry = new THREE.BoxGeometry(1, 1, 1);
-                    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-                    const cube = new THREE.Mesh(geometry, material);
-                    scene.add(cube);
-
-                    camera.position.z = 5;
-
-                    document.getElementById('overlay').appendChild(renderer.domElement);
-
-                    function animate() {
-                        requestAnimationFrame(animate);
-                        renderer.render(scene, camera);
-                    }
-                    animate();
-                });
-            </script>
-        </div>
-
         <div class="custom-image-container" style="display: none;">
             <img class="custom-image" src="/bilder/mBot.png"/>
         </div>
 
-        <div class="button-3Dcontainer">
-            <button onclick="toggleVisibility()">Toggle Model View</button>
-        </div>
 
         <section id="controller">
             <h2 style="color: whitesmoke">Controller</h2>
+
             <div class="container">
+
                 <div class="selected-device">
                     <p>Selected Device: <span id="ipAdresse" th:text="${ipAdresse}"></span></p>
                     <form action="/mBotIP" method="get">
@@ -89,7 +58,21 @@
                     <button id="suicideOff" type="button" name="prevention">OFF</button>
                     <button id="suicideOn" type="button" name="prevention">ON</button>
                 </form>
+                </div>
 
+                <div class="iframe-container">
+                    <iframe src="https://sketchfab.com/playlists/embed?collection=45a704d7f1c74dbbb79f01971f676a85&autostart=0"
+                            title="adil"
+                            allow="autoplay; fullscreen; xr-spatial-tracking"
+                            frameborder="0"
+                            allowfullscreen
+                            mozallowfullscreen="true"
+                            webkitallowfullscreen="true"
+                            xr-spatial-tracking
+                            execution-while-out-of-viewport
+                            execution-while-not-rendered
+                            web-share
+                    ></iframe>
                 </div>
                  <!-- Joystick für Handys -->
             <div class="joystick-container" id="phoneControls">
@@ -120,7 +103,6 @@
                     </form>
                 </div>
                 </div>
-            </div>
         </section>
 
         <section id="sensor-data">
