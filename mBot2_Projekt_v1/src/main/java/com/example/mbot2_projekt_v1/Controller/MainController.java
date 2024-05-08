@@ -213,6 +213,7 @@ public class MainController{
         }
         return sensordata;
     }
+
     @PostMapping("/getSensordata")
     @ResponseBody
     public Sensordata sendSensorData() {
@@ -245,6 +246,69 @@ public class MainController{
 
             } catch (Exception e) {
                 e.printStackTrace();
+            }
+        }
+    }
+
+    @PostMapping("/lineFollower")
+    @ResponseBody
+    public void lineFollower(@RequestParam("follower") String follower){
+        if(Objects.equals(follower, "ON")) {
+
+            while (true){
+                //Gerade aus fahren
+                if(sensordata.getLine() == 6){
+                    try {
+                        //Befeht in byte-Array konvertieren
+                        String s = "UP";
+                        byte[] sendData = s.getBytes();
+
+                        try (DatagramSocket socket = new DatagramSocket()) {
+                            DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
+                            socket.send(packet);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                //Nach Rechts fahren
+                if(sensordata.getLine() == 7 || sensordata.getLine() == 3 || sensordata.getLine() == 1){
+                    try {
+                        //Befeht in byte-Array konvertieren
+                        String s = "TURN_RIGHT";
+                        byte[] sendData = s.getBytes();
+
+                        try (DatagramSocket socket = new DatagramSocket()) {
+                            DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
+                            socket.send(packet);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                //Nach Links fahren
+                if(sensordata.getLine() == 14 || sensordata.getLine() == 12 || sensordata.getLine() == 8){
+                    try {
+                        //Befeht in byte-Array konvertieren
+                        String s = "TURN_LEFT";
+                        byte[] sendData = s.getBytes();
+
+                        try (DatagramSocket socket = new DatagramSocket()) {
+                            DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
+                            socket.send(packet);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                try {
+                    Thread.sleep(200); // Pause für 100 Millisekunden
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

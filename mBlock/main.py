@@ -58,6 +58,15 @@ def drive(message):
     if message == "LEFT":
         cyberpi.mbot2.drive_power(40, -60)
         direction_before="LEFT"
+        
+    if message == "TURN_LEFT":
+        cyberpi.mbot2.turn_left(speed = slider_speed)
+        direction_before="TURN_LEFT"
+        
+    if message == "TURN_RIGHT":
+        cyberpi.mbot2.turn_right(speed = slider_speed)
+        direction_before="TURN_RIGHT"
+        
     if message == "RIGHT":
         cyberpi.mbot2.drive_power(60, -40)
         direction_before="RIGHT"
@@ -168,7 +177,7 @@ while True:
             cyberpi.console.println("Suicide-Prevention deaktiviert!")
             time.sleep(3)
             cyberpi.console.clear()
-        elif received_message=="UP" or received_message=="DOWN" or received_message=="RIGHT" or received_message=="RIGHT_B" or received_message=="LEFT" or received_message=="LEFT_B" or received_message=="STOP":
+        elif received_message=="UP" or received_message=="DOWN" or received_message=="RIGHT" or received_message=="TURN_RIGHT" or received_message=="RIGHT_B" or received_message=="LEFT" or received_message=="TURN_LEFT" or received_message=="LEFT_B" or received_message=="STOP":
             drive(received_message)
         elif received_message == "SENSOR":
             thread_flag2 = True
