@@ -1,7 +1,18 @@
+let sock = new SockJS('http://localhost:8080/ws');
+
+let client = Stomp.over(sock);
+
+client.connect({}, (frame) => {
+    //console.log("Frame is: " +frame);
+    client.subscribe('/topic/sensorData', (payload) => {
+        //console.log(payload);
+        sensorData(JSON.parse(payload.body))
+    });
+});
+
 $(document).ready(function() {
     btnDrive();
     btnSuicide();
-    sensorData();
 });
 
 function checkDevice() {
@@ -88,15 +99,6 @@ function btnSuicide(){
         });
     })
 }
-
-let socket = new WebSocket("ws://localhost:8080/sensorData");
-
-socket.onmessage = function(event) {
-    if(event != "") {
-        let data = JSON.parse(event.data);
-        sensorData(data);
-    }
-};
 
 function sensorData(data){
     console.log(data);
