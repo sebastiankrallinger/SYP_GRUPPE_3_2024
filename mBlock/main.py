@@ -122,7 +122,7 @@ def send_sensor_data_to_server_thread():
         json_data = ujson.dumps(sensordata)
         #cyberpi.console.println(json_data)
         s.sendto(json_data.encode('utf-8'), (server_ip, 4001))
-        time.sleep(5)
+        time.sleep(0.25)
     
 
 

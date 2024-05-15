@@ -3,6 +3,13 @@ package com.example.mbot2_projekt_v1.Controller;
 import com.example.mbot2_projekt_v1.classes.Sensordata;
 import com.google.gson.Gson;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +22,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.time.Clock;
+import java.time.Instant;
 import java.util.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -23,6 +32,7 @@ import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+@Slf4j
 @Controller
 public class MainController{
     //IP Adresse des aktiven mBots
@@ -32,6 +42,9 @@ public class MainController{
     private int mbotId = 1;
     private int speed=100;
     private Sensordata sensordata;
+
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
 
     @GetMapping("/mBot")
@@ -213,11 +226,14 @@ public class MainController{
         }
         return sensordata;
     }
-
-    @PostMapping("/getSensordata")
-    @ResponseBody
+    @MessageMapping("/sensorData")
     public Sensordata sendSensorData() {
-        return sensordata;
+
+        if (sensordata != null) {
+            //log.info("Data: " + sensordata);
+            messagingTemplate.convertAndSend("/topic/sensorData", sensordata);
+        }
+        return null;
     }
     class SensorThread implements Runnable {
         @Override
@@ -241,7 +257,7 @@ public class MainController{
                     // JSON-String in ein Objekt deserialisieren
                     sensordata = gson.fromJson(sensorDataJSON, Sensordata.class);
                     sendSensorData();
-                    System.out.println(sensordata.getMbotid() + "\t" + sensordata.getSpeed() + "\t" + sensordata.getUltrasonic());
+                    //System.out.println(sensordata.getMbotid() + "\t" + sensordata.getQuadRGB() + "\t" + sensordata.getUltrasonic());
                 }
 
             } catch (Exception e) {

@@ -7,6 +7,8 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
         <title>MBot2</title>
     </head>
     <body class="noselect" onload="checkDevice()">
@@ -111,28 +113,90 @@
         <section id="sensor-data">
             <h2 style="color: whitesmoke">Sensor Data</h2>
             <table>
-                <thead>
-                <tr>
-                    <th>Data1 Name</th>
-                    <th>Data2 Name</th>
-                    <th>Data3 Name</th>
-                </tr>
-                </thead>
                 <tbody>
                 <tr>
-                    <td>Obj1 Data1 Content</td>
-                    <td>Obj2 Data2 Content</td>
-                    <td>Obj3 Data3 Content</td>
+                    <td>MBot ID:</td>
+                    <td id="mbotid"></td>
                 </tr>
                 <tr>
-                    <td>Obj2 Data1 Content</td>
-                    <td>Obj2 Data2 Content</td>
-                    <td>Obj2 Data3 Content</td>
+                    <td>Gierachse:</td>
+                    <td id="yaw"></td>
                 </tr>
                 <tr>
-                    <td>Obj3 Data1 Content</td>
-                    <td>Obj3 Data2 Content</td>
-                    <td>Obj3 Data3 Content</td>
+                    <td>Umgebungslärm:</td>
+                    <td id="loudness"></td>
+                </tr>
+                <tr>
+                    <td>Neigung x-Achse:</td>
+                    <td id="rot_x"></td>
+                </tr>
+                <tr>
+                    <td>Neigung y-Achse:</td>
+                    <td id="rot_y"></td>
+                </tr>
+                <tr>
+                    <td>Rotataion y-Achse:</td>
+                    <td id="gyro_y"></td>
+                </tr>
+                <tr>
+                    <td>Helligkeit:</td>
+                    <td id="brightness"></td>
+                </tr>
+                <tr>
+                    <td>Beschleunigung z-Achse:</td>
+                    <td id="acc_z"></td>
+                </tr>
+                <tr>
+                    <td>Pitch:</td>
+                    <td id="pitch"></td>
+                </tr>
+                <tr>
+                    <td>Erschütterung:</td>
+                    <td id="shakeval"></td>
+                </tr>
+                <tr>
+                    <td>Wellengeschwindigkeit:</td>
+                    <td id="wave_speed"></td>
+                </tr>
+                <tr>
+                    <td>Roll:</td>
+                    <td id="roll"></td>
+                </tr>
+                <tr>
+                    <td>Beschleunigung x-Achse:</td>
+                    <td id="acc_x"></td>
+                </tr>
+                <tr>
+                    <td>Wave Angle:</td>
+                    <td id="wave_angle"></td>
+                </tr>
+                <tr>
+                    <td>Beschleunigung y-Achse:</td>
+                    <td id="acc_y"></td>
+                </tr>
+                <tr>
+                    <td>Rotation x-Achse:</td>
+                    <td id="gyro_x"></td>
+                </tr>
+                <tr>
+                    <td>Abstand:</td>
+                    <td id="ultrasonic"></td>
+                </tr>
+                <tr>
+                    <td>Rotation z-Achse:</td>
+                    <td id="gyro_z"></td>
+                </tr>
+                <tr>
+                    <td>Rotation z-Achse:</td>
+                    <td id="rot_z"></td>
+                </tr>
+                <tr>
+                    <td>Quad RGB:</td>
+                    <td id="quad_rgb"></td>
+                </tr>
+                <tr>
+                    <td>Speed:</td>
+                    <td id="speed"></td>
                 </tr>
                 </tbody>
             </table>
