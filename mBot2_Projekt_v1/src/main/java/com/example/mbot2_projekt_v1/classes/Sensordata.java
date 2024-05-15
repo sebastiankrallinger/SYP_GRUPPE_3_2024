@@ -1,11 +1,17 @@
 package com.example.mbot2_projekt_v1.classes;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
+import jdk.jfr.DataAmount;
+import lombok.Builder;
+import lombok.Data;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
+@Data
+@Builder
 public class Sensordata {
 
     @JsonProperty("line")
@@ -69,7 +75,11 @@ public class Sensordata {
     private int rotZ;
 
     @JsonProperty("quad_rgb")
-    private List<String> quadRGB;
+    @SerializedName("quad_rgb")
+    private String[] quadRGB;
+
+    @JsonProperty("speed")
+    private int speed;
 
     public int getLine() {
         return line;
@@ -231,11 +241,14 @@ public class Sensordata {
         this.rotZ = rotZ;
     }
 
-    public List<String> getQuadRGB() {
+    public String[] getQuadRGB() {
         return quadRGB;
     }
 
-    public void setQuadRGB(List<String> quadRGB) {
+    public void setQuadRGB(String[] quadRGB) {
         this.quadRGB = quadRGB;
     }
+
+    public void setSpeed(int speed){this.speed=speed;}
+    public int getSpeed(){return speed;}
 }

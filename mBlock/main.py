@@ -7,6 +7,7 @@ import cyberpi
 import _thread
 
 thread_flag = False
+thread_flag2 = False
 distance = 50
 suicide_prevention = False
 slider_speed=0
@@ -71,42 +72,48 @@ def drive(message):
         direction_before="STOP"
         
 
-def send_sensor_data_to_server(s):
-
+def send_sensor_data_to_server_thread():
+    global thread_flag2
     server_ip = "10.10.1.184"
-    
-    sensordata = {
-                "mbotid": cyberpi.get_mac_address(),
-                "ultrasonic": cyberpi.ultrasonic2.get(1),
-                "quad_rgb": [
-                    cyberpi.quad_rgb_sensor.get_color(1, index=1),
-                    cyberpi.quad_rgb_sensor.get_color(2, index=1),
-                    cyberpi.quad_rgb_sensor.get_color(3, index=1),
-                    cyberpi.quad_rgb_sensor.get_color(4, index=1)
-                ],
-                "line": cyberpi.quad_rgb_sensor.get_line_sta(index = 1),
-                "loudness": cyberpi.get_loudness("maximum"),
-                "brightness": cyberpi.get_bri(),
-                "pitch": cyberpi.get_pitch(),
-                "roll": cyberpi.get_roll(),
-                "yaw": cyberpi.get_yaw(),
-                "shakeval": cyberpi.get_shakeval(),
-                "wave_angle": cyberpi.get_wave_angle(),
-                "wave_speed": cyberpi.get_wave_speed(),
-                "acc_x": cyberpi.get_acc('x'),
-                "acc_y": cyberpi.get_acc('y'),
-                "acc_z": cyberpi.get_acc('z'),
-                "gyro_x": cyberpi.get_gyro('x'),
-                "gyro_y": cyberpi.get_gyro('y'),
-                "gyro_z": cyberpi.get_gyro('z'),
-                "rot_x": cyberpi.get_rotation('x'),
-                "rot_y": cyberpi.get_rotation('x'),
-                "rot_z": cyberpi.get_rotation('x')
-            }
-        
-    json_data = ujson.dumps(sensordata)
-    
-    s.sendto(json_data.encode('utf-8'), (server_ip, 1234))
+    s = usocket.socket(usocket.AF_INET, usocket.SOCK_DGRAM)
+    local_addr = ("0.0.0.0", 4001)  # Ändern Sie den Port entsprechend Ihrer Konfiguration
+    # Socket an die Adresse und den Port binden
+    s.bind(local_addr)
+    while thread_flag2:
+        sensordata = {
+                    "mbotid": cyberpi.get_mac_address(),
+                    "ultrasonic": cyberpi.ultrasonic2.get(1),
+                    "quad_rgb": [
+                        cyberpi.quad_rgb_sensor.get_color(1, index=1),
+                        cyberpi.quad_rgb_sensor.get_color(2, index=1),
+                        cyberpi.quad_rgb_sensor.get_color(3, index=1),
+                        cyberpi.quad_rgb_sensor.get_color(4, index=1)
+                    ],
+                    "line": cyberpi.quad_rgb_sensor.get_line_sta(index = 1),
+                    "loudness": cyberpi.get_loudness("maximum"),
+                    "brightness": cyberpi.get_bri(),
+                    "pitch": cyberpi.get_pitch(),
+                    "roll": cyberpi.get_roll(),
+                    "yaw": cyberpi.get_yaw(),
+                    "shakeval": cyberpi.get_shakeval(),
+                    "wave_angle": cyberpi.get_wave_angle(),
+                    "wave_speed": cyberpi.get_wave_speed(),
+                    "acc_x": cyberpi.get_acc('x'),
+                    "acc_y": cyberpi.get_acc('y'),
+                    "acc_z": cyberpi.get_acc('z'),
+                    "gyro_x": cyberpi.get_gyro('x'),
+                    "gyro_y": cyberpi.get_gyro('y'),
+                    "gyro_z": cyberpi.get_gyro('z'),
+                    "rot_x": cyberpi.get_rotation('x'),
+                    "rot_y": cyberpi.get_rotation('x'),
+                    "rot_z": cyberpi.get_rotation('x'),
+                    "speed": selected_speed
+                }
+            
+        json_data = ujson.dumps(sensordata)
+        #cyberpi.console.println(json_data)
+        s.sendto(json_data.encode('utf-8'), (server_ip, 4001))
+        time.sleep(0.25)
     
 
 
@@ -146,6 +153,7 @@ while True:
     data, addr = s.recvfrom(1024)
     #empfangenen Daten verarbeiten
     received_message = data.decode('utf-8')
+    #cyberpi.console.println(received_message)
     if received_message.isdigit():
         selected_speed = int(received_message)
     if suicide_prevention == False:
@@ -163,7 +171,8 @@ while True:
         elif received_message=="UP" or received_message=="DOWN" or received_message=="RIGHT" or received_message=="RIGHT_B" or received_message=="LEFT" or received_message=="LEFT_B" or received_message=="STOP":
             drive(received_message)
         elif received_message == "SENSOR":
-            send_sensor_data_to_server(s)
+            thread_flag2 = True
+            _thread.start_new_thread(send_sensor_data_to_server_thread, ())
         if 0 <= selected_speed <= 100:
             define_speed(selected_speed)
             drive(direction_before)
