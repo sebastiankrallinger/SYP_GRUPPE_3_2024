@@ -264,3 +264,21 @@ iframe {
     height: 100%;
     border: none;
 }
+
+@media (max-width: 1000px) {
+
+    .iframe-container {
+        grid-column: 2 / span 3; /* Span 3 columns */
+        grid-row: 2; /* Second row */
+        /* Add any other styles you want for the smaller screen */
+    }
+}
+
+@media (max-width: 767px) {
+
+    .iframe-container {
+        grid-column: 1 / span 3; /* Span 3 columns */
+        grid-row: 2; /* Second row */
+        /* Add any other styles you want for the smaller screen */
+    }
+}
