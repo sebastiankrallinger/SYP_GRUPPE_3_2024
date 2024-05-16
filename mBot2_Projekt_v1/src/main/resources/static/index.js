@@ -3,9 +3,9 @@ let sock = new SockJS('http://localhost:8080/ws');
 let client = Stomp.over(sock);
 
 client.connect({}, (frame) => {
-    //console.log("Frame is: " +frame);
+    console.log("Frame is: " +frame);
     client.subscribe('/topic/sensorData', (payload) => {
-        //console.log(payload);
+        console.log(payload);
         sensorData(JSON.parse(payload.body))
     });
 });

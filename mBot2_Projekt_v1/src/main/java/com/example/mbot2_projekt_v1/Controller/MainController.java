@@ -142,7 +142,6 @@ public class MainController{
     public void arrowControl(HttpServletRequest request){
         try {
             String direction = request.getParameter("direction");
-
             byte[] sendData = direction.getBytes();
 
             try (DatagramSocket socket = new DatagramSocket()) {
@@ -230,7 +229,7 @@ public class MainController{
     public Sensordata sendSensorData() {
 
         if (sensordata != null) {
-            //log.info("Data: " + sensordata);
+            log.info("Data: " + sensordata);
             messagingTemplate.convertAndSend("/topic/sensorData", sensordata);
         }
         return null;
@@ -267,85 +266,78 @@ public class MainController{
     }
 
     @PostMapping("/lineFollower")
-    public String lineFollower(@RequestParam("follower") String follower) {
+    public void lineFollower(@RequestParam("follower") String follower) {
         System.out.println("LINE-FOLLOWER: " + follower);
 
         if (follower.equals("ON")) {
             // Starte den Line-Follower-Modus
-            startLineFollower();
-        } else {
+            Thread thread = new Thread(new LineFollowerThread());
+            thread.start();
+        }
+        else {
             // Stoppe den Line-Follower-Modus
-            stopLineFollower();
+
         }
-        return "index";
     }
-
-    @Async
-    public void startLineFollower() {
-        while (true){
-            //Gerade aus fahren
-            if(sensordata.getLine() == 6){
-                System.out.println("Gerade aus fahren");
-
-                try {
-                    //Befeht in byte-Array konvertieren
-                    String s = "UP";
-                    byte[] sendData = s.getBytes();
-
-                    try (DatagramSocket socket = new DatagramSocket()) {
-                        DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
-                        socket.send(packet);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            //Nach Rechts fahren
-            if(sensordata.getLine() == 7 || sensordata.getLine() == 3 || sensordata.getLine() == 1){
-                System.out.println("Nach Rechts fahren");
-
-                try {
-                    //Befeht in byte-Array konvertieren
-                    String s = "TURN_RIGHT";
-                    byte[] sendData = s.getBytes();
-
-                    try (DatagramSocket socket = new DatagramSocket()) {
-                        DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
-                        socket.send(packet);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            //Nach Links fahren
-            if(sensordata.getLine() == 14 || sensordata.getLine() == 12 || sensordata.getLine() == 8){
-                System.out.println("Nach Links fahren");
-
-                try {
-                    //Befeht in byte-Array konvertieren
-                    String s = "TURN_LEFT";
-                    byte[] sendData = s.getBytes();
-
-                    try (DatagramSocket socket = new DatagramSocket()) {
-                        DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
-                        socket.send(packet);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
+    class LineFollowerThread implements Runnable {
+        @Override
+        public void run() {
             try {
-                Thread.sleep(100); // Pause für 100 Millisekunden
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                //Gerade aus fahren
+                if (sensordata.getLine() == 6) {
+                    System.out.println("Gerade aus fahren");
+
+                    try {
+                        //Befeht in byte-Array konvertieren
+                        String s = "UP";
+                        byte[] sendData = s.getBytes();
+
+                        try (DatagramSocket socket = new DatagramSocket()) {
+                            DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
+                            socket.send(packet);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                //Nach Rechts fahren
+                if (sensordata.getLine() == 7 || sensordata.getLine() == 3 || sensordata.getLine() == 1) {
+                    System.out.println("Nach Rechts fahren");
+
+                    try {
+                        //Befeht in byte-Array konvertieren
+                        String s = "TURN_RIGHT";
+                        byte[] sendData = s.getBytes();
+
+                        try (DatagramSocket socket = new DatagramSocket()) {
+                            DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
+                            socket.send(packet);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                //Nach Links fahren
+                if (sensordata.getLine() == 14 || sensordata.getLine() == 12 || sensordata.getLine() == 8) {
+                    System.out.println("Nach Links fahren");
+                    try {
+                        //Befeht in byte-Array konvertieren
+                        String s = "TURN_LEFT";
+                        byte[] sendData = s.getBytes();
+
+                        try (DatagramSocket socket = new DatagramSocket()) {
+                            DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
+                            socket.send(packet);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            } catch (Exception e) {
+                log.error(e.getMessage());
             }
         }
-    }
-
-    public void stopLineFollower() {
-        // Stoppe den Line-Follower-Modus
     }
 }

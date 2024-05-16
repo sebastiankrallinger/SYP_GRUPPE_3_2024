@@ -83,7 +83,7 @@ def drive(message):
 
 def send_sensor_data_to_server_thread():
     global thread_flag2
-    server_ip = "10.10.1.184"
+    server_ip = "10.10.1.157"
     s = usocket.socket(usocket.AF_INET, usocket.SOCK_DGRAM)
     local_addr = ("0.0.0.0", 4001)  # Ändern Sie den Port entsprechend Ihrer Konfiguration
     # Socket an die Adresse und den Port binden
@@ -122,8 +122,7 @@ def send_sensor_data_to_server_thread():
         json_data = ujson.dumps(sensordata)
         #cyberpi.console.println(json_data)
         s.sendto(json_data.encode('utf-8'), (server_ip, 4001))
-        time.sleep(0.25)
-    
+
 
 
 
