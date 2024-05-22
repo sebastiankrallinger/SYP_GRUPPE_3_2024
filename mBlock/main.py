@@ -115,8 +115,6 @@ def send_sensor_data_to_server_thread():
         #cyberpi.console.println(json_data)
         s.sendto(json_data.encode('utf-8'), (serverip, 4001))
         time.sleep(0.25)
-    
-
 
 
 cyberpi.led.on(255, 0, 0)  # Red Lights
@@ -174,7 +172,7 @@ while True:
         elif "SENSOR" in received_message:
             thread_flag2 = True
             _thread.start_new_thread(send_sensor_data_to_server_thread, ())
-        elif "10.10." in received_message:
+        else:
             serverip = received_message
         if 0 <= selected_speed <= 100:
             define_speed(selected_speed)
