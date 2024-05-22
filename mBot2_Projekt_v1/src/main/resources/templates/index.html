@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en"  xmlns:th="http://www.thymeleaf.org">
     <head>
@@ -13,15 +14,17 @@
         <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/MTLLoader.js"></script>
 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
         <title>MBot2</title>
     </head>
     <body class="noselect" onload="checkDevice()">
         <div class="navbar" id="myNavbar">
-            <a href="#about">About Us</a>
-            <a href="#team">Team</a>
-            <a href="#user-manual">User Manual</a>
             <a href="#controller">Controller</a>
             <a href="#sensor-data">Sensor Data</a>
+            <a href="#team">Team</a>
+            <a href="#user-manual">User Manual</a>
+            <a href="#about">About Us</a>
             <a href="javascript:void(0);" class="icon" onclick="myFunction()">
                 <img src="/bilder/icon.jpg" alt="Menu Icon">
             </a>
@@ -73,6 +76,20 @@
                             execution-while-not-rendered
                             web-share
                     ></iframe>
+                <!-- <button onclick="sensorData()">Abfragen</button> -->
+
+                <p>LED</p>
+                <form id="light_data" action="/light_data" method="post">
+                    <div style="display: flex;">
+                        <button id="light_status_start" type="button" name="light_status" style="width: 100px; height: 50px;">Start</button>
+                        <div style="display: inline-flex; align-items: center; margin-left: 10px;">
+                            <div id="out_left" style="width: 50px; height: 50px; margin: 5px; background-color: grey; border: 1px solid black;"></div>
+                            <div id="mid_left" style="width: 50px; height: 50px; margin: 5px; background-color: grey; border: 1px solid black;"></div>
+                            <div id="mid_right" style="width: 50px; height: 50px; margin: 5px; background-color: grey; border: 1px solid black;"></div>
+                            <div id="out_right" style="width: 50px; height: 50px; margin: 5px; background-color: grey; border: 1px solid black;"></div>
+                        </div>
+                    </div>
+                </form>
                 </div>
                  <!-- Joystick für Handys -->
             <div class="joystick-container" id="phoneControls">
@@ -108,28 +125,90 @@
         <section id="sensor-data">
             <h2 style="color: whitesmoke">Sensor Data</h2>
             <table>
-                <thead>
-                <tr>
-                    <th>Data1 Name</th>
-                    <th>Data2 Name</th>
-                    <th>Data3 Name</th>
-                </tr>
-                </thead>
                 <tbody>
                 <tr>
-                    <td>Obj1 Data1 Content</td>
-                    <td>Obj2 Data2 Content</td>
-                    <td>Obj3 Data3 Content</td>
+                    <td>MBot ID:</td>
+                    <td id="mbotid"></td>
                 </tr>
                 <tr>
-                    <td>Obj2 Data1 Content</td>
-                    <td>Obj2 Data2 Content</td>
-                    <td>Obj2 Data3 Content</td>
+                    <td>Gierachse:</td>
+                    <td id="yaw"></td>
                 </tr>
                 <tr>
-                    <td>Obj3 Data1 Content</td>
-                    <td>Obj3 Data2 Content</td>
-                    <td>Obj3 Data3 Content</td>
+                    <td>Umgebungslärm:</td>
+                    <td id="loudness"></td>
+                </tr>
+                <tr>
+                    <td>Neigung x-Achse:</td>
+                    <td id="rot_x"></td>
+                </tr>
+                <tr>
+                    <td>Neigung y-Achse:</td>
+                    <td id="rot_y"></td>
+                </tr>
+                <tr>
+                    <td>Rotataion y-Achse:</td>
+                    <td id="gyro_y"></td>
+                </tr>
+                <tr>
+                    <td>Helligkeit:</td>
+                    <td id="brightness"></td>
+                </tr>
+                <tr>
+                    <td>Beschleunigung z-Achse:</td>
+                    <td id="acc_z"></td>
+                </tr>
+                <tr>
+                    <td>Pitch:</td>
+                    <td id="pitch"></td>
+                </tr>
+                <tr>
+                    <td>Erschütterung:</td>
+                    <td id="shakeval"></td>
+                </tr>
+                <tr>
+                    <td>Wellengeschwindigkeit:</td>
+                    <td id="wave_speed"></td>
+                </tr>
+                <tr>
+                    <td>Roll:</td>
+                    <td id="roll"></td>
+                </tr>
+                <tr>
+                    <td>Beschleunigung x-Achse:</td>
+                    <td id="acc_x"></td>
+                </tr>
+                <tr>
+                    <td>Wave Angle:</td>
+                    <td id="wave_angle"></td>
+                </tr>
+                <tr>
+                    <td>Beschleunigung y-Achse:</td>
+                    <td id="acc_y"></td>
+                </tr>
+                <tr>
+                    <td>Rotation x-Achse:</td>
+                    <td id="gyro_x"></td>
+                </tr>
+                <tr>
+                    <td>Abstand:</td>
+                    <td id="ultrasonic"></td>
+                </tr>
+                <tr>
+                    <td>Rotation z-Achse:</td>
+                    <td id="gyro_z"></td>
+                </tr>
+                <tr>
+                    <td>Rotation z-Achse:</td>
+                    <td id="rot_z"></td>
+                </tr>
+                <tr>
+                    <td>Quad RGB:</td>
+                    <td id="quad_rgb"></td>
+                </tr>
+                <tr>
+                    <td>Speed:</td>
+                    <td id="speed"></td>
                 </tr>
                 </tbody>
             </table>
@@ -262,5 +341,6 @@
     <script src="/phone_joystick.js"></script>
     <script src="/index.js"></script>
     <script src="/navbar.js"></script>
+    <script src="/arrow_key_disable.js"></script>
     </body>
 </html>
