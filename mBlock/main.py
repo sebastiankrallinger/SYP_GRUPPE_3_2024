@@ -13,6 +13,7 @@ suicide_prevention = False
 slider_speed=0
 direction_before="STOP"
 selected_speed=50
+severip=""
 
 def define_speed(speed_value):
     global slider_speed
@@ -74,7 +75,7 @@ def drive(message):
 
 def send_sensor_data_to_server_thread():
     global thread_flag2
-    server_ip = "10.10.1.184"
+    global serverip
     s = usocket.socket(usocket.AF_INET, usocket.SOCK_DGRAM)
     local_addr = ("0.0.0.0", 4001)  # Ändern Sie den Port entsprechend Ihrer Konfiguration
     # Socket an die Adresse und den Port binden
@@ -112,7 +113,7 @@ def send_sensor_data_to_server_thread():
             
         json_data = ujson.dumps(sensordata)
         #cyberpi.console.println(json_data)
-        s.sendto(json_data.encode('utf-8'), (server_ip, 4001))
+        s.sendto(json_data.encode('utf-8'), (serverip, 4001))
         time.sleep(0.25)
     
 
@@ -170,9 +171,11 @@ while True:
             cyberpi.console.clear()
         elif received_message=="UP" or received_message=="DOWN" or received_message=="RIGHT" or received_message=="RIGHT_B" or received_message=="LEFT" or received_message=="LEFT_B" or received_message=="STOP":
             drive(received_message)
-        elif received_message == "SENSOR":
+        elif "SENSOR" in received_message:
             thread_flag2 = True
             _thread.start_new_thread(send_sensor_data_to_server_thread, ())
+        elif "10.10." in received_message:
+            serverip = received_message
         if 0 <= selected_speed <= 100:
             define_speed(selected_speed)
             drive(direction_before)
