@@ -231,8 +231,8 @@ public class MainController{
             DatagramPacket sendIp = new DatagramPacket(sendAddress, sendAddress.length, InetAddress.getByName(mBotIP), 4000);
             socket.send(sendIp);
         }catch (Exception e) {
-        e.printStackTrace();
-    }
+            e.printStackTrace();
+        }
     }
     @MessageMapping("/sensorData")
     public Sensordata sendSensorData() {
