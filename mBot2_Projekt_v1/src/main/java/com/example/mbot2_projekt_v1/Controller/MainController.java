@@ -279,6 +279,7 @@ public class MainController{
     }
 
     @PostMapping("/lineFollower")
+    @ResponseBody
     public void lineFollower(@RequestParam("follower") String follower) {
         System.out.println("LINE-FOLLOWER: " + follower);
 
@@ -295,9 +296,22 @@ public class MainController{
     class LineFollowerThread implements Runnable {
         @Override
         public void run() {
+            String[] quadRGB = sensordata.getQuadRGB();
+
+            String[] s1 = quadRGB[0].split("x");
+            String lv = s1[1];
+            String[] s2 = quadRGB[1].split("x");
+            String liv  = s2[1];
+            String[] s3 = quadRGB[2].split("x");
+            String riv  = s3[1];
+            String[] s4 = quadRGB[3].split("x");
+            String rv  = s4[1];
+
+            log.info(lv +","+ liv +","+ riv +","+ rv);
+
             try {
                 //Gerade aus fahren
-                if (sensordata.getLine() == 6) {
+                if (lv == "ffffff" && rv == "ffffff") {
                     System.out.println("Gerade aus fahren");
 
                     try {
@@ -349,7 +363,7 @@ public class MainController{
                     }
                 }
             } catch (Exception e) {
-                log.error(e.getMessage());
+                log.error("FEHLER BEIM LENKEN");
             }
         }
     }

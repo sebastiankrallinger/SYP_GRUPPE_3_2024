@@ -13,6 +13,7 @@ client.connect({}, (frame) => {
 $(document).ready(function() {
     btnDrive();
     btnSuicide();
+    btnLinefollower();
 });
 
 function checkDevice() {
@@ -89,6 +90,24 @@ function btnSuicide(){
             url: "/suicidePrevention",
             type: "POST",
             data: { prevention: "OFF" }
+        });
+    })
+    $("#suicideOn").click(function() {
+        $.ajax({
+            url: "/suicidePrevention",
+            type: "POST",
+            data: { prevention: "ON" }
+        });
+    })
+}
+
+function btnLinefollower(){
+    $("#lineOn").click(function() {
+        updateSliderValue(10, "myRange");
+        $.ajax({
+            url: "/lineFollower",
+            type: "POST",
+            data: { follower: "ON" }
         });
     })
     $("#suicideOn").click(function() {
