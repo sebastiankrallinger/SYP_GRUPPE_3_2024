@@ -213,9 +213,11 @@ public class MainController{
 
 
     public Sensordata receiveData() {
+        sendServerIP();
         try (DatagramSocket socket = new DatagramSocket()) {
+            String send = "SENSOR";
             // Sende Befehl zum Abrufen von Sensorwerten
-            byte[] sendData = "SENSOR".getBytes();
+            byte[] sendData = send.getBytes();
             DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
             socket.send(sendPacket);
             Thread thread = new Thread(new SensorThread());
@@ -224,6 +226,17 @@ public class MainController{
             e.printStackTrace();
         }
         return sensordata;
+    }
+    public void sendServerIP(){
+        try (DatagramSocket socket = new DatagramSocket()) {
+            InetAddress localhost = InetAddress.getLocalHost();
+            String serverip = localhost.getHostAddress();
+            byte[] sendAddress = serverip.getBytes();
+            DatagramPacket sendIp = new DatagramPacket(sendAddress, sendAddress.length, InetAddress.getByName(mBotIP), 4000);
+            socket.send(sendIp);
+        }catch (Exception e) {
+        e.printStackTrace();
+    }
     }
     @MessageMapping("/sensorData")
     public Sensordata sendSensorData() {
