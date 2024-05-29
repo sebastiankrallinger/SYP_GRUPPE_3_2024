@@ -173,6 +173,7 @@ while True:
             thread_flag2 = True
             _thread.start_new_thread(send_sensor_data_to_server_thread, ())
         else:
+            #cyberpi.console.println(received_message)
             serverip = received_message
         if 0 <= selected_speed <= 100:
             define_speed(selected_speed)
