@@ -7,12 +7,16 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="/arrow_key_disable.js"></script>
+        <script src="/lagedarstellung.js"></script>
         <script src="/model_swap.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/MTLLoader.js"></script>
+
+        <script src="https://static.sketchfab.com/api/sketchfab-viewer-1.12.0.js"></script>
+
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
@@ -64,7 +68,7 @@
                 </div>
 
                 <div class="iframe-container">
-                    <iframe src="https://sketchfab.com/playlists/embed?collection=45a704d7f1c74dbbb79f01971f676a85&autostart=0"
+                    <iframe id="sketchfab-iframe" src="https://sketchfab.com/playlists/embed?collection=45a704d7f1c74dbbb79f01971f676a85&autostart=0"
                             title="adil"
                             allow="autoplay; fullscreen; xr-spatial-tracking"
                             frameborder="0"
