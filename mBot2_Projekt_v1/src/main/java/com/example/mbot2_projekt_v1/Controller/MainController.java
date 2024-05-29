@@ -17,9 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
+import java.net.*;
 import java.time.Clock;
 import java.time.Instant;
 import java.util.*;
@@ -223,10 +221,23 @@ public class MainController{
         }
         return sensordata;
     }
-    public void sendServerIP(){
+    public void sendServerIP() {
         try (DatagramSocket socket = new DatagramSocket()) {
-            InetAddress localhost = InetAddress.getLocalHost();
-            String serverip = localhost.getHostAddress();
+            String serverip = "";
+            Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
+            while (networkInterfaces.hasMoreElements()) {
+                NetworkInterface networkInterface = networkInterfaces.nextElement();
+                Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
+                while (addresses.hasMoreElements()) {
+                    InetAddress address = addresses.nextElement();
+                    if (!address.isLoopbackAddress() && address instanceof Inet4Address) {
+                        if (address.getHostAddress().contains("10.10.")) {
+                            serverip = address.getHostAddress();
+                            //System.out.println("Local IP Address: " + address.getHostAddress());
+                        }
+                    }
+                }
+            }
             byte[] sendAddress = serverip.getBytes();
             DatagramPacket sendIp = new DatagramPacket(sendAddress, sendAddress.length, InetAddress.getByName(mBotIP), 4000);
             socket.send(sendIp);
