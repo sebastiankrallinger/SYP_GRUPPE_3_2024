@@ -41,6 +41,7 @@ public class MainController {
     private int mbotId = 1;
     private int speed = 100;
     private Sensordata sensordata;
+    private boolean start = false;
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
@@ -253,19 +254,20 @@ public class MainController {
     public void sendSensorData() {
 
         if (sensordata != null) {
-            log.info("Data: " + sensordata);
+            //log.info("Data: " + sensordata);
             messagingTemplate.convertAndSend("/topic/sensorData", sensordata);
         }
 
     }
 
     class SensorThread implements Runnable {
+        private static final Object lock = new Object();
         @Override
         public void run() {
             try (DatagramSocket socket2 = new DatagramSocket(4001)) {
                 while (true) {
-                    System.out.println("SensorThread");
-                    byte[] buffer = new byte[1024];
+                    log.info("Sensordata " + sensordata);
+                    byte[] buffer = new byte[4069];
                     DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
                     // Empfange die Antwort vom mBot
                     socket2.receive(packet);
@@ -278,18 +280,17 @@ public class MainController {
 
                     //Auslesen
                     Gson gson = new Gson();
-                    if (sensordata == null) {
-                        sensordata = gson.fromJson(sensorDataJSON, Sensordata.class);
-                    } else {
-                        // JSON-String in ein Objekt deserialisieren
-                        synchronized (sensordata) {
-                            sensordata = gson.fromJson(sensorDataJSON, Sensordata.class);
+                    sensordata = gson.fromJson(sensorDataJSON, Sensordata.class);
+
+                    //sendSensorData();
+                    //System.out.println(sensordata.getMbotid() + "\t" + sensordata.getQuadRGB() + "\t" + sensordata.getUltrasonic());
+                    if(start) {
+                        synchronized (lock) {
+                            lock.notify();
                         }
                     }
 
-                    sendSensorData();
-                    //System.out.println(sensordata.getMbotid() + "\t" + sensordata.getQuadRGB() + "\t" + sensordata.getUltrasonic());
-                    Thread.sleep(500);
+                    Thread.sleep(100);
                 }
 
             } catch (Exception e) {
@@ -304,10 +305,12 @@ public class MainController {
         System.out.println("LINE-FOLLOWER: " + follower);
 
         if (follower.equals("ON")) {
+            start = true;
             // Starte den Line-Follower-Modus
             Thread thread2 = new Thread(new LineFollowerThread());
             thread2.start();
         } else {
+            start = false;
             // Stoppe den Line-Follower-Modus
 
         }
@@ -316,82 +319,16 @@ public class MainController {
     class LineFollowerThread implements Runnable {
         @Override
         public void run() {
-            String previousCommand = "";
-            try (DatagramSocket socket = new DatagramSocket()) {
-                while (true) {
-                    String[] quadRGB;
-                    quadRGB = sensordata.getQuadRGB();
-
-                    String[] s1 = quadRGB[0].split("x");
-                    String lv = s1[1];
-                    String[] s2 = quadRGB[1].split("x");
-                    String liv = s2[1];
-                    String[] s3 = quadRGB[2].split("x");
-                    String riv = s3[1];
-                    String[] s4 = quadRGB[3].split("x");
-                    String rv = s4[1];
-
-                    log.info(lv + "," + liv + "," + riv + "," + rv);
-
-                    //Gerade aus fahren
-                    if ((Objects.equals(lv, "ffffff") && Objects.equals(rv, "ffffff")) && !previousCommand.equals("UP")) {
-                        System.out.println("Geradeaus fahre");
-                        previousCommand = "UP";
-                        byte[] sendData = previousCommand.getBytes();
-
-                        DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
-                        socket.send(packet);
+            while (true) {
+                try {
+                    synchronized (SensorThread.lock) {
+                        SensorThread.lock.wait(); // Warte auf Benachrichtigung vom SensorThread
                     }
-                    //STOP
-                    else if ((Objects.equals(lv, "ffffff") && Objects.equals(rv, "ffffff") && Objects.equals(riv, "ffffff") && Objects.equals(lv, "ffffff")) && !previousCommand.equals("STOP")) {
-                        System.out.println("Stoppen");
-                        previousCommand = "STOP";
-                        byte[] sendData = previousCommand.getBytes();
-                        DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
-                        socket.send(packet);
-                    }
-
-                    System.out.println(previousCommand);
-                    Thread.sleep(500);
+                    log.info("Linefollower");
+                    Thread.sleep(150);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
-
-                /*
-                //Nach Rechts fahren
-                if (sensordata.getLine() == 7 || sensordata.getLine() == 3 || sensordata.getLine() == 1) {
-                    System.out.println("Nach Rechts fahren");
-
-                    try {
-                        //Befeht in byte-Array konvertieren
-                        String s = "TURN_RIGHT";
-                        byte[] sendData = s.getBytes();
-
-                        try (DatagramSocket socket = new DatagramSocket()) {
-                            DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
-                            socket.send(packet);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                //Nach Links fahren
-                if (sensordata.getLine() == 14 || sensordata.getLine() == 12 || sensordata.getLine() == 8) {
-                    System.out.println("Nach Links fahren");
-                    try {
-                        //Befeht in byte-Array konvertieren
-                        String s = "TURN_LEFT";
-                        byte[] sendData = s.getBytes();
-
-                        try (DatagramSocket socket = new DatagramSocket()) {
-                            DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
-                            socket.send(packet);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }*/
-            } catch (Exception e) {
-                log.error("FEHLER IM LINE-FOLLOWER THREAD");
             }
         }
     }
