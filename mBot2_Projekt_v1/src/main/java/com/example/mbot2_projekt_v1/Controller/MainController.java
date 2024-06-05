@@ -41,7 +41,6 @@ public class MainController {
     private int mbotId = 1;
     private int speed = 100;
     private Sensordata sensordata;
-    private ReentrantReadWriteLock reentrantReadWriteLock = new ReentrantReadWriteLock();
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
@@ -253,12 +252,10 @@ public class MainController {
     @MessageMapping("/sensorData")
     public void sendSensorData() {
 
-        reentrantReadWriteLock.readLock().lock();
         if (sensordata != null) {
             log.info("Data: " + sensordata);
             messagingTemplate.convertAndSend("/topic/sensorData", sensordata);
         }
-        reentrantReadWriteLock.readLock().unlock();
 
     }
 
@@ -281,7 +278,6 @@ public class MainController {
 
                     //Auslesen
                     Gson gson = new Gson();
-                    reentrantReadWriteLock.writeLock().lock();
                     if (sensordata == null) {
                         sensordata = gson.fromJson(sensorDataJSON, Sensordata.class);
                     } else {
@@ -290,7 +286,6 @@ public class MainController {
                             sensordata = gson.fromJson(sensorDataJSON, Sensordata.class);
                         }
                     }
-                    reentrantReadWriteLock.writeLock().unlock();
 
                     sendSensorData();
                     //System.out.println(sensordata.getMbotid() + "\t" + sensordata.getQuadRGB() + "\t" + sensordata.getUltrasonic());
@@ -325,9 +320,7 @@ public class MainController {
             try (DatagramSocket socket = new DatagramSocket()) {
                 while (true) {
                     String[] quadRGB;
-                    reentrantReadWriteLock.readLock().lock();
                     quadRGB = sensordata.getQuadRGB();
-                    reentrantReadWriteLock.readLock().unlock();
 
                     String[] s1 = quadRGB[0].split("x");
                     String lv = s1[1];
