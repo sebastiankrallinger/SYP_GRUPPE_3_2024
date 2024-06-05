@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 @Slf4j
@@ -43,7 +44,9 @@ public class MainController {
     private int mbotId = 1;
     private int speed = 100;
     private Sensordata sensordata;
-    private ReentrantReadWriteLock reentrantReadWriteLock = new ReentrantReadWriteLock();
+    private boolean sensorDataReady = false;
+    private final ReentrantLock lock = new ReentrantLock();
+
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
@@ -243,13 +246,10 @@ public class MainController {
     @MessageMapping("/sensorData")
     public void sendSensorData() {
 
-        reentrantReadWriteLock.readLock().lock();
         if (sensordata != null) {
             log.info("Data: " + sensordata);
             messagingTemplate.convertAndSend("/topic/sensorData", sensordata);
         }
-        reentrantReadWriteLock.readLock().unlock();
-
     }
 
     class SensorThread implements Runnable {
@@ -263,28 +263,19 @@ public class MainController {
                     // Empfange die Antwort vom mBot
                     socket2.receive(packet);
                     byte[] data = packet.getData();
-                    //System.out.println("Data: " + data);
 
                     String sensorDataJSON = new String(data, 0, packet.getLength(), StandardCharsets.UTF_8);
-
-                    //System.out.println("Empfangene Sensorwerte:\n" + sensorDataJSON);
-
-                    //Auslesen
                     Gson gson = new Gson();
-                    reentrantReadWriteLock.writeLock().lock();
-                    if (sensordata == null) {
+
+                    try {
+                        lock.lock();
                         sensordata = gson.fromJson(sensorDataJSON, Sensordata.class);
-                    } else {
-                        // JSON-String in ein Objekt deserialisieren
-                        synchronized (sensordata) {
-                            sensordata = gson.fromJson(sensorDataJSON, Sensordata.class);
-                        }
+                    } finally {
+                        lock.unlock();
                     }
-                    reentrantReadWriteLock.writeLock().unlock();
 
                     sendSensorData();
-                    //System.out.println(sensordata.getMbotid() + "\t" + sensordata.getQuadRGB() + "\t" + sensordata.getUltrasonic());
-                    Thread.sleep(500);
+                    Thread.sleep(200);
                 }
 
             } catch (Exception e) {
@@ -304,7 +295,6 @@ public class MainController {
             thread2.start();
         } else {
             // Stoppe den Line-Follower-Modus
-
         }
     }
 
@@ -314,10 +304,15 @@ public class MainController {
             String previousCommand = "";
             try (DatagramSocket socket = new DatagramSocket()) {
                 while (true) {
+                    Thread.sleep(200);
+
                     String[] quadRGB;
-                    reentrantReadWriteLock.readLock().lock();
-                    quadRGB = sensordata.getQuadRGB();
-                    reentrantReadWriteLock.readLock().unlock();
+                    try {
+                        lock.lock();
+                        quadRGB = sensordata.getQuadRGB();
+                    } finally {
+                        lock.unlock();
+                    }
 
                     String[] s1 = quadRGB[0].split("x");
                     String lv = s1[1];
@@ -330,7 +325,6 @@ public class MainController {
 
                     log.info(lv + "," + liv + "," + riv + "," + rv);
 
-                    //Gerade aus fahren
                     if ((Objects.equals(lv, "ffffff") && Objects.equals(rv, "ffffff")) && !previousCommand.equals("UP")) {
                         System.out.println("Geradeaus fahre");
                         previousCommand = "UP";
@@ -349,46 +343,10 @@ public class MainController {
                     }
 
                     System.out.println(previousCommand);
-                    Thread.sleep(500);
                 }
 
-                /*
-                //Nach Rechts fahren
-                if (sensordata.getLine() == 7 || sensordata.getLine() == 3 || sensordata.getLine() == 1) {
-                    System.out.println("Nach Rechts fahren");
-
-                    try {
-                        //Befeht in byte-Array konvertieren
-                        String s = "TURN_RIGHT";
-                        byte[] sendData = s.getBytes();
-
-                        try (DatagramSocket socket = new DatagramSocket()) {
-                            DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
-                            socket.send(packet);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                //Nach Links fahren
-                if (sensordata.getLine() == 14 || sensordata.getLine() == 12 || sensordata.getLine() == 8) {
-                    System.out.println("Nach Links fahren");
-                    try {
-                        //Befeht in byte-Array konvertieren
-                        String s = "TURN_LEFT";
-                        byte[] sendData = s.getBytes();
-
-                        try (DatagramSocket socket = new DatagramSocket()) {
-                            DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
-                            socket.send(packet);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }*/
             } catch (Exception e) {
-                log.error("FEHLER IM LINE-FOLLOWER THREAD");
+                System.out.println(e.getMessage());
             }
         }
     }

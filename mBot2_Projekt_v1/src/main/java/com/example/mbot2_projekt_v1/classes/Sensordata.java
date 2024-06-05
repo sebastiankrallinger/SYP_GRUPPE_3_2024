@@ -81,174 +81,174 @@ public class Sensordata {
     @JsonProperty("speed")
     private int speed;
 
-    public int getLine() {
+    public synchronized int getLine() {
         return line;
     }
 
-    public void setLine(int line) {
+    public synchronized void setLine(int line) {
         this.line = line;
     }
 
-    public int getYaw() {
+    public synchronized int getYaw() {
         return yaw;
     }
 
-    public void setYaw(int yaw) {
+    public synchronized void setYaw(int yaw) {
         this.yaw = yaw;
     }
 
-    public String getMbotid() {
+    public synchronized String getMbotid() {
         return mbotid;
     }
 
-    public void setMbotid(String mbotid) {
+    public synchronized void setMbotid(String mbotid) {
         this.mbotid = mbotid;
     }
 
-    public int getLoudness() {
+    public synchronized int getLoudness() {
         return loudness;
     }
 
-    public void setLoudness(int loudness) {
+    public synchronized void setLoudness(int loudness) {
         this.loudness = loudness;
     }
 
-    public int getRotX() {
+    public synchronized int getRotX() {
         return rotX;
     }
 
-    public void setRotX(int rotX) {
+    public synchronized void setRotX(int rotX) {
         this.rotX = rotX;
     }
 
-    public int getRotY() {
+    public synchronized int getRotY() {
         return rotY;
     }
 
-    public void setRotY(int rotY) {
+    public synchronized void setRotY(int rotY) {
         this.rotY = rotY;
     }
 
-    public int getGyroY() {
+    public synchronized int getGyroY() {
         return gyroY;
     }
 
-    public void setGyroY(int gyroY) {
+    public synchronized void setGyroY(int gyroY) {
         this.gyroY = gyroY;
     }
 
-    public int getBrightness() {
+    public synchronized int getBrightness() {
         return brightness;
     }
 
-    public void setBrightness(int brightness) {
+    public synchronized void setBrightness(int brightness) {
         this.brightness = brightness;
     }
 
-    public double getAccZ() {
+    public synchronized double getAccZ() {
         return accZ;
     }
 
-    public void setAccZ(double accZ) {
+    public synchronized void setAccZ(double accZ) {
         this.accZ = accZ;
     }
 
-    public int getPitch() {
+    public synchronized int getPitch() {
         return pitch;
     }
 
-    public void setPitch(int pitch) {
+    public synchronized void setPitch(int pitch) {
         this.pitch = pitch;
     }
 
-    public int getShakeval() {
+    public synchronized int getShakeval() {
         return shakeval;
     }
 
-    public void setShakeval(int shakeval) {
+    public synchronized void setShakeval(int shakeval) {
         this.shakeval = shakeval;
     }
 
-    public int getWaveSpeed() {
+    public synchronized int getWaveSpeed() {
         return waveSpeed;
     }
 
-    public void setWaveSpeed(int waveSpeed) {
+    public synchronized void setWaveSpeed(int waveSpeed) {
         this.waveSpeed = waveSpeed;
     }
 
-    public int getRoll() {
+    public synchronized int getRoll() {
         return roll;
     }
 
-    public void setRoll(int roll) {
+    public synchronized void setRoll(int roll) {
         this.roll = roll;
     }
 
-    public double getAccX() {
+    public synchronized double getAccX() {
         return accX;
     }
 
-    public void setAccX(double accX) {
+    public synchronized void setAccX(double accX) {
         this.accX = accX;
     }
 
-    public int getWaveAngle() {
+    public synchronized int getWaveAngle() {
         return waveAngle;
     }
 
-    public void setWaveAngle(int waveAngle) {
+    public synchronized void setWaveAngle(int waveAngle) {
         this.waveAngle = waveAngle;
     }
 
-    public double getAccY() {
+    public synchronized double getAccY() {
         return accY;
     }
 
-    public void setAccY(double accY) {
+    public synchronized void setAccY(double accY) {
         this.accY = accY;
     }
 
-    public int getGyroX() {
+    public synchronized int getGyroX() {
         return gyroX;
     }
 
-    public void setGyroX(int gyroX) {
+    public synchronized void setGyroX(int gyroX) {
         this.gyroX = gyroX;
     }
 
-    public double getUltrasonic() {
+    public synchronized double getUltrasonic() {
         return ultrasonic;
     }
 
-    public void setUltrasonic(double ultrasonic) {
+    public synchronized void setUltrasonic(double ultrasonic) {
         this.ultrasonic = ultrasonic;
     }
 
-    public int getGyroZ() {
+    public synchronized int getGyroZ() {
         return gyroZ;
     }
 
-    public void setGyroZ(int gyroZ) {
+    public synchronized void setGyroZ(int gyroZ) {
         this.gyroZ = gyroZ;
     }
 
-    public int getRotZ() {
+    public synchronized int getRotZ() {
         return rotZ;
     }
 
-    public void setRotZ(int rotZ) {
+    public synchronized void setRotZ(int rotZ) {
         this.rotZ = rotZ;
     }
 
-    public String[] getQuadRGB() {
+    public synchronized String[] getQuadRGB() {
         return quadRGB;
     }
 
-    public void setQuadRGB(String[] quadRGB) {
+    public synchronized void setQuadRGB(String[] quadRGB) {
         this.quadRGB = quadRGB;
     }
 
-    public void setSpeed(int speed){this.speed=speed;}
-    public int getSpeed(){return speed;}
+    public synchronized void setSpeed(int speed){this.speed=speed;}
+    public synchronized int getSpeed(){return speed;}
 }

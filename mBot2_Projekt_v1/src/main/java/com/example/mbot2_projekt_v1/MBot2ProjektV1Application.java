@@ -9,5 +9,4 @@ public class MBot2ProjektV1Application {
     public static void main(String[] args) {
         SpringApplication.run(MBot2ProjektV1Application.class, args);
     }
-
 }
