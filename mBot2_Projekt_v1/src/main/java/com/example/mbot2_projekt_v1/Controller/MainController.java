@@ -204,6 +204,25 @@ public class MainController{
             e.printStackTrace();
         }
     }
+    @PostMapping("/sendColor")
+    @ResponseBody
+    public void sendColor(HttpServletRequest request/*, @RequestParam("color") String colorHEX>*/){
+        try {
+            String colorHEX = request.getParameter("color");
+            String test= colorHEX;
+            System.out.println(test+"<-bitte geh");
+            byte[] sendData = String.valueOf(colorHEX).getBytes();
+            try (DatagramSocket socket = new DatagramSocket()) {
+                //Button Befehl direkt an den mBot senden
+                DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
+                System.out.println(packet);
+                socket.send(packet);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
     public Sensordata receiveData() {

@@ -1,3 +1,4 @@
+
 import time
 import usocket
 import ujson
@@ -14,6 +15,24 @@ slider_speed=0
 direction_before="STOP"
 selected_speed=50
 severip=""
+speed_before=0
+
+def define_color(hex_color):
+    
+    # Entfernen des führenden '#' falls vorhanden
+    if hex_color.startswith('#'):
+        hex_color = hex_color[1:]
+    
+    # Überprüfen, ob der Hex-Farbwert gültig ist (6 Zeichen)
+    if len(hex_color) != 6:
+        raise ValueError("Ungültiger Hex-Farbwert")
+    
+    # Aufteilen des Hex-Farbwerts in die RGB-Komponenten
+    r = int(hex_color[0:2], 16)
+    g = int(hex_color[2:4], 16)
+    b = int(hex_color[4:6], 16)
+    
+    cyberpi.led.on(r,g,b)
 
 def define_speed(speed_value):
     global slider_speed
@@ -25,6 +44,7 @@ def connect():
     cyberpi.console.clear()
     cyberpi.console.println("Mbot bereit zum Steuern")
     time.sleep(3)
+    cyberpi.console.println(slider_speed)
 
 def ultrasonic_thread():
     global distance
@@ -33,6 +53,7 @@ def ultrasonic_thread():
     while thread_flag:
         distance = cyberpi.ultrasonic2.get(index=1)
         if distance < 50:
+        if distance < 35:
             suicide_prevention = True
             turn()
         time.sleep(1)
@@ -54,6 +75,7 @@ def drive(message):
         cyberpi.mbot2.forward(speed = slider_speed)
         direction_before="UP"
     if message == "DOWN":
+        define_color("#990000")
         cyberpi.mbot2.backward(speed = slider_speed)
         direction_before="DOWN"
     if message == "LEFT":
@@ -141,10 +163,16 @@ while True:
             recieved_message = data.decode('utf-8')
             if recieved_message == "TRUE":
                 connect()
+                cyberpi.led.on(0,255,0)
+                cyberpi.console.clear()
+                cyberpi.console.println("Mbot bereit zum Steuern")
+                time.sleep(3)
                 break
         
+            
         cyberpi.led.off() #No Lights
         cyberpi.console.clear()        
+        cyberpi.console.clear()
         break
     
 while True:
@@ -153,6 +181,11 @@ while True:
     #empfangenen Daten verarbeiten
     received_message = data.decode('utf-8')
     #cyberpi.console.println(received_message)
+    cyberpi.console.print(received_message)
+    
+    if received_message.startswith('#'):
+        define_color(received_message)
+    
     if received_message.isdigit():
         selected_speed = int(received_message)
     if suicide_prevention == False:
@@ -179,3 +212,6 @@ while True:
             define_speed(selected_speed)
             drive(direction_before)
     
+            if(selected_speed - speed_before > 5 or selected_speed - speed_before < -5):
+                drive(direction_before)
+                speed_before=selected_speed
