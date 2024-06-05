@@ -144,3 +144,10 @@ function updateSliderValue(value, id) {
     xhr.open('POST', '/speedControl?speed=' + value, true);
     xhr.send();
 }
+
+function ColorPicker(value) {
+    console.log(value);
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/sendColor?color=' + encodeURIComponent(value), true);
+    xhr.send();
+}
