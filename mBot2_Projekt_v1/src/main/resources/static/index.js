@@ -3,9 +3,9 @@ let sock = new SockJS('http://localhost:8080/ws');
 let client = Stomp.over(sock);
 
 client.connect({}, (frame) => {
-    //console.log("Frame is: " +frame);
+    console.log("Frame is: " +frame);
     client.subscribe('/topic/sensorData', (payload) => {
-        //console.log(payload);
+        console.log(payload);
         sensorData(JSON.parse(payload.body))
     });
 });
@@ -13,6 +13,7 @@ client.connect({}, (frame) => {
 $(document).ready(function() {
     btnDrive();
     btnSuicide();
+    btnLinefollower();
 });
 
 function checkDevice() {
@@ -89,6 +90,24 @@ function btnSuicide(){
             url: "/suicidePrevention",
             type: "POST",
             data: { prevention: "OFF" }
+        });
+    })
+    $("#suicideOn").click(function() {
+        $.ajax({
+            url: "/suicidePrevention",
+            type: "POST",
+            data: { prevention: "ON" }
+        });
+    })
+}
+
+function btnLinefollower(){
+    $("#lineOn").click(function() {
+        updateSliderValue(10, "myRange");
+        $.ajax({
+            url: "/lineFollower",
+            type: "POST",
+            data: { follower: "ON" }
         });
     })
     $("#suicideOn").click(function() {

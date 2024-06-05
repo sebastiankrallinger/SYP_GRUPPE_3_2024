@@ -38,6 +38,7 @@
         <section id="controller">
             <h2 style="color: whitesmoke">Controller</h2>
             <div class="container">
+
                 <div class="selected-device">
                     <p>Selected Device: <span id="ipAdresse" th:text="${ipAdresse}"></span></p>
                     <form action="/mBotIP" method="get">
@@ -56,10 +57,9 @@
                     <button id="suicideOn" type="button" name="prevention">ON</button>
                 </form>
 
-                <!-- <button onclick="sensorData()">Abfragen</button> -->
 
                 <p>LED</p>
-                <form id="light_data" action="/light_data" method="post">
+                <form id="light_data" action="/lineFollower" method="post">
                     <div style="display: flex;">
                         <button id="light_status_start" type="button" name="light_status" style="width: 100px; height: 50px;">Start</button>
                         <div style="display: inline-flex; align-items: center; margin-left: 10px;">
@@ -70,6 +70,13 @@
                         </div>
                     </div>
                 </form>
+
+                <p>Line Follower:</p>
+                <form id="toggleLineFollower" action="/lineFollower" method="post">
+                    <button id="lineOn" type="button" name="follower" value="ON">ON</button>
+                    <button id="lineOff" type="submit" name="follower" value="OFF">OFF</button>
+                </form>
+
                 </div>
                  <!-- Joystick für Handys -->
             <div class="joystick-container" id="phoneControls">
