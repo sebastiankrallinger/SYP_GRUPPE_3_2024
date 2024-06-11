@@ -1,7 +1,7 @@
 var iframe = document.getElementById('sketchfab-iframe');
-var client = new Sketchfab(iframe);
+var client_iframe = new Sketchfab(iframe);
 
-client.init(null, {
+client_iframe.init(null, {
     success: function(api) {
         api.start();
         api.addEventListener('viewerready', function() {
@@ -22,7 +22,7 @@ client.init(null, {
                 api.setMatrixTransform(matrix);
             }
 
-            setInterval(updateModel, 1000); // Update every second
+            setInterval(updateModel, 1000);
         });
     },
     error: function() {

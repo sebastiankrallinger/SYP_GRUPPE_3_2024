@@ -164,7 +164,7 @@ function updateSliderValue(value, id) {
 }
 
 function ColorPicker(value) {
-    console.log(value);
+    //console.log(value);
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/sendColor?color=' + encodeURIComponent(value), true);
     xhr.send();
