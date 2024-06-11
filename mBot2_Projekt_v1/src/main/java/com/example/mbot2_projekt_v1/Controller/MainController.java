@@ -5,10 +5,7 @@ import com.google.gson.Gson;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,10 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import java.net.*;
-import java.time.Clock;
-import java.time.Instant;
 import java.util.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -33,9 +27,9 @@ public class MainController{
     private HashMap<String, String> ips = new HashMap<>();
     private List<String> s = new ArrayList<>();
     private int mbotId = 1;
-    private int speed=100;
+    private int speed = 100;
     private Sensordata sensordata;
-
+    private boolean start = false;
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
@@ -299,6 +293,106 @@ public class MainController{
 
             } catch (Exception e) {
                 e.printStackTrace();
+            }
+        }
+    }
+
+    @PostMapping("/lineFollower")
+    @ResponseBody
+    public void lineFollower(@RequestParam("follower") String follower) {
+        System.out.println("LINE-FOLLOWER: " + follower);
+        if (follower.equals("ON")) {
+            start = true;
+            // Starte den Line-Follower-Modus
+            Thread thread2 = new Thread(new LineFollowerThread());
+            thread2.start();
+        } else {
+            start = false;
+            // Stoppe den Line-Follower-Modus
+
+        }
+    }
+
+    class LineFollowerThread implements Runnable {
+        @Override
+        public void run() {
+            log.info("Linefollower");
+            String previousCommand = "";
+            try (DatagramSocket socket = new DatagramSocket()) {
+                while (true) {
+                    String[] quadRGB;
+                    quadRGB = sensordata.getQuadRGB();
+
+                    String[] s1 = quadRGB[0].split("x");
+                    String lv = s1[1];
+                    String[] s2 = quadRGB[1].split("x");
+                    String liv = s2[1];
+                    String[] s3 = quadRGB[2].split("x");
+                    String riv = s3[1];
+                    String[] s4 = quadRGB[3].split("x");
+                    String rv = s4[1];
+
+                    log.info(lv + "," + liv + "," + riv + "," + rv);
+
+                    //Gerade aus fahren
+                    if ((Objects.equals(lv, "ffffff") && Objects.equals(rv, "ffffff")) && !previousCommand.equals("UP")) {
+                        System.out.println("Geradeaus fahre");
+                        previousCommand = "UP";
+                        byte[] sendData = previousCommand.getBytes();
+
+                        DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
+                        socket.send(packet);
+                    }
+                    //STOP
+                    else if ((Objects.equals(lv, "ffffff") && Objects.equals(rv, "ffffff") && Objects.equals(riv, "ffffff") && Objects.equals(lv, "ffffff")) && !previousCommand.equals("STOP")) {
+                        System.out.println("Stoppen");
+                        previousCommand = "STOP";
+                        byte[] sendData = previousCommand.getBytes();
+                        DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
+                        socket.send(packet);
+                    }
+
+                    System.out.println(previousCommand);
+                    Thread.sleep(500);
+                }
+
+                /*
+                //Nach Rechts fahren
+                if (sensordata.getLine() == 7 || sensordata.getLine() == 3 || sensordata.getLine() == 1) {
+                    System.out.println("Nach Rechts fahren");
+
+                    try {
+                        //Befeht in byte-Array konvertieren
+                        String s = "TURN_RIGHT";
+                        byte[] sendData = s.getBytes();
+
+                        try (DatagramSocket socket = new DatagramSocket()) {
+                            DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
+                            socket.send(packet);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                //Nach Links fahren
+                if (sensordata.getLine() == 14 || sensordata.getLine() == 12 || sensordata.getLine() == 8) {
+                    System.out.println("Nach Links fahren");
+                    try {
+                        //Befeht in byte-Array konvertieren
+                        String s = "TURN_LEFT";
+                        byte[] sendData = s.getBytes();
+
+                        try (DatagramSocket socket = new DatagramSocket()) {
+                            DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
+                            socket.send(packet);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }*/
+            } catch (Exception e) {
+                log.error("FEHLER IM LINE-FOLLOWER THREAD");
             }
         }
     }

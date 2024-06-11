@@ -83,6 +83,24 @@ function btnDrive(){
     })
 }
 
+function btnLinefollower(){
+    $("#lineOn").click(function() {
+        updateSliderValue(10, "myRange");
+        $.ajax({
+            url: "/lineFollower",
+            type: "POST",
+            data: { follower: "ON" }
+        });
+    })
+    $("#suicideOn").click(function() {
+        $.ajax({
+            url: "/suicidePrevention",
+            type: "POST",
+            data: { prevention: "ON" }
+        });
+    })
+}
+
 function btnSuicide(){
     $("#suicideOff").click(function() {
         $.ajax({

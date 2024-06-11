@@ -11,9 +11,6 @@
         <module name="mBot2_Projekt_v1" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="mBot2_Projekt_v1" target="17" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
