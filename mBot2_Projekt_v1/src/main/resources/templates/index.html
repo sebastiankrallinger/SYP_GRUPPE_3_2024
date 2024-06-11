@@ -16,7 +16,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
         <title>MBot2</title>
     </head>
-    <body class="noselect" onload="checkDevice()">
+    <body class="noselect" onresize="checkDevice()">
         <div class="navbar" id="myNavbar">
             <a href="#controller">Controller</a>
             <a href="#sensor-data">Sensor Data</a>
@@ -52,43 +52,61 @@
                             <a th:each="ipAdresse : ${ipAdresses}" th:text="${ipAdresse}"></a>
                         </div>
                     </div>
+                </div>
 
-                <p>Suicide Prevention:</p>
-                <form id="toggleForm" action="/suizidePrevention" method="post">
-                    <button id="suicideOff" type="button" name="prevention">OFF</button>
-                    <button id="suicideOn" type="button" name="prevention">ON</button>
-                </form>
-                <p>Line Follower</p>
-                <form id="toggleLineFollower" action="/lineFollower" method="post">
-                    <div style="display: flex;">
-                        <button id="lineOn" type="button" name="follower">Start</button>
-                        <button id="lineOff" type="button" name="follower">Stop</button>
+                <div class="container2">
+                    <p>Suicide Prevention:</p>
+                    <form id="toggleForm" action="/suizidePrevention" method="post">
+                        <button id="suicideOff" type="button" name="prevention">OFF</button>
+                        <button id="suicideOn" type="button" name="prevention">ON</button>
+                    </form>
+                    <p>Line Follower</p>
+                    <form id="toggleLineFollower" action="/lineFollower" method="post">
+                        <div style="display: flex;">
+                            <button id="lineOn" type="button" name="follower">Start</button>
+                            <button id="lineOff" type="button" name="follower">Stop</button>
+                        </div>
                         <div style="display: inline-flex; align-items: center; margin-left: 10px;">
                             <div id="out_left" style="width: 50px; height: 50px; margin: 5px; background-color: grey; border: 1px solid black;"></div>
                             <div id="mid_left" style="width: 50px; height: 50px; margin: 5px; background-color: grey; border: 1px solid black;"></div>
                             <div id="mid_right" style="width: 50px; height: 50px; margin: 5px; background-color: grey; border: 1px solid black;"></div>
                             <div id="out_right" style="width: 50px; height: 50px; margin: 5px; background-color: grey; border: 1px solid black;"></div>
                         </div>
-                    </div>
-                </form>
-                <br>
-                <br>
-                <input type="color" id="colorPicker" value="#ff0000" oninput="ColorPicker(this.value)">
-            </div>
+                    </form>
+                </div>
+                <div class="colorPicker">
+                    <input type="color" id="colorPicker" value="#ff0000" oninput="ColorPicker(this.value)">
+                </div>
 
+                <div class="iframe-container">
+                    <iframe id="sketchfab-iframe" src="https://sketchfab.com/playlists/embed?collection=45a704d7f1c74dbbb79f01971f676a85&autostart=0"
+                            title="adil"
+                            allow="autoplay; fullscreen; xr-spatial-tracking"
+                            frameborder="0"
+                            allowfullscreen
+                            mozallowfullscreen="true"
+                            webkitallowfullscreen="true"
+                            xr-spatial-tracking
+                            execution-while-out-of-viewport
+                            execution-while-not-rendered
+                            web-share
+                    ></iframe>
+                </div>
 
                 <!-- Joystick für Handys -->
                 <div class="joystick-container" id="phoneControls">
-                    <div class="joystick">
-                        <img src="/joystick-base.png"/>
-                        <div id="stick1" style="position: absolute; left:32px; top:32px;">
-                            <img src="/joystick-green.png"/>
+                    <form class="sub-container">
+                        <div class="joystick">
+                            <img src="/joystick-base.png"/>
+                            <div id="stick1">
+                                <img src="/joystick-green.png"/>
+                            </div>
+                            <div>
+                                <input type="range" min="0" max="100" value="${speed}" class="slider" id="myRange2" oninput="updateSliderValue(this.value, this.id)">
+                                <span id="sliderValue2">50</span>
+                            </div>
                         </div>
-                        <div style="margin-top: 20px;">
-                            <input type="range" min="0" max="100" value="${speed}" class="slider" id="myRange2" oninput="updateSliderValue(this.value, this.id)">
-                            <span id="sliderValue2">50</span>
-                        </div>
-                    </div>
+                    </form>
                 </div>
                 <div id="pcContainer" class="buttons-container">
                     <form class="sub-container">
@@ -314,10 +332,6 @@
                     <p>Wir sind stolz darauf, ein Team zu sein, das sich für Exzellenz und Innovation einsetzt. Danke, dass Sie uns auf dieser Reise begleiten!</p>
                 </div>
             </div>
-            <br>
-            <br>
-            <br>
-            <br>
         </section>
 
         <footer>
