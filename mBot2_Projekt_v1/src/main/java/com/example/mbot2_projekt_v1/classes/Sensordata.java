@@ -2,14 +2,11 @@ package com.example.mbot2_projekt_v1.classes;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
-import jdk.jfr.DataAmount;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.swing.*;
-import java.awt.*;
-import java.util.List;
-
+//Objektklasse zum Deserialisieren der Sensordaten des Mbots
+//Getter und Setter aller Daten
 @Data
 @Builder
 public class Sensordata {
