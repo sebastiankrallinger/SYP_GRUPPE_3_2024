@@ -248,7 +248,7 @@ th {
 }
 
 .iframe-container {
-    grid-column: 2; /* Second column */
+    grid-column: 3; /* Second column */
     grid-row: 1; /* Second row */
     position: relative;
     width: 100%; /* Full width of the container */

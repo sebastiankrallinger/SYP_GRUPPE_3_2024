@@ -306,7 +306,7 @@ public class MainController{
             // Starte den Line-Follower-Modus
             Thread thread2 = new Thread(new LineFollowerThread());
             thread2.start();
-        } else {
+        } else if (follower.equals("OFF")){
             start = false;
             // Stoppe den Line-Follower-Modus
 
@@ -319,7 +319,7 @@ public class MainController{
             log.info("Linefollower");
             String previousCommand = "";
             try (DatagramSocket socket = new DatagramSocket()) {
-                while (true) {
+                while (start) {
                     String[] quadRGB;
                     quadRGB = sensordata.getQuadRGB();
 

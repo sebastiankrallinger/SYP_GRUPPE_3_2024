@@ -61,10 +61,10 @@
                     <button id="suicideOn" type="button" name="prevention">ON</button>
                 </form>
                 <p>Line Follower</p>
-                <form id="light_data" action="/light_data" method="post">
+                <form id="toggleLineFollower" action="/lineFollower" method="post">
                     <div style="display: flex;">
-                        <button id="light_status_start" type="button" name="light_status" style="width: 100px; height: 50px;">Start</button>
-                        <button id="light_status_end" type="button" name="light_status" style="width: 100px; height: 50px;">Stop</button>
+                        <button id="lineOn" type="button" name="follower">Start</button>
+                        <button id="lineOff" type="button" name="follower">Stop</button>
                         <div style="display: inline-flex; align-items: center; margin-left: 10px;">
                             <div id="out_left" style="width: 50px; height: 50px; margin: 5px; background-color: grey; border: 1px solid black;"></div>
                             <div id="mid_left" style="width: 50px; height: 50px; margin: 5px; background-color: grey; border: 1px solid black;"></div>
@@ -73,6 +73,8 @@
                         </div>
                     </div>
                 </form>
+                <br>
+                <br>
                 <input type="color" id="colorPicker" value="#ff0000" oninput="ColorPicker(this.value)">
             </div>
 

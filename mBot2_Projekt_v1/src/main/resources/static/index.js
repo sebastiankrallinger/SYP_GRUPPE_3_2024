@@ -13,6 +13,7 @@ client.connect({}, (frame) => {
 $(document).ready(function() {
     btnDrive();
     btnSuicide();
+    btnLinefollower();
 });
 
 function checkDevice() {
@@ -92,11 +93,11 @@ function btnLinefollower(){
             data: { follower: "ON" }
         });
     })
-    $("#suicideOn").click(function() {
+    $("#lineOff").click(function() {
         $.ajax({
-            url: "/suicidePrevention",
+            url: "/lineFollower",
             type: "POST",
-            data: { prevention: "ON" }
+            data: { follower: "OFF" }
         });
     })
 }
