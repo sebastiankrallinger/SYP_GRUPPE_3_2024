@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en"  xmlns:th="http://www.thymeleaf.org">
     <head>
@@ -6,12 +5,19 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="/arrow_key_disable.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/MTLLoader.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+        <script src="https://static.sketchfab.com/api/sketchfab-viewer-1.0.0.js"></script>
+        <script src="/lagedarstellung.js"></script>
         <title>MBot2</title>
     </head>
-    <body class="noselect" onload="checkDevice()">
+    <body class="noselect" onresize="checkDevice()">
         <div class="navbar" id="myNavbar">
             <a href="#controller">Controller</a>
             <a href="#sensor-data">Sensor Data</a>
@@ -27,18 +33,15 @@
             <h1>Welcome to MBot2</h1>
         </header>
 
-        <div class="image_container">
-            <img src="/bilder/mBot.png" style="
-                max-width: 90%;
-                height: auto;
-                display: block;
-                margin: 0 auto; "/>
+        <div class="custom-image-container" style="display: none;">
+            <img class="custom-image" src="/bilder/mBot.png"/>
         </div>
+
 
         <section id="controller">
             <h2 style="color: whitesmoke">Controller</h2>
+
             <div class="container">
-                <input type="color" id="colorPicker" value="#ff0000" oninput="ColorPicker(this.value)">
                 <div class="selected-device">
                     <p>Selected Device: <span id="ipAdresse" th:text="${ipAdresse}"></span></p>
                     <form action="/mBotIP" method="get">
@@ -50,41 +53,62 @@
                             <a th:each="ipAdresse : ${ipAdresses}" th:text="${ipAdresse}"></a>
                         </div>
                     </div>
+                </div>
 
-                <p>Suicide Prevention:</p>
-                <form id="toggleForm" action="/suizidePrevention" method="post">
-                    <button id="suicideOff" type="button" name="prevention">OFF</button>
-                    <button id="suicideOn" type="button" name="prevention">ON</button>
-                </form>
-
-                <!-- <button onclick="sensorData()">Abfragen</button> -->
-
-                <p>LED</p>
-                <form id="light_data" action="/light_data" method="post">
-                    <div style="display: flex;">
-                        <button id="light_status_start" type="button" name="light_status" style="width: 100px; height: 50px;">Start</button>
+                <div class="container2">
+                    <p>Suicide Prevention:</p>
+                    <form id="toggleForm" action="/suizidePrevention" method="post">
+                        <button id="suicideOff" type="button" name="prevention">OFF</button>
+                        <button id="suicideOn" type="button" name="prevention">ON</button>
+                    </form>
+                    <p>Line Follower</p>
+                    <form id="toggleLineFollower" action="/lineFollower" method="post">
+                        <div style="display: flex;">
+                            <button id="lineOn" type="button" name="follower">Start</button>
+                            <button id="lineOff" type="button" name="follower">Stop</button>
+                        </div>
                         <div style="display: inline-flex; align-items: center; margin-left: 10px;">
                             <div id="out_left" style="width: 50px; height: 50px; margin: 5px; background-color: grey; border: 1px solid black;"></div>
                             <div id="mid_left" style="width: 50px; height: 50px; margin: 5px; background-color: grey; border: 1px solid black;"></div>
                             <div id="mid_right" style="width: 50px; height: 50px; margin: 5px; background-color: grey; border: 1px solid black;"></div>
                             <div id="out_right" style="width: 50px; height: 50px; margin: 5px; background-color: grey; border: 1px solid black;"></div>
                         </div>
-                    </div>
-                </form>
+                    </form>
                 </div>
-                 <!-- Joystick für Handys -->
-            <div class="joystick-container" id="phoneControls">
-                <div class="joystick">
-                    <img src="/joystick-base.png"/>
-                    <div id="stick1" style="position: absolute; left:32px; top:32px;">
-                        <img src="/joystick-green.png"/>
-                    </div>
-                    <div style="margin-top: 20px;">
-                        <input type="range" min="0" max="100" value="${speed}" class="slider" id="myRange2" oninput="updateSliderValue(this.value, this.id)">
-                        <span id="sliderValue2">50</span>
-                    </div>
+                <div class="colorPicker">
+                    <input type="color" id="colorPicker" value="#ff0000" oninput="ColorPicker(this.value)">
                 </div>
-            </div>
+
+                <div class="iframe-container">
+                    <iframe id="sketchfab-iframe" src="https://sketchfab.com/playlists/embed?collection=45a704d7f1c74dbbb79f01971f676a85&autostart=0"
+                            title="adil"
+                            allow="autoplay; fullscreen; xr-spatial-tracking"
+                            frameborder="0"
+                            allowfullscreen
+                            mozallowfullscreen="true"
+                            webkitallowfullscreen="true"
+                            xr-spatial-tracking
+                            execution-while-out-of-viewport
+                            execution-while-not-rendered
+                            web-share
+                    ></iframe>
+                </div>
+
+                <!-- Joystick für Handys -->
+                <div class="joystick-container" id="phoneControls">
+                    <form class="sub-container">
+                        <div class="joystick">
+                            <img src="/joystick-base.png"/>
+                            <div id="stick1">
+                                <img src="/joystick-green.png"/>
+                            </div>
+                            <div>
+                                <input type="range" min="0" max="100" value="${speed}" class="slider" id="myRange2" oninput="updateSliderValue(this.value, this.id)">
+                                <span id="sliderValue2">50</span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
                 <div id="pcContainer" class="buttons-container">
                     <form class="sub-container">
                         <button id="driveBtnU" type="button" name="direction">Vorwärts</button>
@@ -99,7 +123,6 @@
                             <span id="sliderValue">50</span>
                         </div>
                     </form>
-                </div>
                 </div>
             </div>
         </section>
@@ -310,10 +333,6 @@
                     <p>Wir sind stolz darauf, ein Team zu sein, das sich für Exzellenz und Innovation einsetzt. Danke, dass Sie uns auf dieser Reise begleiten!</p>
                 </div>
             </div>
-            <br>
-            <br>
-            <br>
-            <br>
         </section>
 
         <footer>

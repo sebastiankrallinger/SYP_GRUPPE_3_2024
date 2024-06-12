@@ -1,17 +1,12 @@
 class JoystickController
 {
-    // stickID: ID of HTML element (representing joystick) that will be dragged
-    // maxDistance: maximum amount joystick can move in any direction
-    // deadzone: joystick must move at least this amount from origin to register value change
     constructor( stickID, maxDistance, deadzone )
     {
         this.id = stickID;
         let stick = document.getElementById(stickID);
 
-        // location from which drag begins, used to calculate offsets
         this.dragStart = null;
 
-        // track touch identifier in case multiple joysticks present
         this.touchId = null;
 
         this.active = false;
@@ -23,10 +18,8 @@ class JoystickController
         {
             self.active = true;
 
-            // all drag movements are instantaneous
             stick.style.transition = '0s';
 
-            // touch event fired before mouse event; prevent redundant mouse event from firing
             event.preventDefault();
 
             if (event.changedTouches)
@@ -34,7 +27,6 @@ class JoystickController
             else
                 self.dragStart = { x: event.clientX, y: event.clientY };
 
-            // if this is a touch event, keep track of which one
             if (event.changedTouches)
                 self.touchId = event.changedTouches[0].identifier;
         }
@@ -43,8 +35,7 @@ class JoystickController
         {
             if ( !self.active ) return;
 
-            // if this is a touch event, make sure it is the right one
-            // also handle multiple simultaneous touchmove events
+
             let touchmoveId = null;
             if (event.changedTouches)
             {
@@ -68,10 +59,8 @@ class JoystickController
             const xPosition = distance * Math.cos(angle);
             const yPosition = distance * Math.sin(angle);
 
-            // move stick image to new position
             stick.style.transform = `translate3d(${xPosition}px, ${yPosition}px, 0px)`;
 
-            // deadzone adjustment
             const distance2 = (distance < deadzone) ? 0 : maxDistance / (maxDistance - deadzone) * (distance - deadzone);
             const xPosition2 = distance2 * Math.cos(angle);
             const yPosition2 = distance2 * Math.sin(angle);
@@ -85,14 +74,11 @@ class JoystickController
         {
             if ( !self.active ) return;
 
-            // if this is a touch event, make sure it is the right one
             if (event.changedTouches && self.touchId != event.changedTouches[0].identifier) return;
 
-            // transition the joystick position back to center
             stick.style.transition = '.2s';
             stick.style.transform = `translate3d(0px, 0px, 0px)`;
 
-            // reset everything
             self.value = { x: 0, y: 0 };
             self.touchId = null;
             self.active = false;
@@ -111,7 +97,6 @@ let joystick1 = new JoystickController("stick1", 64, 8);
 
 function update()
 {
-    //document.getElementById("status1").innerText = "Joystick 1: " + JSON.stringify(joystick1.value);
     sendXY(JSON.stringify(joystick1.value));
 }
 

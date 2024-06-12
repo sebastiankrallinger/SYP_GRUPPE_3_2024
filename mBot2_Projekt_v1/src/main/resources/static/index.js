@@ -11,8 +11,10 @@ client.connect({}, (frame) => {
 });
 
 $(document).ready(function() {
+    checkDevice();
     btnDrive();
     btnSuicide();
+    btnLinefollower();
 });
 
 function checkDevice() {
@@ -20,12 +22,10 @@ function checkDevice() {
     var pcContainer = document.getElementById("pcContainer");
     var phoneControls = document.getElementById("phoneControls");
 
-    if (screenWidth < 768) {
-        // Kleiner als 768px: wahrscheinlich ein Handy
+    if (screenWidth < 800) {
         pcContainer.style.display = "none";
         phoneControls.style.display = "block";
     } else {
-        // Größer oder gleich 768px: wahrscheinlich ein Desktop
         pcContainer.style.display = "block";
         phoneControls.style.display = "none";
     }
@@ -79,6 +79,24 @@ function btnDrive(){
             url: "/buttonControl",
             type: "POST",
             data: { direction: "STOP" }
+        });
+    })
+}
+
+function btnLinefollower(){
+    $("#lineOn").click(function() {
+        updateSliderValue(10, "myRange");
+        $.ajax({
+            url: "/lineFollower",
+            type: "POST",
+            data: { follower: "ON" }
+        });
+    })
+    $("#lineOff").click(function() {
+        $.ajax({
+            url: "/lineFollower",
+            type: "POST",
+            data: { follower: "OFF" }
         });
     })
 }
@@ -146,7 +164,7 @@ function updateSliderValue(value, id) {
 }
 
 function ColorPicker(value) {
-    console.log(value);
+    //console.log(value);
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/sendColor?color=' + encodeURIComponent(value), true);
     xhr.send();

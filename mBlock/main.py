@@ -1,4 +1,3 @@
-
 import time
 import usocket
 import ujson
@@ -15,24 +14,6 @@ slider_speed=0
 direction_before="STOP"
 selected_speed=50
 severip=""
-speed_before=0
-
-def define_color(hex_color):
-    
-    # Entfernen des führenden '#' falls vorhanden
-    if hex_color.startswith('#'):
-        hex_color = hex_color[1:]
-    
-    # Überprüfen, ob der Hex-Farbwert gültig ist (6 Zeichen)
-    if len(hex_color) != 6:
-        raise ValueError("Ungültiger Hex-Farbwert")
-    
-    # Aufteilen des Hex-Farbwerts in die RGB-Komponenten
-    r = int(hex_color[0:2], 16)
-    g = int(hex_color[2:4], 16)
-    b = int(hex_color[4:6], 16)
-    
-    cyberpi.led.on(r,g,b)
 
 def define_speed(speed_value):
     global slider_speed
@@ -44,7 +25,6 @@ def connect():
     cyberpi.console.clear()
     cyberpi.console.println("Mbot bereit zum Steuern")
     time.sleep(3)
-    cyberpi.console.println(slider_speed)
 
 def ultrasonic_thread():
     global distance
@@ -53,7 +33,6 @@ def ultrasonic_thread():
     while thread_flag:
         distance = cyberpi.ultrasonic2.get(index=1)
         if distance < 50:
-        if distance < 35:
             suicide_prevention = True
             turn()
         time.sleep(1)
@@ -75,12 +54,20 @@ def drive(message):
         cyberpi.mbot2.forward(speed = slider_speed)
         direction_before="UP"
     if message == "DOWN":
-        define_color("#990000")
         cyberpi.mbot2.backward(speed = slider_speed)
         direction_before="DOWN"
     if message == "LEFT":
         cyberpi.mbot2.drive_power(40, -60)
         direction_before="LEFT"
+        
+    if message == "TURN_LEFT":
+        cyberpi.mbot2.turn_left(speed = slider_speed)
+        direction_before="TURN_LEFT"
+        
+    if message == "TURN_RIGHT":
+        cyberpi.mbot2.turn_right(speed = slider_speed)
+        direction_before="TURN_RIGHT"
+        
     if message == "RIGHT":
         cyberpi.mbot2.drive_power(60, -40)
         direction_before="RIGHT"
@@ -98,11 +85,14 @@ def drive(message):
 def send_sensor_data_to_server_thread():
     global thread_flag2
     global serverip
+    i = 0
     s = usocket.socket(usocket.AF_INET, usocket.SOCK_DGRAM)
     local_addr = ("0.0.0.0", 4001)  # Ändern Sie den Port entsprechend Ihrer Konfiguration
     # Socket an die Adresse und den Port binden
     s.bind(local_addr)
     while thread_flag2:
+        cyberpi.console.println("send data")
+        cyberpi.console.clear()        
         sensordata = {
                     "mbotid": cyberpi.get_mac_address(),
                     "ultrasonic": cyberpi.ultrasonic2.get(1),
@@ -163,29 +153,18 @@ while True:
             recieved_message = data.decode('utf-8')
             if recieved_message == "TRUE":
                 connect()
-                cyberpi.led.on(0,255,0)
-                cyberpi.console.clear()
-                cyberpi.console.println("Mbot bereit zum Steuern")
-                time.sleep(3)
                 break
         
-            
         cyberpi.led.off() #No Lights
         cyberpi.console.clear()        
-        cyberpi.console.clear()
         break
     
-while True:
+while True:   
     # Daten empfangen (maximal 1024 Bytes)
     data, addr = s.recvfrom(1024)
     #empfangenen Daten verarbeiten
     received_message = data.decode('utf-8')
     #cyberpi.console.println(received_message)
-    cyberpi.console.print(received_message)
-    
-    if received_message.startswith('#'):
-        define_color(received_message)
-    
     if received_message.isdigit():
         selected_speed = int(received_message)
     if suicide_prevention == False:
@@ -200,7 +179,7 @@ while True:
             cyberpi.console.println("Suicide-Prevention deaktiviert!")
             time.sleep(3)
             cyberpi.console.clear()
-        elif received_message=="UP" or received_message=="DOWN" or received_message=="RIGHT" or received_message=="RIGHT_B" or received_message=="LEFT" or received_message=="LEFT_B" or received_message=="STOP":
+        elif received_message=="UP" or received_message=="DOWN" or received_message=="RIGHT" or received_message=="TURN_RIGHT" or received_message=="RIGHT_B" or received_message=="LEFT" or received_message=="TURN_LEFT" or received_message=="LEFT_B" or received_message=="STOP":
             drive(received_message)
         elif "SENSOR" in received_message:
             thread_flag2 = True
@@ -211,7 +190,3 @@ while True:
         if 0 <= selected_speed <= 100:
             define_speed(selected_speed)
             drive(direction_before)
-    
-            if(selected_speed - speed_before > 5 or selected_speed - speed_before < -5):
-                drive(direction_before)
-                speed_before=selected_speed

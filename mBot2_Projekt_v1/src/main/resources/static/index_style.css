@@ -12,35 +12,46 @@ html, body {
     height: 100%;
     background-size: cover;
     background: linear-gradient(to bottom, #646464, #000000) no-repeat;
-    z-index: -1; /* Ensure the background is behind other content */
+    z-index: -1;
 }
 
 .content {
-    position: relative; /* Make sure the content is positioned relative to its parent */
-    z-index: 1; /* Ensure content is on top of the background */
-    overflow-y: auto; /* Add a vertical scrollbar when content overflows */
+    position: relative;
+    z-index: 1;
+    overflow-y: auto;
 }
 
 h1 {
     color: white;
-    text-align: center; /* Center align the text */
+    text-align: center;
 }
 .selected-device {
-    grid-column: 1; /* First column */
-    grid-row: 1; /* First row */
+    grid-column: 1;
+    grid-row: 1;
     font-weight: bold;
 }
+
+.container2 {
+    grid-column: 1;
+    grid-row: 2;
+    font-weight: bold;
+}
+
+.colorPicker {
+    grid-column: 1;
+    grid-row: 4;
+    align-items: center;
+    font-weight: bold;
+}
+
 .buttons-container {
-    grid-column: 2; /* Second column */
-    grid-row: 0; /* Second row */
-    display: grid;
-    flex-direction: column;
-    align-items: center; /* Center align items horizontally */
+    grid-column: 3;
+    grid-row: 2;
 }
 
 .joystick-container {
-    grid-column: 2; /* Adjust grid-column to place it on the right */
-    grid-row: 0; /* Adjust grid-row if necessary */
+    grid-column: 3;
+    grid-row: 2;
     width: 150px;
 }
 
@@ -81,13 +92,14 @@ button {
 }
 
 .container {
-    width: 80%;
+    width: 90%;
+    height: auto;
     margin: 0 auto;
     padding: 20px;
     display: grid;
-    grid-template-columns: 1fr 0fr; /* Two columns */
-    grid-template-rows: auto auto; /* Two rows, first row for header, second row for content */
-    gap: 20px; /* Gap between grid items */
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto auto auto auto;
+    gap: 20px;
     background: white;
     border-radius: 4px;
 }
@@ -97,7 +109,6 @@ button {
     display: inline-block;
 }
 
-/* Style the dropdown content (hidden by default) */
 .dropdown-content {
     display: none;
     position: absolute;
@@ -107,7 +118,6 @@ button {
     z-index: 1;
 }
 
-/* Style the links inside the dropdown */
 .dropdown-content a {
     color: black;
     padding: 12px 16px;
@@ -115,17 +125,14 @@ button {
     display: block;
 }
 
-/* Change color of dropdown links on hover */
 .dropdown-content a:hover {
     background-color: #f1f1f1;
 }
 
-/* Show the dropdown menu on hover */
 .dropdown:hover .dropdown-content {
     display: block;
 }
 
-/* Change the background color of the dropdown button when the dropdown content is shown */
 .dropdown:hover .dropbtn {
     background-color: #3e8e41;
 }
@@ -159,8 +166,8 @@ button {
     .navbar a.icon {
         float: right;
         display: block;
-        width: 20%; /* Set the width of the image relative to its parent element */
-        height: auto; /* Maintain aspect ratio */
+        width: 20%;
+        height: auto;
     }
 }
 
@@ -172,9 +179,9 @@ button {
         position: absolute;
         right: 0;
         top: 0;
-        width: 20%; /* Set the width of the image relative to its parent element */
-        height: auto; /* Maintain aspect ratio */
-        display: block; /* Ensures proper layout */
+        width: 20%;
+        height: auto;
+        display: block;
     }
     .navbar.responsive a {
         float: none;
@@ -229,7 +236,7 @@ table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
-    background-color: #f9f9f9; /* Background color for the whole table */
+    background-color: #f9f9f9;
 }
 th, td {
     padding: 8px;
@@ -240,9 +247,70 @@ th {
     background-color: #f2f2f2;
 }
 
-.image_container {
-    max-width: 100%;
+.custom-image {
+    max-width: 90%;
+    height: auto;
+    display: block;
     margin: 0 auto;
-    padding: 0 20px; /* optional: add padding to prevent image sticking to the edge */
 }
 
+.iframe-container {
+    grid-column: 2;
+    grid-row: 2;
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%;
+}
+
+iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+@media (max-width: 1000px) {
+
+    .iframe-container {
+        grid-column: 2 / span 3;
+        grid-row: 2;
+    }
+}
+
+@media (max-width: 767px) {
+
+    .iframe-container {
+        grid-column: 1 / span 3;
+        grid-row: 2;
+    }
+}
+
+@media (max-width: 710px) {
+    .container {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 200px auto auto auto auto auto;
+    }
+
+    .iframe-container{
+        grid-row: 7;
+    }
+
+    .joystick-container {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    .out_left, mid_left, mid_right, out_right{
+        grid-column: 1;
+        grid-row: 4;
+    }
+    .colorPicker{
+        grid-row: 5;
+    }
+
+    .container2{
+        grid-row: 3;
+    }
+}

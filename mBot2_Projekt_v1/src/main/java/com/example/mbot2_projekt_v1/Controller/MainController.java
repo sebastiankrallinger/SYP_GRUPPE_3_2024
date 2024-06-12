@@ -5,10 +5,7 @@ import com.google.gson.Gson;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,10 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import java.net.*;
-import java.time.Clock;
-import java.time.Instant;
 import java.util.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -30,16 +24,24 @@ import java.util.List;
 public class MainController{
     //IP Adresse des aktiven mBots
     private String mBotIP = "kein mBot ausgewählt";
+    //IP Adressen aller verbundenen mBots
     private HashMap<String, String> ips = new HashMap<>();
+    //IP Adressen zum anzeigen auf der Webseite
     private List<String> s = new ArrayList<>();
+    //Id fuer mBot festlegen
     private int mbotId = 1;
-    private int speed=100;
+    //Geschwindigkeit des mBots
+    private int speed = 100;
+    //aktuellen Sensordaten
     private Sensordata sensordata;
-
+    //Variable fuer Sensorthread
+    private boolean start = false;
+    //Nachrichten an Websocket Clients
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
 
+    //mBot Id und IP Adressen anzeigen
     @GetMapping("/mBot")
     public String ips(Model model) {
         if (ips.get(mBotIP) != null) {
@@ -55,11 +57,13 @@ public class MainController{
         return "index";
     }
 
+    //mBot IP Adresse zurueckgeben
     @GetMapping("/mBotIP")
     public String sendCommand() {
         return "mBotIP";
     }
 
+    //eingegebene mBot IP Adresse verarbeiten
     @GetMapping("/getDevice")
     public String getDevice(@RequestParam("ipAdresse") String ipAdresseMbot){
         System.out.println("Ausgewähltes Gerät: " + ipAdresseMbot);
@@ -73,17 +77,16 @@ public class MainController{
         return "redirect:/mBot#controller";
     }
 
+    //Signal an mBot senden
     public void sendConnected(){
         try {
             //System.out.println(mBotIP);
             String connected = "TRUE";
             //System.out.println(connected);
-            //Befeht in byte-Array konvertieren
             byte[] sendData = connected.getBytes();
 
             try (DatagramSocket socket = new DatagramSocket()) {
                 DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
-
                 socket.send(packet);
             }
         } catch (Exception e) {
@@ -91,18 +94,19 @@ public class MainController{
         }
     }
 
+    //Suicide Prevention aktivieren/deaktivieren
     @PostMapping("/suicidePrevention")
     @ResponseBody
     public void sendSuicidePrevention(@RequestParam("prevention") String prevention){
         try {
-            //System.out.println(prevention);
-            //Befeht in byte-Array konvertieren
-            byte[] sendData = prevention.getBytes();
+            if(mBotIP!="kein mBot ausgewählt") {
+                //System.out.println(prevention);
+                byte[] sendData = prevention.getBytes();
 
-            try (DatagramSocket socket = new DatagramSocket()) {
-                DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
-
-                socket.send(packet);
+                try (DatagramSocket socket = new DatagramSocket()) {
+                    DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
+                    socket.send(packet);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -110,59 +114,52 @@ public class MainController{
     }
 
 
-    //Button Befehle an mBots senden
+    //Button Steuerung
     @PostMapping("/buttonControl")
     @ResponseBody
     public void buttonControl(@RequestParam("direction") String direction){
         try {
-            //System.out.println(direction);
-            //Befeht in byte-Array konvertieren
-            byte[] sendData = direction.getBytes();
-
-            try (DatagramSocket socket = new DatagramSocket()) {
-                //Button Befehl direkt an den mBot senden
-                DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
-
-                socket.send(packet);
+            if(mBotIP!="kein mBot ausgewählt") {
+                //System.out.println(direction);
+                byte[] sendData = direction.getBytes();
+                try (DatagramSocket socket = new DatagramSocket()) {
+                    DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
+                    socket.send(packet);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    //Pfeiltasten Steuerung
     @PostMapping("/arrowControl")
     @ResponseBody
     public void arrowControl(HttpServletRequest request){
         try {
-            String direction = request.getParameter("direction");
-
-            byte[] sendData = direction.getBytes();
-
-            try (DatagramSocket socket = new DatagramSocket()) {
-                //Button Befehl direkt an den mBot senden
-                DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
-
-                socket.send(packet);
+            if(mBotIP!="kein mBot ausgewählt") {
+                String direction = request.getParameter("direction");
+                byte[] sendData = direction.getBytes();
+                try (DatagramSocket socket = new DatagramSocket()) {
+                    DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
+                    socket.send(packet);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    //Joystick Steuerung
     @PostMapping("/joystickControl")
     @ResponseBody
     public void joystickControl(HttpServletRequest request){
         try {
            if(mBotIP!="kein mBot ausgewählt") {
                String xy = request.getParameter("direction");
-               //Befeht in byte-Array konvertieren
                byte[] sendDataxy = xy.getBytes();
-
-
                try (DatagramSocket socket = new DatagramSocket()) {
-                   //Button Befehl direkt an den mBot senden
                    DatagramPacket packet = new DatagramPacket(sendDataxy, sendDataxy.length, InetAddress.getByName(mBotIP), 4000);
-
                    socket.send(packet);
                }
            }
@@ -171,6 +168,7 @@ public class MainController{
         }
     }
 
+    //HashMap Werte in eine Liste konvertieren
     private List<String> mapToString(){
         for (Map.Entry<String, String> m : ips.entrySet()) {
             String key = m.getKey();
@@ -182,41 +180,42 @@ public class MainController{
         return s;
     }
 
+    //Geschwindigkeit verwalten
     @PostMapping("/speedControl")
     @ResponseBody
     public void speedControl(HttpServletRequest request){
         try {
-            int input = Integer.parseInt(request.getParameter("speed"));
-            if (input - speed > 5 || input - speed < -5 ){
-                speed = input;
-                //System.out.println(speed);
-                //Befeht in byte-Array konvertieren
-                byte[] sendData = String.valueOf(speed).getBytes();
+            if(mBotIP!="kein mBot ausgewählt") {
+                int input = Integer.parseInt(request.getParameter("speed"));
+                if (input - speed > 5 || input - speed < -5) {
+                    speed = input;
+                    //System.out.println(speed);
+                    //Befeht in byte-Array konvertieren
+                    byte[] sendData = String.valueOf(speed).getBytes();
 
-                try (DatagramSocket socket = new DatagramSocket()) {
-                    //Button Befehl direkt an den mBot senden
-                    DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
-
-                    socket.send(packet);
+                    try (DatagramSocket socket = new DatagramSocket()) {
+                        DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
+                        socket.send(packet);
+                    }
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    //Farebn des mBot verwalten
     @PostMapping("/sendColor")
     @ResponseBody
     public void sendColor(HttpServletRequest request/*, @RequestParam("color") String colorHEX>*/){
         try {
-            String colorHEX = request.getParameter("color");
-            String test= colorHEX;
-            System.out.println(test+"<-bitte geh");
-            byte[] sendData = String.valueOf(colorHEX).getBytes();
-            try (DatagramSocket socket = new DatagramSocket()) {
-                //Button Befehl direkt an den mBot senden
-                DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
-                System.out.println(packet);
-                socket.send(packet);
+            if (mBotIP != "kein mBot ausgewählt") {
+                String colorHEX = request.getParameter("color");
+                byte[] sendData = String.valueOf(colorHEX).getBytes();
+                try (DatagramSocket socket = new DatagramSocket()) {
+                    DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
+                    socket.send(packet);
+                }
             }
         }
         catch (Exception e) {
@@ -224,7 +223,7 @@ public class MainController{
         }
     }
 
-
+    //Sensordaten empfangen
     public Sensordata receiveData() {
         sendServerIP();
         try (DatagramSocket socket = new DatagramSocket()) {
@@ -240,6 +239,8 @@ public class MainController{
         }
         return sensordata;
     }
+
+    //IP Adresse des Servers an mBot senden
     public void sendServerIP() {
         try (DatagramSocket socket = new DatagramSocket()) {
             String serverip = "";
@@ -264,15 +265,18 @@ public class MainController{
             e.printStackTrace();
         }
     }
+
+    //Sensordaten an Websocket senden
     @MessageMapping("/sensorData")
     public Sensordata sendSensorData() {
-
         if (sensordata != null) {
             //log.info("Data: " + sensordata);
             messagingTemplate.convertAndSend("/topic/sensorData", sensordata);
         }
         return null;
     }
+
+    //Thread fuer die Sensordaten
     class SensorThread implements Runnable {
         @Override
         public void run() {
@@ -299,6 +303,99 @@ public class MainController{
 
             } catch (Exception e) {
                 e.printStackTrace();
+            }
+        }
+    }
+
+    //Linienfolgen Modus aktivieren/deaktivieren
+    @PostMapping("/lineFollower")
+    @ResponseBody
+    public void lineFollower(@RequestParam("follower") String follower) {
+        //System.out.println("LINE-FOLLOWER: " + follower);
+        if (follower.equals("ON")) {
+            start = true;
+            // Starte den Line-Follower-Modus
+            Thread thread2 = new Thread(new LineFollowerThread());
+            thread2.start();
+        } else if (follower.equals("OFF")){
+            // Stoppe den Line-Follower-Modus
+            start = false;
+        }
+    }
+
+    //Thread fuer den Line Follower
+    class LineFollowerThread implements Runnable {
+        @Override
+        public void run() {
+            log.info("Linefollower");
+            String previousCommand = "";
+            try (DatagramSocket socket = new DatagramSocket()) {
+                while (start) {
+                    String[] quadRGB;
+                    quadRGB = sensordata.getQuadRGB();
+
+                    String[] s1 = quadRGB[0].split("x");
+                    String lv = s1[1];
+                    String[] s2 = quadRGB[1].split("x");
+                    String liv = s2[1];
+                    String[] s3 = quadRGB[2].split("x");
+                    String riv = s3[1];
+                    String[] s4 = quadRGB[3].split("x");
+                    String rv = s4[1];
+
+                    log.info(lv + "," + liv + "," + riv + "," + rv);
+
+                    //Gerade aus fahren
+                    if ((Objects.equals(lv, "ffffff") && Objects.equals(rv, "ffffff")) && !previousCommand.equals("UP")) {
+                        //System.out.println("Geradeaus fahre");
+                        previousCommand = "UP";
+                        byte[] sendData = previousCommand.getBytes();
+
+                        DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
+                        socket.send(packet);
+                    }
+                    //STOP
+                    else if ((Objects.equals(lv, "ffffff") && Objects.equals(rv, "ffffff") && Objects.equals(riv, "ffffff") && Objects.equals(lv, "ffffff")) && !previousCommand.equals("STOP")) {
+                        //System.out.println("Stoppen");
+                        previousCommand = "STOP";
+                        byte[] sendData = previousCommand.getBytes();
+                        DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
+                        socket.send(packet);
+                    }
+                    //Nach Rechts fahren
+                    else if (sensordata.getLine() == 7 || sensordata.getLine() == 3 || sensordata.getLine() == 1) {
+                        //System.out.println("Nach Rechts fahren");
+                        try {
+                            //Befeht in byte-Array konvertieren
+                            String s = "TURN_RIGHT";
+                            byte[] sendData = s.getBytes();
+
+                            DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
+                            socket.send(packet);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    //Nach Links fahren
+                    else if (sensordata.getLine() == 14 || sensordata.getLine() == 12 || sensordata.getLine() == 8) {
+                        //System.out.println("Nach Links fahren");
+                        try {
+                            //Befeht in byte-Array konvertieren
+                            String s = "TURN_LEFT";
+                            byte[] sendData = s.getBytes();
+                            DatagramPacket packet = new DatagramPacket(sendData, sendData.length, InetAddress.getByName(mBotIP), 4000);
+                            socket.send(packet);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    //System.out.println(previousCommand);
+                    Thread.sleep(500);
+                }
+            } catch (Exception e) {
+                log.error("FEHLER IM LINE-FOLLOWER THREAD");
             }
         }
     }
