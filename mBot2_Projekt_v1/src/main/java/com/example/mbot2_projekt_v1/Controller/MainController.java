@@ -204,10 +204,10 @@ public class MainController{
         }
     }
 
-    //Farebn des mBot verwalten
+    //Farben des mBot verwalten
     @PostMapping("/sendColor")
     @ResponseBody
-    public void sendColor(HttpServletRequest request/*, @RequestParam("color") String colorHEX>*/){
+    public void sendColor(HttpServletRequest request){
         try {
             if (mBotIP != "kein mBot ausgewählt") {
                 String colorHEX = request.getParameter("color");

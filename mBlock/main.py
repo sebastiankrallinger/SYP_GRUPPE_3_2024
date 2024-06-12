@@ -15,6 +15,19 @@ direction_before="STOP"
 selected_speed=50
 severip=""
 
+def define_color(hex_color):
+    # Entfernen des führenden '#' falls vorhanden
+    if hex_color.startswith('#'):
+        hex_color = hex_color[1:]
+    # Überprüfen, ob der Hex-Farbwert gültig ist (6 Zeichen)
+    if len(hex_color) != 6:
+        raise ValueError("Ungültiger Hex-Farbwert")
+    # Aufteilen des Hex-Farbwerts in die RGB-Komponenten
+    r = int(hex_color[0:2], 16)
+    g = int(hex_color[2:4], 16)
+    b = int(hex_color[4:6], 16)
+    cyberpi.led.on(r,g,b)
+
 def define_speed(speed_value):
     global slider_speed
     slider_speed = speed_value * 2
@@ -91,8 +104,6 @@ def send_sensor_data_to_server_thread():
     # Socket an die Adresse und den Port binden
     s.bind(local_addr)
     while thread_flag2:
-        cyberpi.console.println("send data")
-        cyberpi.console.clear()        
         sensordata = {
                     "mbotid": cyberpi.get_mac_address(),
                     "ultrasonic": cyberpi.ultrasonic2.get(1),
@@ -165,6 +176,8 @@ while True:
     #empfangenen Daten verarbeiten
     received_message = data.decode('utf-8')
     #cyberpi.console.println(received_message)
+    if received_message.startswith('#'):
+        define_color(received_message)
     if received_message.isdigit():
         selected_speed = int(received_message)
     if suicide_prevention == False:
